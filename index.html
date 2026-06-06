@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AeroLog — Aviation Radio Logger</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -76,11 +76,11 @@ tr:hover td{background:var(--bg2)}
 .serial-tag{font-family:var(--mono);font-size:11px;color:var(--text2)}
 .type-badge{font-size:11px;background:var(--amber-light);color:var(--amber);padding:3px 8px;border-radius:4px;font-weight:500;white-space:nowrap;display:inline-block}
 .user-chip{font-size:11px;background:var(--bg2);border:0.5px solid var(--border2);padding:3px 8px;border-radius:12px;color:var(--text2);white-space:nowrap;display:inline-block}
-.notes-cell{width:36px;cursor:default;position:relative}
-.notes-icon{color:var(--text3);display:flex;align-items:center;justify-content:center}
-.notes-icon svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.tooltip{position:absolute;z-index:999;background:var(--bg);border:0.5px solid var(--border2);border-radius:var(--radius);padding:8px 12px;font-size:12px;color:var(--text);max-width:280px;box-shadow:0 4px 12px rgba(0,0,0,0.15);white-space:normal;line-height:1.5;pointer-events:none;display:none;top:100%;left:0;min-width:120px}
-.notes-cell:hover .tooltip{display:block}
+.notes-row td{padding-top:0;padding-bottom:8px;border-bottom:0.5px solid var(--border)}
+.notes-row:hover td{background:var(--bg2)}
+.notes-content{display:flex;align-items:baseline;gap:8px;padding:5px 10px;background:var(--bg2);border-radius:var(--radius);border-left:2px solid var(--border2)}
+.notes-label{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);white-space:nowrap;flex-shrink:0}
+.notes-text{font-size:12px;color:var(--text2);line-height:1.5}
 .empty{text-align:center;padding:40px 20px;color:var(--text2);font-size:13px}
 .empty svg{width:36px;height:36px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;display:block;margin:0 auto 8px;opacity:0.35}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
@@ -114,10 +114,22 @@ tr:hover td{background:var(--bg2)}
 .loading-box{background:var(--bg);border-radius:var(--radius-lg);padding:24px 32px;font-size:14px;color:var(--text2);display:flex;align-items:center;gap:12px}
 .spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
+
+.kebab-btn{background:none;border:none;cursor:pointer;padding:4px 8px;border-radius:6px;color:var(--text2);font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center}
+.kebab-btn:hover{background:var(--bg2);color:var(--text)}
+.kebab-wrap{position:relative;display:inline-block}
+.kebab-menu{position:absolute;right:0;top:calc(100% + 4px);background:var(--bg);border:0.5px solid var(--border2);border-radius:var(--radius);min-width:120px;z-index:50;overflow:hidden;display:none}
+.kebab-menu.open{display:block}
+.kebab-item{display:flex;align-items:center;gap:8px;padding:8px 12px;font-size:13px;cursor:pointer;color:var(--text);white-space:nowrap;border:none;background:none;width:100%;text-align:left;font-family:inherit}
+.kebab-item:hover{background:var(--bg2)}
+.kebab-item.danger{color:var(--danger-text)}
+.kebab-item.danger:hover{background:#fff5f5}
+.kebab-item svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
 </style>
 </head>
 <body>
 
+<div class="alert alert-error" id="global-err" style="position:sticky;top:64px;z-index:9;margin:0;border-radius:0;display:none;padding:10px 20px;font-size:13px;"></div>
 <div class="loading-overlay" id="loading-overlay">
   <div class="loading-box"><div class="spinner"></div>Loading data…</div>
 </div>
@@ -174,8 +186,8 @@ tr:hover td{background:var(--bg2)}
     <div class="table-wrap">
       <table>
         <thead><tr>
-          <th>Date / Time</th><th>Frequency</th><th>Callsign</th><th>Serial</th><th>Type</th><th>Signal</th>
-          <th style="width:36px"></th><th style="width:90px"></th>
+          <th>Date / Time</th><th>Frequency</th><th>Callsign</th><th>Serial</th><th>Type</th>
+          <th style="width:36px"></th>
         </tr></thead>
         <tbody id="log-tbody"></tbody>
       </table>
@@ -200,7 +212,7 @@ tr:hover td{background:var(--bg2)}
       <table>
         <thead><tr>
           <th>Callsign</th><th>Serial</th><th>Type / Model</th><th>Operator</th><th>Country</th>
-          <th style="width:36px"></th><th style="width:90px"></th>
+          <th style="width:36px"></th>
         </tr></thead>
         <tbody id="ac-tbody"></tbody>
       </table>
@@ -226,7 +238,7 @@ tr:hover td{background:var(--bg2)}
       <table>
         <thead><tr>
           <th>Frequency (MHz)</th><th>Description</th><th>Category</th><th>User / Owner</th><th>Location</th>
-          <th style="width:36px"></th><th style="width:90px"></th>
+          <th style="width:36px"></th>
         </tr></thead>
         <tbody id="freq-tbody"></tbody>
       </table>
@@ -270,13 +282,6 @@ tr:hover td{background:var(--bg2)}
   </div>
   <div class="info-banner" id="ac-match"></div>
   <div class="field" style="margin-bottom:12px"><label>Operator</label><input type="text" id="le-op" placeholder="e.g. RAF, USAF"></div>
-  <div class="field" style="margin-bottom:12px"><label>Signal quality (1–5)</label>
-    <select id="le-sig">
-      <option value="">— select —</option>
-      <option>1 — barely readable</option><option>2 — readable with difficulty</option>
-      <option>3 — readable</option><option>4 — good</option><option>5 — perfect</option>
-    </select>
-  </div>
   <div class="field" style="margin-bottom:16px"><label>Notes</label><textarea id="le-notes" placeholder="Any additional observations…"></textarea></div>
   <input type="hidden" id="le-edit-id" value="">
   <div style="display:flex;gap:8px;justify-content:flex-end">
@@ -410,7 +415,7 @@ async function loadAll() {
     setSyncStatus('ok', 'Synced');
     renderLog(); renderAircraft(); renderFreqs();
   } catch(e) {
-    setSyncStatus('err', 'Connection error');
+    var msg = (e && e.message) ? e.message : (e && e.hint ? e.hint : String(e)); var ge=document.getElementById("global-err"); ge.textContent="Supabase error: "+msg+". Check the browser console (F12) for details."; ge.style.display="block"; setSyncStatus('err', msg.length > 60 ? msg.slice(0,60)+'...' : msg);
     console.error(e);
   }
   document.getElementById('loading-overlay').classList.remove('show');
@@ -418,15 +423,16 @@ async function loadAll() {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function fmtFreq(v) { var n = parseFloat(v); return isNaN(n) ? v : n.toFixed(3); }
 function fmt(dt) {
   if (!dt) return '—';
   var d = new Date(dt);
   return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'}) + ' ' +
          d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
 }
-function noteCell(notes) {
-  if (!notes || !notes.trim()) return '<td></td>';
-  return '<td class="notes-cell"><div class="notes-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div class="tooltip">' + esc(notes) + '</div></td>';
+function notesRow(notes, cols) {
+  if (!notes || !notes.trim()) return '';
+  return '<tr class="notes-row"><td colspan="' + cols + '" style="padding-top:0"><div class="notes-content"><span class="notes-label">Notes</span><span class="notes-text">' + esc(notes) + '</span></div></td></tr>';
 }
 function setBusy(btnId, busy) {
   var b = document.getElementById(btnId);
@@ -450,7 +456,7 @@ function renderLog() {
   var rows = log.filter(function(r){ return !q || (r.freq+r.callsign+r.serial+r.type+r.notes).toLowerCase().includes(q); });
   var tb = document.getElementById('log-tbody');
   if (!rows.length) {
-    tb.innerHTML = '<tr><td colspan="8"><div class="empty"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49"/></svg>No entries yet. Start logging!</div></td></tr>';
+    tb.innerHTML = '<tr><td colspan="6"><div class="empty"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49"/></svg>No entries yet. Start logging!</div></td></tr>';
     return;
   }
   tb.innerHTML = rows.map(function(r) {
@@ -460,12 +466,13 @@ function renderLog() {
       + '<td><span class="callsign-tag">' + esc(r.callsign) + '</span></td>'
       + '<td><span class="serial-tag">' + esc(r.serial) + '</span></td>'
       + '<td>' + (r.type ? '<span class="type-badge">' + esc(r.type) + '</span>' : '') + '</td>'
-      + '<td style="font-family:var(--mono);font-size:13px;text-align:center">' + esc((r.sig||'').charAt(0)) + '</td>'
-      + noteCell(r.notes)
-      + '<td><div style="display:flex;gap:6px">'
-      + '<button class="btn" title="Edit" onclick="editLog(\'' + r.id + '\')">✏</button>'
-      + '<button class="btn btn-danger" title="Delete" onclick="delLog(\'' + r.id + '\')">✕</button>'
-      + '</div></td></tr>';
+      + '<td><div class="kebab-wrap">'
+      + '<button class="kebab-btn" onclick="toggleKebab(event,\'kb-'+r.id+'\')" aria-label="Actions">⋮</button>'
+      + '<div class="kebab-menu" id="kb-'+r.id+'">'
+      + '<button class="kebab-item" onclick="editLog(\''+r.id+'\')" ><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit</button>'
+      + '<button class="kebab-item danger" onclick="delLog(\''+r.id+'\')" ><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>Delete</button>'
+      + '</div></div></td></tr>'
+      + notesRow(r.notes, 6);
   }).join('');
 }
 
@@ -475,7 +482,7 @@ function renderAircraft() {
   var rows = aircraft.filter(function(r){ return !q || (r.cs+r.serial+r.type+r.op+r.country+r.hex).toLowerCase().includes(q); });
   var tb = document.getElementById('ac-tbody');
   if (!rows.length) {
-    tb.innerHTML = '<tr><td colspan="7"><div class="empty"><svg viewBox="0 0 24 24"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21 4 19 4c-2 0-4 2-4 2l-8.2 1.8L3 9l4 2 2 4 2-1 1 3 3-2z"/></svg>No aircraft added yet.</div></td></tr>';
+    tb.innerHTML = '<tr><td colspan="6"><div class="empty"><svg viewBox="0 0 24 24"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21 4 19 4c-2 0-4 2-4 2l-8.2 1.8L3 9l4 2 2 4 2-1 1 3 3-2z"/></svg>No aircraft added yet.</div></td></tr>';
     return;
   }
   tb.innerHTML = rows.map(function(r) {
@@ -485,11 +492,13 @@ function renderAircraft() {
       + '<td>' + (r.type ? '<span class="type-badge">' + esc(r.type) + '</span>' : '') + '</td>'
       + '<td>' + esc(r.op) + '</td>'
       + '<td>' + esc(r.country) + '</td>'
-      + noteCell(r.notes)
-      + '<td><div style="display:flex;gap:6px">'
-      + '<button class="btn" onclick="editAircraft(\'' + r.id + '\')">✏</button>'
-      + '<button class="btn btn-danger" onclick="delAircraft(\'' + r.id + '\')">✕</button>'
-      + '</div></td></tr>';
+      + '<td><div class="kebab-wrap">'
+      + '<button class="kebab-btn" onclick="toggleKebab(event,\'kb-'+r.id+'\')" aria-label="Actions">⋮</button>'
+      + '<div class="kebab-menu" id="kb-'+r.id+'">'
+      + '<button class="kebab-item" onclick="editAircraft(\''+r.id+'\')" ><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit</button>'
+      + '<button class="kebab-item danger" onclick="delAircraft(\''+r.id+'\')" ><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>Delete</button>'
+      + '</div></div></td></tr>'
+      + notesRow(r.notes, 6);
   }).join('');
 }
 
@@ -505,7 +514,7 @@ function renderFreqs() {
   }).sort(function(a,b){ return parseFloat(a.freq) - parseFloat(b.freq); });
   var tb = document.getElementById('freq-tbody');
   if (!rows.length) {
-    tb.innerHTML = '<tr><td colspan="7"><div class="empty"><svg viewBox="0 0 24 24"><path d="M2 12h4M18 12h4M6 12a6 6 0 0 0 12 0M6 12a6 6 0 0 1 12 0"/></svg>No frequencies found.</div></td></tr>';
+    tb.innerHTML = '<tr><td colspan="6"><div class="empty"><svg viewBox="0 0 24 24"><path d="M2 12h4M18 12h4M6 12a6 6 0 0 0 12 0M6 12a6 6 0 0 1 12 0"/></svg>No frequencies found.</div></td></tr>';
     return;
   }
   tb.innerHTML = rows.map(function(r) {
@@ -515,11 +524,13 @@ function renderFreqs() {
       + '<td>' + (r.cat ? '<span class="type-badge">' + esc(r.cat) + '</span>' : '') + '</td>'
       + '<td>' + (r.usr ? '<span class="user-chip">' + esc(r.usr) + '</span>' : '') + '</td>'
       + '<td style="font-size:12px">' + esc(r.loc) + '</td>'
-      + noteCell(r.notes)
-      + '<td><div style="display:flex;gap:6px">'
-      + '<button class="btn" onclick="editFreq(\'' + r.id + '\')">✏</button>'
-      + '<button class="btn btn-danger" onclick="delFreq(\'' + r.id + '\')">✕</button>'
-      + '</div></td></tr>';
+      + '<td><div class="kebab-wrap">'
+      + '<button class="kebab-btn" onclick="toggleKebab(event,\'kb-'+r.id+'\')" aria-label="Actions">⋮</button>'
+      + '<div class="kebab-menu" id="kb-'+r.id+'">'
+      + '<button class="kebab-item" onclick="editFreq(\''+r.id+'\')" ><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit</button>'
+      + '<button class="kebab-item danger" onclick="delFreq(\''+r.id+'\')" ><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>Delete</button>'
+      + '</div></div></td></tr>'
+      + notesRow(r.notes, 6);
   }).join('');
 }
 function setCat(c) { catFilter = c; renderFreqs(); }
@@ -562,7 +573,6 @@ function openLogModal(id) {
   document.getElementById('le-serial').value  = r ? (r.serial  || '') : '';
   document.getElementById('le-type').value    = r ? (r.type    || '') : '';
   document.getElementById('le-op').value      = r ? (r.op      || '') : '';
-  document.getElementById('le-sig').value     = r ? (r.sig     || '') : '';
   document.getElementById('le-notes').value   = r ? (r.notes   || '') : '';
   document.getElementById('le-edit-id').value = r ? r.id : '';
   document.getElementById('freq-match').textContent = '';
@@ -586,9 +596,8 @@ async function saveLog() {
   var op     = document.getElementById('le-op').value.trim();
   var payload = {
     dt: document.getElementById('le-dt').value,
-    freq: document.getElementById('le-freq').value.trim(),
+    freq: fmtFreq(document.getElementById('le-freq').value.trim()),
     callsign: cs, serial: serial, type: type, op: op,
-    sig: document.getElementById('le-sig').value,
     notes: document.getElementById('le-notes').value.trim()
   };
   if (!payload.freq && !payload.callsign) { alert('Please enter at least a frequency or callsign.'); return; }
@@ -604,6 +613,16 @@ async function saveLog() {
   if (logErr) { setSyncStatus('err','Error'); showErr('log-err','Save failed: '+logErr.message); setBusy('le-save-btn',false); return; }
   if (editId) { log = log.map(function(r){ return r.id===editId ? logData : r; }); }
   else        { log.unshift(logData); }
+  // Auto-add frequency if not already in DB
+  var freq = fmtFreq(document.getElementById('le-freq').value.trim());
+  if (freq) {
+    var freqExists = freqs.find(function(f){ return f.freq === freq; });
+    if (!freqExists) {
+      var frPayload = { freq: freq, descr: '' , cat: 'Other', usr: '' , loc: '' , notes: '' };
+      var frRes = await sb.from('frequencies').insert(frPayload).select().single();
+      if (!frRes.error) { freqs.push(frRes.data); freqs.sort(function(a,b){ return parseFloat(a.freq)-parseFloat(b.freq); }); }
+    }
+  }
   // Auto-add aircraft if not already in DB
   if (cs) {
     var exists = aircraft.find(function(a){ return a.cs === cs; });
@@ -691,7 +710,7 @@ async function delFreq(id) {
 async function saveFreq() {
   var editId = document.getElementById('fm-edit-id').value;
   var payload = {
-    freq:  document.getElementById('fm-freq').value.trim(),
+    freq: fmtFreq(document.getElementById('fm-freq').value.trim()),
     descr: document.getElementById('fm-desc').value.trim(),
     cat:   document.getElementById('fm-cat').value,
     usr:   document.getElementById('fm-user').value.trim(),
@@ -754,6 +773,19 @@ function pickFreq(f) { document.getElementById('le-freq').value = f; freqLookup(
 // ── Modal click-outside close ─────────────────────────────────────────────────
 document.querySelectorAll('.modal-bg').forEach(function(m){
   m.addEventListener('click', function(e){ if (e.target === m) m.classList.remove('open'); });
+});
+
+
+// ── Kebab menu ────────────────────────────────────────────────────────────────
+function toggleKebab(e, id) {
+  e.stopPropagation();
+  var menu = document.getElementById(id);
+  var wasOpen = menu.classList.contains('open');
+  document.querySelectorAll('.kebab-menu').forEach(function(m){ m.classList.remove('open'); });
+  if (!wasOpen) menu.classList.add('open');
+}
+document.addEventListener('click', function(){
+  document.querySelectorAll('.kebab-menu').forEach(function(m){ m.classList.remove('open'); });
 });
 
 // ── Boot ──────────────────────────────────────────────────────────────────────
