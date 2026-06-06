@@ -342,7 +342,16 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
         <div style="margin-top:10px"><a href="#" onclick="showAllTypesHeard();return false;" style="font-size:12px;color:var(--green);text-decoration:none">Show all aircraft types →</a></div>
       </div>
     </div>
-    <div class="card"><div style="font-size:13px;font-weight:500;margin-bottom:12px">Recent contacts (last 20)</div><div id="stat-recent"></div></div>
+    <div class="card">
+      <div style="font-size:13px;font-weight:500;margin-bottom:12px">Recent contacts (last 20)</div>
+      <div class="table-wrap"><table>
+        <thead><tr>
+          <th>Date / Time</th><th>Frequency</th><th>Callsign</th><th>Serial</th><th>Type</th>
+        </tr></thead>
+        <tbody id="stat-recent"></tbody>
+      </table></div>
+      <div style="margin-top:10px"><a href="#" onclick="showSection('log',document.querySelector('.nav button'));window.scrollTo(0,0);return false;" style="font-size:12px;color:var(--green);text-decoration:none">Go to full log →</a></div>
+    </div>
   </div>
 
   <!-- STAT DETAIL: All frequencies heard -->
@@ -834,14 +843,14 @@ function renderStats() {
 
   var recent = log.slice().sort(function(a,b){ return new Date(b.dt||b.created_at)-new Date(a.dt||a.created_at); }).slice(0,20);
   document.getElementById('stat-recent').innerHTML = recent.length ? recent.map(function(r){
-    return '<div style="display:flex;gap:12px;align-items:center;padding:7px 0;border-bottom:0.5px solid var(--border);flex-wrap:wrap">'
-      + '<span style="font-size:11px;font-family:var(--mono);color:var(--text2);white-space:nowrap">'+fmt(r.dt)+'</span>'
-      + '<span class="freq-tag">'+esc(r.freq)+'</span>'
-      + '<span class="callsign-tag">'+esc(r.callsign)+'</span>'
-      + (r.type ? '<span class="type-badge">'+esc(r.type)+'</span>' : '')
-      + (r.serial ? '<span class="serial-tag">'+esc(r.serial)+'</span>' : '')
-      + '</div>';
-  }).join('') : '<div style="color:var(--text2);font-size:13px">No entries yet</div>';
+    return '<tr>'
+      + '<td style="font-family:var(--mono);font-size:11px;white-space:nowrap">'+fmt(r.dt)+'</td>'
+      + '<td style="white-space:nowrap"><span class="freq-tag">'+esc(r.freq)+' MHz</span></td>'
+      + '<td><span class="callsign-tag">'+esc(r.callsign)+'</span></td>'
+      + '<td><span class="serial-tag">'+esc(r.serial)+'</span></td>'
+      + '<td>'+(r.type ? '<span class="type-badge">'+esc(r.type)+'</span>' : '')+'</td>'
+      + '</tr>';
+  }).join('') : '<tr><td colspan="5" style="padding:20px;text-align:center;color:var(--text2);font-size:13px">No entries yet</td></tr>';
 }
 
 function showAllFreqsHeard() {
