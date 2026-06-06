@@ -65,8 +65,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--green);box-shadow:0 0 0 2px rgba(26,107,60,0.15)}
 .field textarea{resize:vertical;min-height:60px}
 .field input[type=datetime-local]{font-family:var(--mono);font-size:12px}
-.table-wrap{overflow-x:auto;border:0.5px solid var(--border);border-radius:var(--radius-lg)}
-table{width:100%;border-collapse:collapse;font-size:13px}
+.table-wrap{border:0.5px solid var(--border);border-radius:var(--radius-lg);overflow:visible}
+table{width:100%;border-collapse:collapse;font-size:13px;border-radius:var(--radius-lg)}
 th{background:var(--bg2);padding:10px 12px;text-align:left;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.05em;color:var(--text2);border-bottom:0.5px solid var(--border);white-space:nowrap}
 td{padding:10px 12px;border-bottom:0.5px solid var(--border);color:var(--text);vertical-align:middle;position:relative}
 tr:last-child td{border-bottom:none}
@@ -118,13 +118,18 @@ tr:hover td{background:var(--bg2)}
 .kebab-btn{background:none;border:none;cursor:pointer;padding:4px 8px;border-radius:6px;color:var(--text2);font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center}
 .kebab-btn:hover{background:var(--bg2);color:var(--text)}
 .kebab-wrap{position:relative;display:inline-block}
-.kebab-menu{position:absolute;right:0;top:calc(100% + 4px);background:var(--bg);border:0.5px solid var(--border2);border-radius:var(--radius);min-width:120px;z-index:50;overflow:hidden;display:none}
+.kebab-menu{position:fixed;background:var(--bg);border:0.5px solid var(--border2);border-radius:var(--radius);min-width:120px;z-index:1000;display:none}
 .kebab-menu.open{display:block}
 .kebab-item{display:flex;align-items:center;gap:8px;padding:8px 12px;font-size:13px;cursor:pointer;color:var(--text);white-space:nowrap;border:none;background:none;width:100%;text-align:left;font-family:inherit}
 .kebab-item:hover{background:var(--bg2)}
 .kebab-item.danger{color:var(--danger-text)}
 .kebab-item.danger:hover{background:#fff5f5}
 .kebab-item svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+
+thead tr:first-child th:first-child{border-top-left-radius:var(--radius-lg)}
+thead tr:first-child th:last-child{border-top-right-radius:var(--radius-lg)}
+tbody tr:last-child td:first-child{border-bottom-left-radius:var(--radius-lg)}
+tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
 </style>
 </head>
 <body>
@@ -782,7 +787,19 @@ function toggleKebab(e, id) {
   var menu = document.getElementById(id);
   var wasOpen = menu.classList.contains('open');
   document.querySelectorAll('.kebab-menu').forEach(function(m){ m.classList.remove('open'); });
-  if (!wasOpen) menu.classList.add('open');
+  if (!wasOpen) {
+    var rect = e.currentTarget.getBoundingClientRect();
+    var menuH = 80;
+    var spaceBelow = window.innerHeight - rect.bottom;
+    menu.style.right = 'auto';
+    menu.style.left = (rect.right - 120) + 'px';
+    if (spaceBelow < menuH + 8) {
+      menu.style.top = (rect.top - menuH - 4) + 'px';
+    } else {
+      menu.style.top = (rect.bottom + 4) + 'px';
+    }
+    menu.classList.add('open');
+  }
 }
 document.addEventListener('click', function(){
   document.querySelectorAll('.kebab-menu').forEach(function(m){ m.classList.remove('open'); });
