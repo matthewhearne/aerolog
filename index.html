@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AeroLog — Aviation Radio Logger</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#1a6b3c;--green-light:#e8f5ee;--green-mid:#4caf50;
+  --amber:#bf7a0b;--amber-light:#fff8e6;
+  --mono:'Courier New',monospace;
+  --bg:#ffffff;--bg2:#f5f5f3;--bg3:#eeede9;
+  --text:#1a1a1a;--text2:#666;--text3:#999;
+  --border:rgba(0,0,0,0.12);--border2:rgba(0,0,0,0.22);
+  --radius:8px;--radius-lg:12px;
+  --info-bg:#e8f0fb;--info-text:#1a4fa0;
+  --danger-text:#c0392b;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#1e1e1e;--bg2:#272727;--bg3:#303030;
+    --text:#e8e8e8;--text2:#aaa;--text3:#666;
+    --border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.2);
+    --green-light:#0d2e1a;--green:#4caf50;--green-mid:#4caf50;
+    --amber-light:#2a1f00;--amber:#e6a020;
+    --info-bg:#0d1f3c;--info-text:#7aadee;
+  }
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg3);color:var(--text);font-size:14px;min-height:100vh}
+.app{max-width:1100px;margin:0 auto;background:var(--bg);min-height:100vh;display:flex;flex-direction:column}
+.topbar{background:var(--bg2);border-bottom:0.5px solid var(--border);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+.logo{display:flex;align-items:center;gap:10px;font-weight:600;font-size:16px}
+.logo svg{width:22px;height:22px;stroke:var(--green-mid);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ver{font-size:11px;background:var(--green-light);color:var(--green);padding:3px 8px;border-radius:4px;font-weight:500;font-family:var(--mono)}
+.sync-status{font-size:11px;display:flex;align-items:center;gap:5px;color:var(--text2)}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--text3);flex-shrink:0;transition:background 0.3s}
+.sync-dot.ok{background:var(--green-mid)}
+.sync-dot.err{background:#e74c3c}
+.sync-dot.loading{background:#f39c12;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.nav{display:flex;gap:2px}
+.nav button{background:none;border:none;padding:8px 14px;font-size:13px;cursor:pointer;border-radius:6px;color:var(--text2);display:flex;align-items:center;gap:6px;font-family:inherit}
+.nav button svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nav button.active{background:var(--bg);color:var(--text);border:0.5px solid var(--border);font-weight:500}
+.nav button:hover:not(.active){background:var(--bg3)}
+.main{padding:20px;flex:1}
+.section{display:none}.section.active{display:block}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.section-title{font-size:16px;font-weight:500}
+.btn{padding:8px 14px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg);font-size:13px;cursor:pointer;color:var(--text);display:inline-flex;align-items:center;gap:6px;font-family:inherit}
+.btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.btn:hover{background:var(--bg2)}
+.btn:disabled{opacity:0.5;cursor:not-allowed}
+.btn-primary{background:var(--green);color:#fff;border-color:var(--green)}
+.btn-primary:hover{background:#155a32;border-color:#155a32}
+.btn-danger{color:var(--danger-text);border-color:var(--danger-text)}
+.btn-danger:hover{background:#fff5f5}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-grid.three{grid-template-columns:1fr 1fr 1fr}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:11px;color:var(--text2);font-weight:500;text-transform:uppercase;letter-spacing:0.05em}
+.field input,.field select,.field textarea{width:100%;padding:8px 10px;border:0.5px solid var(--border2);border-radius:var(--radius);background:var(--bg);color:var(--text);font-size:13px;font-family:inherit;outline:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--green);box-shadow:0 0 0 2px rgba(26,107,60,0.15)}
+.field textarea{resize:vertical;min-height:60px}
+.field input[type=datetime-local]{font-family:var(--mono);font-size:12px}
+.table-wrap{overflow-x:auto;border:0.5px solid var(--border);border-radius:var(--radius-lg)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--bg2);padding:10px 12px;text-align:left;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.05em;color:var(--text2);border-bottom:0.5px solid var(--border);white-space:nowrap}
+td{padding:10px 12px;border-bottom:0.5px solid var(--border);color:var(--text);vertical-align:middle;position:relative}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--bg2)}
+.freq-tag{font-family:var(--mono);font-size:12px;background:var(--green-light);color:var(--green);padding:3px 8px;border-radius:4px;font-weight:500;white-space:nowrap;display:inline-block}
+.callsign-tag{font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:0.05em;white-space:nowrap}
+.serial-tag{font-family:var(--mono);font-size:11px;color:var(--text2)}
+.type-badge{font-size:11px;background:var(--amber-light);color:var(--amber);padding:3px 8px;border-radius:4px;font-weight:500;white-space:nowrap;display:inline-block}
+.user-chip{font-size:11px;background:var(--bg2);border:0.5px solid var(--border2);padding:3px 8px;border-radius:12px;color:var(--text2);white-space:nowrap;display:inline-block}
+.notes-cell{width:36px;cursor:default;position:relative}
+.notes-icon{color:var(--text3);display:flex;align-items:center;justify-content:center}
+.notes-icon svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tooltip{position:absolute;z-index:999;background:var(--bg);border:0.5px solid var(--border2);border-radius:var(--radius);padding:8px 12px;font-size:12px;color:var(--text);max-width:280px;box-shadow:0 4px 12px rgba(0,0,0,0.15);white-space:normal;line-height:1.5;pointer-events:none;display:none;top:100%;left:0;min-width:120px}
+.notes-cell:hover .tooltip{display:block}
+.empty{text-align:center;padding:40px 20px;color:var(--text2);font-size:13px}
+.empty svg{width:36px;height:36px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;display:block;margin:0 auto 8px;opacity:0.35}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.stat-card{background:var(--bg2);border-radius:var(--radius);padding:14px;text-align:center}
+.stat-val{font-size:22px;font-weight:500;font-family:var(--mono);color:var(--text)}
+.stat-lbl{font-size:11px;color:var(--text2);margin-top:3px;text-transform:uppercase;letter-spacing:0.05em}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:var(--bg);border-radius:var(--radius-lg);border:0.5px solid var(--border);padding:20px;width:500px;max-width:95vw;max-height:88vh;overflow-y:auto}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.modal-title{font-size:15px;font-weight:500}
+.alert{padding:10px 14px;border-radius:var(--radius);font-size:13px;margin-bottom:14px;display:none}
+.alert.show{display:block}
+.alert-success{background:var(--green-light);color:var(--green);border:0.5px solid #a8d5b8}
+.alert-error{background:#fdf0f0;color:#c0392b;border:0.5px solid #f5c6c6}
+.search-bar{position:relative;margin-bottom:16px}
+.search-bar input{width:100%;padding:8px 10px 8px 34px;border:0.5px solid var(--border2);border-radius:var(--radius);background:var(--bg);color:var(--text);font-size:13px;font-family:inherit;outline:none}
+.search-bar input:focus{border-color:var(--green)}
+.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--text2);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.pill-filter{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.pill{padding:5px 12px;border-radius:12px;font-size:12px;border:0.5px solid var(--border2);background:var(--bg);cursor:pointer;color:var(--text2);font-family:inherit}
+.pill.active{background:var(--green);color:#fff;border-color:var(--green)}
+.freq-lookup{display:flex;gap:8px;align-items:flex-end;margin-bottom:14px}
+.freq-lookup .field{flex:1}
+.hint{font-size:12px;color:var(--green);min-height:16px;margin-top:-8px;margin-bottom:10px}
+.card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:16px;margin-bottom:12px}
+.info-banner{background:var(--info-bg);color:var(--info-text);border-radius:var(--radius);padding:9px 13px;font-size:12px;margin-bottom:12px;display:none}
+.info-banner.show{display:block}
+.loading-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:200;align-items:center;justify-content:center}
+.loading-overlay.show{display:flex}
+.loading-box{background:var(--bg);border-radius:var(--radius-lg);padding:24px 32px;font-size:14px;color:var(--text2);display:flex;align-items:center;gap:12px}
+.spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loading-overlay">
+  <div class="loading-box"><div class="spinner"></div>Loading data…</div>
+</div>
+
+<div class="app">
+<div class="topbar">
+  <div class="logo">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+    AeroLog
+    <span class="ver">v2.0</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:16px">
+    <div class="sync-status">
+      <div class="sync-dot" id="sync-dot"></div>
+      <span id="sync-label">Connecting…</span>
+    </div>
+    <div class="nav">
+      <button class="active" onclick="showSection('log',this)">
+        <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="M9 12h6M9 16h4"/></svg>
+        Log
+      </button>
+      <button onclick="showSection('aircraft',this)">
+        <svg viewBox="0 0 24 24"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21 4 19 4c-2 0-4 2-4 2l-8.2 1.8L3 9l4 2 2 4 2-1 1 3 3-2z"/></svg>
+        Aircraft
+      </button>
+      <button onclick="showSection('freqs',this)">
+        <svg viewBox="0 0 24 24"><path d="M2 12h4M18 12h4M6 12a6 6 0 0 0 12 0M6 12a6 6 0 0 1 12 0M12 6V2M12 22v-4"/></svg>
+        Frequencies
+      </button>
+      <button onclick="showSection('stats',this)">
+        <svg viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="9"/><rect x="9.5" y="7" width="4" height="14"/><rect x="16" y="3" width="4" height="18"/></svg>
+        Stats
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- LOG -->
+  <div id="s-log" class="section active">
+    <div class="alert alert-success" id="log-alert">Entry saved.</div>
+    <div class="alert alert-error" id="log-err"></div>
+    <div class="section-header">
+      <div class="section-title">Contact log</div>
+      <button class="btn btn-primary" onclick="openLogModal()">
+        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg> New entry
+      </button>
+    </div>
+    <div class="search-bar">
+      <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" placeholder="Search callsign, frequency, serial, type…" id="log-search" oninput="renderLog()">
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>Date / Time</th><th>Frequency</th><th>Callsign</th><th>Serial</th><th>Type</th><th>Signal</th>
+          <th style="width:36px"></th><th style="width:90px"></th>
+        </tr></thead>
+        <tbody id="log-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- AIRCRAFT -->
+  <div id="s-aircraft" class="section">
+    <div class="alert alert-success" id="ac-alert">Aircraft saved.</div>
+    <div class="alert alert-error" id="ac-err"></div>
+    <div class="section-header">
+      <div class="section-title">Aircraft database</div>
+      <button class="btn btn-primary" onclick="openAcModal()">
+        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg> Add aircraft
+      </button>
+    </div>
+    <div class="search-bar">
+      <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" placeholder="Search callsign, serial, type, operator…" id="ac-search" oninput="renderAircraft()">
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>Callsign</th><th>Serial</th><th>Type / Model</th><th>Operator</th><th>Country</th>
+          <th style="width:36px"></th><th style="width:90px"></th>
+        </tr></thead>
+        <tbody id="ac-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- FREQUENCIES -->
+  <div id="s-freqs" class="section">
+    <div class="alert alert-success" id="freq-alert">Frequency saved.</div>
+    <div class="alert alert-error" id="freq-err"></div>
+    <div class="section-header">
+      <div class="section-title">Frequency database</div>
+      <button class="btn btn-primary" onclick="openFreqModal()">
+        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg> Add frequency
+      </button>
+    </div>
+    <div class="search-bar">
+      <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" placeholder="Search MHz, description, user, category…" id="freq-search" oninput="renderFreqs()">
+    </div>
+    <div class="pill-filter" id="cat-filter"></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>Frequency (MHz)</th><th>Description</th><th>Category</th><th>User / Owner</th><th>Location</th>
+          <th style="width:36px"></th><th style="width:90px"></th>
+        </tr></thead>
+        <tbody id="freq-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div id="s-stats" class="section">
+    <div class="section-header"><div class="section-title">Statistics</div></div>
+    <div class="stats" id="stats-grid"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div class="card"><div style="font-size:13px;font-weight:500;margin-bottom:12px">Top frequencies heard</div><div id="stat-freqs"></div></div>
+      <div class="card"><div style="font-size:13px;font-weight:500;margin-bottom:12px">Top aircraft types</div><div id="stat-types"></div></div>
+    </div>
+    <div class="card" style="margin-top:16px"><div style="font-size:13px;font-weight:500;margin-bottom:12px">Recent contacts</div><div id="stat-recent"></div></div>
+  </div>
+
+</div>
+</div>
+
+<!-- LOG MODAL -->
+<div class="modal-bg" id="log-modal">
+<div class="modal">
+  <div class="modal-header">
+    <div class="modal-title" id="log-modal-title">New log entry</div>
+    <button class="btn" onclick="closeModal('log-modal')">&times;</button>
+  </div>
+  <div class="field" style="margin-bottom:12px"><label>Date &amp; Time</label><input type="datetime-local" id="le-dt"></div>
+  <div class="freq-lookup">
+    <div class="field"><label>Frequency (MHz)</label><input type="text" id="le-freq" placeholder="e.g. 123.450" oninput="freqLookup()"></div>
+    <button class="btn" onclick="freqPickerOpen()" style="white-space:nowrap">
+      <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      Browse
+    </button>
+  </div>
+  <div class="hint" id="freq-match"></div>
+  <div class="form-grid three" style="margin-bottom:12px">
+    <div class="field"><label>Callsign</label><input type="text" id="le-cs" placeholder="e.g. RRR1234" style="font-family:var(--mono);text-transform:uppercase" oninput="this.value=this.value.toUpperCase();acLookup()"></div>
+    <div class="field"><label>Serial / Hex</label><input type="text" id="le-serial" placeholder="e.g. ZZ123" style="font-family:var(--mono);text-transform:uppercase" oninput="this.value=this.value.toUpperCase()"></div>
+    <div class="field"><label>Aircraft type</label><input type="text" id="le-type" placeholder="e.g. C-130J"></div>
+  </div>
+  <div class="info-banner" id="ac-match"></div>
+  <div class="field" style="margin-bottom:12px"><label>Operator</label><input type="text" id="le-op" placeholder="e.g. RAF, USAF"></div>
+  <div class="field" style="margin-bottom:12px"><label>Signal quality (1–5)</label>
+    <select id="le-sig">
+      <option value="">— select —</option>
+      <option>1 — barely readable</option><option>2 — readable with difficulty</option>
+      <option>3 — readable</option><option>4 — good</option><option>5 — perfect</option>
+    </select>
+  </div>
+  <div class="field" style="margin-bottom:16px"><label>Notes</label><textarea id="le-notes" placeholder="Any additional observations…"></textarea></div>
+  <input type="hidden" id="le-edit-id" value="">
+  <div style="display:flex;gap:8px;justify-content:flex-end">
+    <button class="btn" onclick="closeModal('log-modal')">Cancel</button>
+    <button class="btn btn-primary" id="le-save-btn" onclick="saveLog()">Save entry</button>
+  </div>
+</div>
+</div>
+
+<!-- FREQ PICKER MODAL -->
+<div class="modal-bg" id="freq-picker-modal">
+<div class="modal">
+  <div class="modal-header">
+    <div class="modal-title">Select frequency</div>
+    <button class="btn" onclick="closeModal('freq-picker-modal')">&times;</button>
+  </div>
+  <input type="text" placeholder="Filter frequencies…" id="fp-search" oninput="renderFreqPicker()"
+    style="width:100%;margin-bottom:12px;padding:8px 10px;border:0.5px solid var(--border2);border-radius:var(--radius);background:var(--bg);color:var(--text);font-size:13px;font-family:inherit;outline:none">
+  <div id="fp-list"></div>
+</div>
+</div>
+
+<!-- AIRCRAFT MODAL -->
+<div class="modal-bg" id="ac-modal">
+<div class="modal">
+  <div class="modal-header">
+    <div class="modal-title">Add / edit aircraft</div>
+    <button class="btn" onclick="closeModal('ac-modal')">&times;</button>
+  </div>
+  <div class="form-grid" style="margin-bottom:12px">
+    <div class="field"><label>Callsign</label><input type="text" id="ac-cs" placeholder="e.g. RRR1234" style="font-family:var(--mono);text-transform:uppercase" oninput="this.value=this.value.toUpperCase()"></div>
+    <div class="field"><label>Serial number</label><input type="text" id="ac-serial" placeholder="e.g. ZZ123" style="font-family:var(--mono);text-transform:uppercase" oninput="this.value=this.value.toUpperCase()"></div>
+  </div>
+  <div class="form-grid" style="margin-bottom:12px">
+    <div class="field"><label>Type / Model</label><input type="text" id="ac-type" placeholder="e.g. Boeing E-3D"></div>
+    <div class="field"><label>Operator</label><input type="text" id="ac-op" placeholder="e.g. RAF, USAF"></div>
+  </div>
+  <div class="form-grid" style="margin-bottom:12px">
+    <div class="field"><label>Country</label><input type="text" id="ac-country" placeholder="e.g. United Kingdom"></div>
+    <div class="field"><label>ICAO hex</label><input type="text" id="ac-hex" placeholder="e.g. 43C3A1" style="font-family:var(--mono);text-transform:uppercase" oninput="this.value=this.value.toUpperCase()"></div>
+  </div>
+  <div class="field" style="margin-bottom:16px"><label>Notes</label><textarea id="ac-notes" placeholder="Role, remarks, first heard…"></textarea></div>
+  <input type="hidden" id="ac-edit-id" value="">
+  <div style="display:flex;gap:8px;justify-content:flex-end">
+    <button class="btn" onclick="closeModal('ac-modal')">Cancel</button>
+    <button class="btn btn-primary" id="ac-save-btn" onclick="saveAircraft()">Save aircraft</button>
+  </div>
+</div>
+</div>
+
+<!-- FREQ MODAL -->
+<div class="modal-bg" id="freq-modal">
+<div class="modal">
+  <div class="modal-header">
+    <div class="modal-title">Add / edit frequency</div>
+    <button class="btn" onclick="closeModal('freq-modal')">&times;</button>
+  </div>
+  <div class="form-grid" style="margin-bottom:12px">
+    <div class="field"><label>Frequency (MHz)</label><input type="text" id="fm-freq" placeholder="e.g. 135.000" style="font-family:var(--mono)"></div>
+    <div class="field"><label>Category</label>
+      <select id="fm-cat">
+        <option>Military Air</option><option>Civil Air</option><option>Ground</option>
+        <option>ATIS</option><option>Approach</option><option>Departure</option>
+        <option>Tower</option><option>Area Control</option><option>Oceanic</option>
+        <option>SAR</option><option>Special Ops</option><option>Emergency</option><option>Other</option>
+      </select>
+    </div>
+  </div>
+  <div class="field" style="margin-bottom:12px"><label>Description</label><input type="text" id="fm-desc" placeholder="e.g. London Military, Swanwick Mil"></div>
+  <div class="form-grid" style="margin-bottom:12px">
+    <div class="field"><label>User / Owner</label><input type="text" id="fm-user" placeholder="e.g. RAF LATCC, NATS"></div>
+    <div class="field"><label>Location / Area</label><input type="text" id="fm-loc" placeholder="e.g. UK, North Sea"></div>
+  </div>
+  <div class="field" style="margin-bottom:16px"><label>Notes</label><textarea id="fm-notes" placeholder="Hours of operation, remarks…"></textarea></div>
+  <input type="hidden" id="fm-edit-id" value="">
+  <div style="display:flex;gap:8px;justify-content:flex-end">
+    <button class="btn" onclick="closeModal('freq-modal')">Cancel</button>
+    <button class="btn btn-primary" id="fm-save-btn" onclick="saveFreq()">Save frequency</button>
+  </div>
+</div>
+</div>
+
+<script>
+// ── Supabase init ─────────────────────────────────────────────────────────────
+const SUPA_URL = 'https://lnuhazkmokijsvpkarwk.supabase.co';
+const SUPA_KEY = 'sb_publishable_GY3FMtHoQXsj-WAvqZoWog_Dr6wxBRJ';
+const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
+
+// ── In-memory cache ───────────────────────────────────────────────────────────
+var log = [], aircraft = [], freqs = [], catFilter = 'All';
+
+// ── Sync status UI ────────────────────────────────────────────────────────────
+function setSyncStatus(state, label) {
+  var dot = document.getElementById('sync-dot');
+  var lbl = document.getElementById('sync-label');
+  dot.className = 'sync-dot ' + (state || '');
+  lbl.textContent = label;
+}
+
+// ── Seed default frequencies if table is empty ────────────────────────────────
+async function seedFreqsIfEmpty() {
+  var { count } = await sb.from('frequencies').select('*', { count: 'exact', head: true });
+  if (count > 0) return;
+  var defaults = [
+    { freq: '121.500', descr: 'International distress',    cat: 'Emergency',     usr: 'ICAO',     loc: 'Worldwide',       notes: 'Guard frequency — always monitored' },
+    { freq: '243.000', descr: 'Military distress (UHF)',   cat: 'Emergency',     usr: 'NATO',     loc: 'Worldwide',       notes: '' },
+    { freq: '135.275', descr: 'London Military',           cat: 'Military Air',  usr: 'RAF LATCC',loc: 'UK',              notes: '' },
+    { freq: '134.300', descr: 'London Control (Sector 9)', cat: 'Area Control',  usr: 'NATS',     loc: 'UK',              notes: '' },
+    { freq: '119.775', descr: 'Heathrow Tower',            cat: 'Tower',         usr: 'NATS',     loc: 'London Heathrow', notes: '' },
+  ];
+  await sb.from('frequencies').insert(defaults);
+}
+
+// ── Load all data ─────────────────────────────────────────────────────────────
+async function loadAll() {
+  setSyncStatus('loading', 'Loading…');
+  document.getElementById('loading-overlay').classList.add('show');
+  try {
+    var [rLog, rAc, rFr] = await Promise.all([
+      sb.from('log_entries').select('*').order('created_at', { ascending: false }),
+      sb.from('aircraft').select('*').order('created_at', { ascending: false }),
+      sb.from('frequencies').select('*').order('freq', { ascending: true }),
+    ]);
+    if (rLog.error) throw rLog.error;
+    if (rAc.error)  throw rAc.error;
+    if (rFr.error)  throw rFr.error;
+    log      = rLog.data || [];
+    aircraft = rAc.data  || [];
+    freqs    = rFr.data  || [];
+    if (!freqs.length) { await seedFreqsIfEmpty(); var r2 = await sb.from('frequencies').select('*').order('freq'); freqs = r2.data || []; }
+    setSyncStatus('ok', 'Synced');
+    renderLog(); renderAircraft(); renderFreqs();
+  } catch(e) {
+    setSyncStatus('err', 'Connection error');
+    console.error(e);
+  }
+  document.getElementById('loading-overlay').classList.remove('show');
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function fmt(dt) {
+  if (!dt) return '—';
+  var d = new Date(dt);
+  return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'}) + ' ' +
+         d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+}
+function noteCell(notes) {
+  if (!notes || !notes.trim()) return '<td></td>';
+  return '<td class="notes-cell"><div class="notes-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div class="tooltip">' + esc(notes) + '</div></td>';
+}
+function setBusy(btnId, busy) {
+  var b = document.getElementById(btnId);
+  if (b) b.disabled = busy;
+}
+function showSection(id, btn) {
+  document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
+  document.querySelectorAll('.nav button').forEach(function(b) { b.classList.remove('active'); });
+  document.getElementById('s-' + id).classList.add('active');
+  btn.classList.add('active');
+  if (id === 'stats') renderStats();
+}
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function showAlert(id, duration) { var el = document.getElementById(id); el.classList.add('show'); setTimeout(function(){ el.classList.remove('show'); }, duration || 2500); }
+function showErr(id, msg) { var el = document.getElementById(id); el.textContent = msg; el.classList.add('show'); setTimeout(function(){ el.classList.remove('show'); }, 4000); }
+
+// ── Render: Log ───────────────────────────────────────────────────────────────
+function renderLog() {
+  var q = (document.getElementById('log-search').value || '').toLowerCase();
+  var rows = log.filter(function(r){ return !q || (r.freq+r.callsign+r.serial+r.type+r.notes).toLowerCase().includes(q); });
+  var tb = document.getElementById('log-tbody');
+  if (!rows.length) {
+    tb.innerHTML = '<tr><td colspan="8"><div class="empty"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49"/></svg>No entries yet. Start logging!</div></td></tr>';
+    return;
+  }
+  tb.innerHTML = rows.map(function(r) {
+    return '<tr>'
+      + '<td style="font-family:var(--mono);font-size:11px;white-space:nowrap">' + fmt(r.dt) + '</td>'
+      + '<td style="white-space:nowrap"><span class="freq-tag">' + esc(r.freq) + ' MHz</span></td>'
+      + '<td><span class="callsign-tag">' + esc(r.callsign) + '</span></td>'
+      + '<td><span class="serial-tag">' + esc(r.serial) + '</span></td>'
+      + '<td>' + (r.type ? '<span class="type-badge">' + esc(r.type) + '</span>' : '') + '</td>'
+      + '<td style="font-family:var(--mono);font-size:13px;text-align:center">' + esc((r.sig||'').charAt(0)) + '</td>'
+      + noteCell(r.notes)
+      + '<td><div style="display:flex;gap:6px">'
+      + '<button class="btn" title="Edit" onclick="editLog(\'' + r.id + '\')">✏</button>'
+      + '<button class="btn btn-danger" title="Delete" onclick="delLog(\'' + r.id + '\')">✕</button>'
+      + '</div></td></tr>';
+  }).join('');
+}
+
+// ── Render: Aircraft ──────────────────────────────────────────────────────────
+function renderAircraft() {
+  var q = (document.getElementById('ac-search').value || '').toLowerCase();
+  var rows = aircraft.filter(function(r){ return !q || (r.cs+r.serial+r.type+r.op+r.country+r.hex).toLowerCase().includes(q); });
+  var tb = document.getElementById('ac-tbody');
+  if (!rows.length) {
+    tb.innerHTML = '<tr><td colspan="7"><div class="empty"><svg viewBox="0 0 24 24"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21 4 19 4c-2 0-4 2-4 2l-8.2 1.8L3 9l4 2 2 4 2-1 1 3 3-2z"/></svg>No aircraft added yet.</div></td></tr>';
+    return;
+  }
+  tb.innerHTML = rows.map(function(r) {
+    return '<tr>'
+      + '<td><span class="callsign-tag">' + esc(r.cs) + '</span></td>'
+      + '<td><span class="serial-tag">' + esc(r.serial) + '</span>' + (r.hex ? '<br><span style="font-size:10px;font-family:var(--mono);color:var(--text2)">' + esc(r.hex) + '</span>' : '') + '</td>'
+      + '<td>' + (r.type ? '<span class="type-badge">' + esc(r.type) + '</span>' : '') + '</td>'
+      + '<td>' + esc(r.op) + '</td>'
+      + '<td>' + esc(r.country) + '</td>'
+      + noteCell(r.notes)
+      + '<td><div style="display:flex;gap:6px">'
+      + '<button class="btn" onclick="editAircraft(\'' + r.id + '\')">✏</button>'
+      + '<button class="btn btn-danger" onclick="delAircraft(\'' + r.id + '\')">✕</button>'
+      + '</div></td></tr>';
+  }).join('');
+}
+
+// ── Render: Frequencies ───────────────────────────────────────────────────────
+function renderFreqs() {
+  var q = (document.getElementById('freq-search').value || '').toLowerCase();
+  var cats = ['All'].concat([...new Set(freqs.map(function(f){ return f.cat; }))].sort());
+  document.getElementById('cat-filter').innerHTML = cats.map(function(c){
+    return '<button class="pill' + (catFilter === c ? ' active' : '') + '" onclick="setCat(\'' + c.replace(/'/g,"\\'") + '\')">' + esc(c) + '</button>';
+  }).join('');
+  var rows = freqs.filter(function(r){
+    return (catFilter === 'All' || r.cat === catFilter) && (!q || (r.freq+r.descr+r.cat+r.usr+r.loc+r.notes).toLowerCase().includes(q));
+  }).sort(function(a,b){ return parseFloat(a.freq) - parseFloat(b.freq); });
+  var tb = document.getElementById('freq-tbody');
+  if (!rows.length) {
+    tb.innerHTML = '<tr><td colspan="7"><div class="empty"><svg viewBox="0 0 24 24"><path d="M2 12h4M18 12h4M6 12a6 6 0 0 0 12 0M6 12a6 6 0 0 1 12 0"/></svg>No frequencies found.</div></td></tr>';
+    return;
+  }
+  tb.innerHTML = rows.map(function(r) {
+    return '<tr>'
+      + '<td style="white-space:nowrap"><span class="freq-tag">' + esc(r.freq) + ' MHz</span></td>'
+      + '<td>' + esc(r.descr) + '</td>'
+      + '<td>' + (r.cat ? '<span class="type-badge">' + esc(r.cat) + '</span>' : '') + '</td>'
+      + '<td>' + (r.usr ? '<span class="user-chip">' + esc(r.usr) + '</span>' : '') + '</td>'
+      + '<td style="font-size:12px">' + esc(r.loc) + '</td>'
+      + noteCell(r.notes)
+      + '<td><div style="display:flex;gap:6px">'
+      + '<button class="btn" onclick="editFreq(\'' + r.id + '\')">✏</button>'
+      + '<button class="btn btn-danger" onclick="delFreq(\'' + r.id + '\')">✕</button>'
+      + '</div></td></tr>';
+  }).join('');
+}
+function setCat(c) { catFilter = c; renderFreqs(); }
+
+// ── Render: Stats ─────────────────────────────────────────────────────────────
+function renderStats() {
+  document.getElementById('stats-grid').innerHTML =
+    '<div class="stat-card"><div class="stat-val">' + log.length + '</div><div class="stat-lbl">Log entries</div></div>'
+    + '<div class="stat-card"><div class="stat-val">' + aircraft.length + '</div><div class="stat-lbl">Aircraft</div></div>'
+    + '<div class="stat-card"><div class="stat-val">' + freqs.length + '</div><div class="stat-lbl">Frequencies</div></div>'
+    + '<div class="stat-card"><div class="stat-val">' + ([...new Set(log.map(function(r){ return r.freq; }))]).size + '</div><div class="stat-lbl">Freqs heard</div></div>';
+  var fmap = {}; log.forEach(function(r){ if (r.freq) fmap[r.freq] = (fmap[r.freq]||0)+1; });
+  var sf = Object.entries(fmap).sort(function(a,b){ return b[1]-a[1]; }).slice(0,5);
+  document.getElementById('stat-freqs').innerHTML = sf.length ? sf.map(function(e){
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:0.5px solid var(--border)"><span class="freq-tag">'+esc(e[0])+' MHz</span><span style="font-family:var(--mono);font-weight:500">'+e[1]+'</span></div>';
+  }).join('') : '<div style="color:var(--text2);font-size:13px">No data yet</div>';
+  var tmap = {}; log.forEach(function(r){ if (r.type) tmap[r.type] = (tmap[r.type]||0)+1; });
+  var st = Object.entries(tmap).sort(function(a,b){ return b[1]-a[1]; }).slice(0,5);
+  document.getElementById('stat-types').innerHTML = st.length ? st.map(function(e){
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:0.5px solid var(--border)"><span class="type-badge">'+esc(e[0])+'</span><span style="font-family:var(--mono);font-weight:500">'+e[1]+'</span></div>';
+  }).join('') : '<div style="color:var(--text2);font-size:13px">No data yet</div>';
+  var recent = log.slice().sort(function(a,b){ return new Date(b.created_at)-new Date(a.created_at); }).slice(0,5);
+  document.getElementById('stat-recent').innerHTML = recent.length ? recent.map(function(r){
+    return '<div style="display:flex;gap:12px;align-items:center;padding:6px 0;border-bottom:0.5px solid var(--border)">'
+      + '<span style="font-size:11px;font-family:var(--mono);color:var(--text2);white-space:nowrap">'+fmt(r.dt)+'</span>'
+      + '<span class="freq-tag">'+esc(r.freq)+'</span>'
+      + '<span class="callsign-tag">'+esc(r.callsign)+'</span>'
+      + (r.type ? '<span class="type-badge">'+esc(r.type)+'</span>' : '')
+      + '</div>';
+  }).join('') : '<div style="color:var(--text2);font-size:13px">No entries yet</div>';
+}
+
+// ── Log CRUD ──────────────────────────────────────────────────────────────────
+function openLogModal(id) {
+  var r = id ? log.find(function(x){ return x.id === id; }) : null;
+  document.getElementById('log-modal-title').textContent = r ? 'Edit log entry' : 'New log entry';
+  document.getElementById('le-dt').value      = r ? (r.dt || '') : new Date().toISOString().slice(0,16);
+  document.getElementById('le-freq').value    = r ? (r.freq    || '') : '';
+  document.getElementById('le-cs').value      = r ? (r.callsign|| '') : '';
+  document.getElementById('le-serial').value  = r ? (r.serial  || '') : '';
+  document.getElementById('le-type').value    = r ? (r.type    || '') : '';
+  document.getElementById('le-op').value      = r ? (r.op      || '') : '';
+  document.getElementById('le-sig').value     = r ? (r.sig     || '') : '';
+  document.getElementById('le-notes').value   = r ? (r.notes   || '') : '';
+  document.getElementById('le-edit-id').value = r ? r.id : '';
+  document.getElementById('freq-match').textContent = '';
+  var am = document.getElementById('ac-match'); am.textContent=''; am.classList.remove('show');
+  openModal('log-modal');
+}
+function editLog(id) { openLogModal(id); }
+async function delLog(id) {
+  if (!confirm('Delete this log entry?')) return;
+  setSyncStatus('loading','Saving…');
+  var { error } = await sb.from('log_entries').delete().eq('id', id);
+  if (error) { setSyncStatus('err','Error'); showErr('log-err','Delete failed: '+error.message); return; }
+  log = log.filter(function(r){ return r.id !== id; });
+  setSyncStatus('ok','Synced'); renderLog();
+}
+async function saveLog() {
+  var editId = document.getElementById('le-edit-id').value;
+  var cs     = document.getElementById('le-cs').value.trim();
+  var serial = document.getElementById('le-serial').value.trim();
+  var type   = document.getElementById('le-type').value.trim();
+  var op     = document.getElementById('le-op').value.trim();
+  var payload = {
+    dt: document.getElementById('le-dt').value,
+    freq: document.getElementById('le-freq').value.trim(),
+    callsign: cs, serial: serial, type: type, op: op,
+    sig: document.getElementById('le-sig').value,
+    notes: document.getElementById('le-notes').value.trim()
+  };
+  if (!payload.freq && !payload.callsign) { alert('Please enter at least a frequency or callsign.'); return; }
+  setBusy('le-save-btn', true); setSyncStatus('loading','Saving…');
+  var logErr, logData;
+  if (editId) {
+    var res = await sb.from('log_entries').update(payload).eq('id', editId).select().single();
+    logErr = res.error; logData = res.data;
+  } else {
+    var res = await sb.from('log_entries').insert(payload).select().single();
+    logErr = res.error; logData = res.data;
+  }
+  if (logErr) { setSyncStatus('err','Error'); showErr('log-err','Save failed: '+logErr.message); setBusy('le-save-btn',false); return; }
+  if (editId) { log = log.map(function(r){ return r.id===editId ? logData : r; }); }
+  else        { log.unshift(logData); }
+  // Auto-add aircraft if not already in DB
+  if (cs) {
+    var exists = aircraft.find(function(a){ return a.cs === cs; });
+    if (!exists) {
+      var acPayload = { cs: cs, serial: serial, type: type, op: op, country: '', hex: '', notes: '' };
+      var acRes = await sb.from('aircraft').insert(acPayload).select().single();
+      if (!acRes.error) aircraft.unshift(acRes.data);
+    }
+  }
+  setBusy('le-save-btn',false); setSyncStatus('ok','Synced');
+  closeModal('log-modal'); renderLog(); showAlert('log-alert');
+}
+
+// ── Aircraft CRUD ─────────────────────────────────────────────────────────────
+function openAcModal(id) {
+  var r = id ? aircraft.find(function(x){ return x.id === id; }) : null;
+  document.getElementById('ac-cs').value      = r ? (r.cs      || '') : '';
+  document.getElementById('ac-serial').value  = r ? (r.serial  || '') : '';
+  document.getElementById('ac-type').value    = r ? (r.type    || '') : '';
+  document.getElementById('ac-op').value      = r ? (r.op      || '') : '';
+  document.getElementById('ac-country').value = r ? (r.country || '') : '';
+  document.getElementById('ac-hex').value     = r ? (r.hex     || '') : '';
+  document.getElementById('ac-notes').value   = r ? (r.notes   || '') : '';
+  document.getElementById('ac-edit-id').value = r ? r.id : '';
+  openModal('ac-modal');
+}
+function editAircraft(id) { openAcModal(id); }
+async function delAircraft(id) {
+  if (!confirm('Delete this aircraft?')) return;
+  setSyncStatus('loading','Saving…');
+  var { error } = await sb.from('aircraft').delete().eq('id', id);
+  if (error) { setSyncStatus('err','Error'); showErr('ac-err','Delete failed: '+error.message); return; }
+  aircraft = aircraft.filter(function(r){ return r.id !== id; });
+  setSyncStatus('ok','Synced'); renderAircraft();
+}
+async function saveAircraft() {
+  var editId = document.getElementById('ac-edit-id').value;
+  var payload = {
+    cs: document.getElementById('ac-cs').value.trim(),
+    serial: document.getElementById('ac-serial').value.trim(),
+    type: document.getElementById('ac-type').value.trim(),
+    op: document.getElementById('ac-op').value.trim(),
+    country: document.getElementById('ac-country').value.trim(),
+    hex: document.getElementById('ac-hex').value.trim(),
+    notes: document.getElementById('ac-notes').value.trim()
+  };
+  if (!payload.cs && !payload.serial) { alert('Enter at least a callsign or serial.'); return; }
+  setBusy('ac-save-btn', true); setSyncStatus('loading','Saving…');
+  var err, data;
+  if (editId) {
+    var res = await sb.from('aircraft').update(payload).eq('id', editId).select().single();
+    err = res.error; data = res.data;
+  } else {
+    var res = await sb.from('aircraft').insert(payload).select().single();
+    err = res.error; data = res.data;
+  }
+  if (err) { setSyncStatus('err','Error'); showErr('ac-err','Save failed: '+err.message); setBusy('ac-save-btn',false); return; }
+  if (editId) { aircraft = aircraft.map(function(r){ return r.id===editId ? data : r; }); }
+  else        { aircraft.unshift(data); }
+  setBusy('ac-save-btn',false); setSyncStatus('ok','Synced');
+  closeModal('ac-modal'); renderAircraft(); showAlert('ac-alert');
+}
+
+// ── Frequency CRUD ────────────────────────────────────────────────────────────
+function openFreqModal(id) {
+  var r = id ? freqs.find(function(x){ return x.id === id; }) : null;
+  document.getElementById('fm-freq').value    = r ? (r.freq  || '') : '';
+  document.getElementById('fm-desc').value    = r ? (r.descr || '') : '';
+  document.getElementById('fm-cat').value     = r ? (r.cat   || 'Military Air') : 'Military Air';
+  document.getElementById('fm-user').value    = r ? (r.usr   || '') : '';
+  document.getElementById('fm-loc').value     = r ? (r.loc   || '') : '';
+  document.getElementById('fm-notes').value   = r ? (r.notes || '') : '';
+  document.getElementById('fm-edit-id').value = r ? r.id : '';
+  openModal('freq-modal');
+}
+function editFreq(id) { openFreqModal(id); }
+async function delFreq(id) {
+  if (!confirm('Delete this frequency?')) return;
+  setSyncStatus('loading','Saving…');
+  var { error } = await sb.from('frequencies').delete().eq('id', id);
+  if (error) { setSyncStatus('err','Error'); showErr('freq-err','Delete failed: '+error.message); return; }
+  freqs = freqs.filter(function(r){ return r.id !== id; });
+  setSyncStatus('ok','Synced'); renderFreqs();
+}
+async function saveFreq() {
+  var editId = document.getElementById('fm-edit-id').value;
+  var payload = {
+    freq:  document.getElementById('fm-freq').value.trim(),
+    descr: document.getElementById('fm-desc').value.trim(),
+    cat:   document.getElementById('fm-cat').value,
+    usr:   document.getElementById('fm-user').value.trim(),
+    loc:   document.getElementById('fm-loc').value.trim(),
+    notes: document.getElementById('fm-notes').value.trim()
+  };
+  if (!payload.freq) { alert('Please enter a frequency.'); return; }
+  setBusy('fm-save-btn', true); setSyncStatus('loading','Saving…');
+  var err, data;
+  if (editId) {
+    var res = await sb.from('frequencies').update(payload).eq('id', editId).select().single();
+    err = res.error; data = res.data;
+  } else {
+    var res = await sb.from('frequencies').insert(payload).select().single();
+    err = res.error; data = res.data;
+  }
+  if (err) { setSyncStatus('err','Error'); showErr('freq-err','Save failed: '+err.message); setBusy('fm-save-btn',false); return; }
+  if (editId) { freqs = freqs.map(function(r){ return r.id===editId ? data : r; }); }
+  else        { freqs.push(data); freqs.sort(function(a,b){ return parseFloat(a.freq)-parseFloat(b.freq); }); }
+  setBusy('fm-save-btn',false); setSyncStatus('ok','Synced');
+  closeModal('freq-modal'); renderFreqs(); showAlert('freq-alert');
+}
+
+// ── Frequency lookup helpers ──────────────────────────────────────────────────
+function freqLookup() {
+  var v = document.getElementById('le-freq').value.trim();
+  var m = freqs.find(function(f){ return f.freq === v || f.freq.startsWith(v); });
+  document.getElementById('freq-match').textContent = m ? (m.descr + (m.usr ? ' — ' + m.usr : '')) : '';
+}
+function acLookup() {
+  var v = document.getElementById('le-cs').value.trim().toUpperCase();
+  var el = document.getElementById('ac-match');
+  if (!v) { el.textContent = ''; el.classList.remove('show'); return; }
+  var m = aircraft.find(function(a){ return a.cs === v; });
+  if (m) {
+    document.getElementById('le-serial').value = m.serial || document.getElementById('le-serial').value;
+    document.getElementById('le-type').value   = m.type   || document.getElementById('le-type').value;
+    document.getElementById('le-op').value     = m.op     || document.getElementById('le-op').value;
+    el.textContent = 'Found in aircraft DB: ' + [m.type, m.serial, m.op].filter(Boolean).join(' · ');
+  } else {
+    el.textContent = 'Not in aircraft DB — will be added on save';
+  }
+  el.classList.add('show');
+}
+function freqPickerOpen() { renderFreqPicker(); openModal('freq-picker-modal'); }
+function renderFreqPicker() {
+  var q = (document.getElementById('fp-search').value || '').toLowerCase();
+  var rows = freqs.filter(function(f){ return !q || (f.freq+f.descr+f.cat+f.usr).toLowerCase().includes(q); })
+                  .sort(function(a,b){ return parseFloat(a.freq)-parseFloat(b.freq); });
+  document.getElementById('fp-list').innerHTML = rows.length ? rows.map(function(r){
+    return '<div onclick="pickFreq(\'' + r.freq.replace(/'/g,"\\'") + '\')" style="padding:10px 12px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:12px;margin-bottom:4px;border:0.5px solid var(--border)" onmouseover="this.style.background=\'var(--bg2)\'" onmouseout="this.style.background=\'\'">'
+      + '<span class="freq-tag">' + esc(r.freq) + ' MHz</span>'
+      + '<span style="font-size:13px">' + esc(r.descr) + '</span>'
+      + (r.usr ? '<span class="user-chip" style="margin-left:auto">' + esc(r.usr) + '</span>' : '')
+      + '</div>';
+  }).join('') : '<div class="empty" style="padding:20px">No frequencies match</div>';
+}
+function pickFreq(f) { document.getElementById('le-freq').value = f; freqLookup(); closeModal('freq-picker-modal'); }
+
+// ── Modal click-outside close ─────────────────────────────────────────────────
+document.querySelectorAll('.modal-bg').forEach(function(m){
+  m.addEventListener('click', function(e){ if (e.target === m) m.classList.remove('open'); });
+});
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+loadAll();
+</script>
+</body>
+</html>
