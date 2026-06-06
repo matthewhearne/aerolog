@@ -83,7 +83,7 @@ tr:hover td{background:var(--bg2)}
 .notes-text{font-size:12px;color:var(--text2);line-height:1.5}
 .empty{text-align:center;padding:40px 20px;color:var(--text2);font-size:13px}
 .empty svg{width:36px;height:36px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;display:block;margin:0 auto 8px;opacity:0.35}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
 .stat-card{background:var(--bg2);border-radius:var(--radius);padding:14px;text-align:center}
 .stat-val{font-size:22px;font-weight:500;font-family:var(--mono);color:var(--text)}
 .stat-lbl{font-size:11px;color:var(--text2);margin-top:3px;text-transform:uppercase;letter-spacing:0.05em}
@@ -146,6 +146,19 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
 .import-card-title{font-size:14px;font-weight:500;margin-bottom:4px}
 .import-card-desc{font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.5}
 .import-progress{font-size:12px;color:var(--text2);margin-top:8px;min-height:16px}
+
+.pagination{display:flex;align-items:center;gap:6px;margin-top:12px;flex-wrap:wrap}
+.pagination .pg-info{font-size:12px;color:var(--text2);margin-right:4px}
+.pg-btn{padding:5px 10px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg);font-size:12px;cursor:pointer;color:var(--text);font-family:inherit;min-width:32px;text-align:center}
+.pg-btn:hover:not(:disabled){background:var(--bg2)}
+.pg-btn:disabled{opacity:0.35;cursor:not-allowed}
+.pg-btn.active{background:var(--green);color:#fff;border-color:var(--green)}
+.pg-select{padding:5px 8px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg);color:var(--text);font-size:12px;font-family:inherit;outline:none;cursor:pointer}
+.per-page-wrap{display:flex;align-items:center;gap:6px;margin-left:auto;font-size:12px;color:var(--text2)}
+
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid var(--border)}
+.stat-row:last-child{border-bottom:none}
+.stat-count{font-family:var(--mono);font-weight:500;font-size:13px;color:var(--text2)}
 </style>
 </head>
 <body>
@@ -184,10 +197,12 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
         <svg viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="9"/><rect x="9.5" y="7" width="4" height="14"/><rect x="16" y="3" width="4" height="18"/></svg>
         Stats
       </button>
+      <!-- Import nav button hidden — functionality retained
       <button onclick="showSection('import',this)">
         <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
         Import
       </button>
+      -->
     </div>
   </div>
 </div>
@@ -204,19 +219,29 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
         <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg> New entry
       </button>
     </div>
-    <div style="display:flex;gap:10px;margin-bottom:16px;align-items:center;flex-wrap:wrap">
+    <div style="display:flex;gap:10px;margin-bottom:10px;align-items:center;flex-wrap:wrap">
       <div class="search-bar" style="flex:1;min-width:200px;margin-bottom:0">
         <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input type="text" placeholder="Search callsign, frequency, serial, type…" id="log-search" oninput="renderLog()">
+        <input type="text" placeholder="Search callsign, frequency, serial, type…" id="log-search" oninput="logPage=1;renderLog()">
       </div>
-      <select id="log-type-filter" onchange="logTypeFilter=this.value;renderLog()" style="padding:8px 10px;border:0.5px solid var(--border2);border-radius:var(--radius);background:var(--bg);color:var(--text);font-size:13px;font-family:inherit;outline:none">
+      <select id="log-type-filter" onchange="logTypeFilter=this.value;logPage=1;renderLog()" style="padding:8px 10px;border:0.5px solid var(--border2);border-radius:var(--radius);background:var(--bg);color:var(--text);font-size:13px;font-family:inherit;outline:none">
         <option value="All">All types</option>
       </select>
-      <select id="log-sort" onchange="logSort=this.value;renderLog()" style="padding:8px 10px;border:0.5px solid var(--border2);border-radius:var(--radius);background:var(--bg);color:var(--text);font-size:13px;font-family:inherit;outline:none">
+      <select id="log-sort" onchange="logSort=this.value;logPage=1;renderLog()" style="padding:8px 10px;border:0.5px solid var(--border2);border-radius:var(--radius);background:var(--bg);color:var(--text);font-size:13px;font-family:inherit;outline:none">
         <option value="desc">Date: newest first</option>
         <option value="asc">Date: oldest first</option>
       </select>
     </div>
+    <div style="display:flex;gap:10px;margin-bottom:16px;align-items:center;flex-wrap:wrap">
+      <select id="log-year" onchange="logYear=this.value;logMonth='All';logPage=1;renderLog()" style="padding:8px 10px;border:0.5px solid var(--border2);border-radius:var(--radius);background:var(--bg);color:var(--text);font-size:13px;font-family:inherit;outline:none">
+        <option value="All">All years</option>
+      </select>
+      <select id="log-month" onchange="logMonth=this.value;logPage=1;renderLog()" style="padding:8px 10px;border:0.5px solid var(--border2);border-radius:var(--radius);background:var(--bg);color:var(--text);font-size:13px;font-family:inherit;outline:none">
+        <option value="All">All months</option>
+      </select>
+      <button id="log-clear-date" onclick="logYear='All';logMonth='All';document.getElementById('log-year').value='All';document.getElementById('log-month').value='All';logPage=1;renderLog()" class="btn" style="font-size:12px;padding:6px 12px;display:none">✕ Clear date filter</button>
+    </div>
+    <div class="pagination" id="log-pagination-top" style="margin-bottom:12px"></div>
     <div class="table-wrap">
       <table>
         <thead><tr>
@@ -226,6 +251,7 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
         <tbody id="log-tbody"></tbody>
       </table>
     </div>
+    <div class="pagination" id="log-pagination"></div>
   </div>
 
   <!-- AIRCRAFT -->
@@ -238,10 +264,20 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
         <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg> Add aircraft
       </button>
     </div>
-    <div class="search-bar">
-      <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input type="text" placeholder="Search callsign, serial, type, operator…" id="ac-search" oninput="renderAircraft()">
+    <div style="display:flex;gap:10px;margin-bottom:16px;align-items:center;flex-wrap:wrap">
+      <div class="search-bar" style="flex:1;min-width:200px;margin-bottom:0">
+        <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Search callsign, serial, type, operator…" id="ac-search" oninput="acPage=1;renderAircraft()">
+      </div>
+      <select id="ac-type-filter" onchange="acTypeFilter=this.value;acPage=1;renderAircraft()" style="padding:8px 10px;border:0.5px solid var(--border2);border-radius:var(--radius);background:var(--bg);color:var(--text);font-size:13px;font-family:inherit;outline:none">
+        <option value="All">All types</option>
+      </select>
+      <select id="ac-sort" onchange="acSort=this.value;acPage=1;renderAircraft()" style="padding:8px 10px;border:0.5px solid var(--border2);border-radius:var(--radius);background:var(--bg);color:var(--text);font-size:13px;font-family:inherit;outline:none">
+        <option value="asc">Callsign: A→Z</option>
+        <option value="desc">Callsign: Z→A</option>
+      </select>
     </div>
+    <div class="pagination" id="ac-pagination-top" style="margin-bottom:12px"></div>
     <div class="table-wrap">
       <table>
         <thead><tr>
@@ -251,6 +287,7 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
         <tbody id="ac-tbody"></tbody>
       </table>
     </div>
+    <div class="pagination" id="ac-pagination"></div>
   </div>
 
   <!-- FREQUENCIES -->
@@ -266,16 +303,17 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
     <div style="display:flex;gap:10px;margin-bottom:16px;align-items:center;flex-wrap:wrap">
       <div class="search-bar" style="flex:1;min-width:200px;margin-bottom:0">
         <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input type="text" placeholder="Search MHz, description, user…" id="freq-search" oninput="renderFreqs()">
+        <input type="text" placeholder="Search MHz, description, user…" id="freq-search" oninput="freqPage=1;renderFreqs()">
       </div>
-      <select id="freq-user-filter" onchange="freqUserFilter=this.value;renderFreqs()" style="padding:8px 10px;border:0.5px solid var(--border2);border-radius:var(--radius);background:var(--bg);color:var(--text);font-size:13px;font-family:inherit;outline:none">
+      <select id="freq-user-filter" onchange="freqUserFilter=this.value;freqPage=1;renderFreqs()" style="padding:8px 10px;border:0.5px solid var(--border2);border-radius:var(--radius);background:var(--bg);color:var(--text);font-size:13px;font-family:inherit;outline:none">
         <option value="All">All users</option>
       </select>
-      <select id="freq-sort" onchange="freqSort=this.value;renderFreqs()" style="padding:8px 10px;border:0.5px solid var(--border2);border-radius:var(--radius);background:var(--bg);color:var(--text);font-size:13px;font-family:inherit;outline:none">
+      <select id="freq-sort" onchange="freqSort=this.value;freqPage=1;renderFreqs()" style="padding:8px 10px;border:0.5px solid var(--border2);border-radius:var(--radius);background:var(--bg);color:var(--text);font-size:13px;font-family:inherit;outline:none">
         <option value="asc">Frequency: low→high</option>
         <option value="desc">Frequency: high→low</option>
       </select>
     </div>
+    <div class="pagination" id="freq-pagination-top" style="margin-bottom:12px"></div>
     <div class="table-wrap">
       <table>
         <thead><tr>
@@ -285,17 +323,50 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
         <tbody id="freq-tbody"></tbody>
       </table>
     </div>
+    <div class="pagination" id="freq-pagination"></div>
   </div>
 
   <!-- STATS -->
   <div id="s-stats" class="section">
     <div class="section-header"><div class="section-title">Statistics</div></div>
     <div class="stats" id="stats-grid"></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-      <div class="card"><div style="font-size:13px;font-weight:500;margin-bottom:12px">Top frequencies heard</div><div id="stat-freqs"></div></div>
-      <div class="card"><div style="font-size:13px;font-weight:500;margin-bottom:12px">Top aircraft types</div><div id="stat-types"></div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+      <div class="card">
+        <div style="font-size:13px;font-weight:500;margin-bottom:12px">Top frequencies heard</div>
+        <div id="stat-freqs"></div>
+        <div style="margin-top:10px"><a href="#" onclick="showAllFreqsHeard();return false;" style="font-size:12px;color:var(--green);text-decoration:none">Show all frequencies heard →</a></div>
+      </div>
+      <div class="card">
+        <div style="font-size:13px;font-weight:500;margin-bottom:12px">Top aircraft types</div>
+        <div id="stat-types"></div>
+        <div style="margin-top:10px"><a href="#" onclick="showAllTypesHeard();return false;" style="font-size:12px;color:var(--green);text-decoration:none">Show all aircraft types →</a></div>
+      </div>
     </div>
-    <div class="card" style="margin-top:16px"><div style="font-size:13px;font-weight:500;margin-bottom:12px">Recent contacts</div><div id="stat-recent"></div></div>
+    <div class="card"><div style="font-size:13px;font-weight:500;margin-bottom:12px">Recent contacts (last 20)</div><div id="stat-recent"></div></div>
+  </div>
+
+  <!-- STAT DETAIL: All frequencies heard -->
+  <div id="s-stat-freqs-all" class="section">
+    <div class="section-header">
+      <div class="section-title">All frequencies heard</div>
+      <a href="#" onclick="showStatsSection();return false;" style="font-size:13px;color:var(--green);text-decoration:none">← Back to stats</a>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Frequency</th><th>Description</th><th>Times heard</th></tr></thead>
+      <tbody id="stat-freqs-all-tbody"></tbody>
+    </table></div>
+  </div>
+
+  <!-- STAT DETAIL: All aircraft types heard -->
+  <div id="s-stat-types-all" class="section">
+    <div class="section-header">
+      <div class="section-title">All aircraft types heard</div>
+      <a href="#" onclick="showStatsSection();return false;" style="font-size:13px;color:var(--green);text-decoration:none">← Back to stats</a>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Type</th><th>Times heard</th></tr></thead>
+      <tbody id="stat-types-all-tbody"></tbody>
+    </table></div>
   </div>
 
 </div>
@@ -449,8 +520,11 @@ const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
 
 // ── In-memory cache ───────────────────────────────────────────────────────────
 var log = [], aircraft = [], freqs = [];
-var logSort = 'desc', logTypeFilter = 'All';
+var logSort = 'desc', logTypeFilter = 'All', logYear = 'All', logMonth = 'All';
 var freqSort = 'asc',  freqUserFilter = 'All';
+var logPage = 1, acPage = 1, freqPage = 1;
+var logPer = 25, acPer = 25, freqPer = 25;
+var acTypeFilter = 'All', acSort = 'asc';
 
 // ── Sync status UI ────────────────────────────────────────────────────────────
 function setSyncStatus(state, label) {
@@ -530,18 +604,73 @@ function showAlert(id, duration) { var el = document.getElementById(id); el.clas
 function showErr(id, msg) { var el = document.getElementById(id); el.textContent = msg; el.classList.add('show'); setTimeout(function(){ el.classList.remove('show'); }, 4000); }
 
 // ── Render: Log ───────────────────────────────────────────────────────────────
+
+// ── Pagination helper ─────────────────────────────────────────────────────────
+function renderPagination(containerId, total, page, perPage, onPage, onPer) {
+  var el = document.getElementById(containerId);
+  if (!el) return;
+  var totalPages = Math.max(1, Math.ceil(total / perPage));
+  if (page > totalPages) page = totalPages;
+  // Build page buttons — show first, last, current ±2, with ellipsis
+  var pages = [];
+  for (var i = 1; i <= totalPages; i++) {
+    if (i === 1 || i === totalPages || (i >= page-2 && i <= page+2)) pages.push(i);
+    else if (pages[pages.length-1] !== '…') pages.push('…');
+  }
+  var btns = pages.map(function(p) {
+    if (p === '…') return '<span style="padding:5px 4px;font-size:12px;color:var(--text3)">…</span>';
+    return '<button class="pg-btn'+(p===page?' active':'')+'" onclick="('+onPage+')('+p+')">' + p + '</button>';
+  }).join('');
+
+  var html =
+    '<span class="pg-info">'+total+' total</span>'
+    + '<button class="pg-btn" onclick="('+onPage+')('+Math.max(1,page-1)+')" '+(page<=1?'disabled':'')+'>‹</button>'
+    + btns
+    + '<button class="pg-btn" onclick="('+onPage+')('+Math.min(totalPages,page+1)+')" '+(page>=totalPages?'disabled':'')+'>›</button>'
+    + '<div class="per-page-wrap">Per page '
+    + '<select class="pg-select" onchange="('+onPer+')(parseInt(this.value))">'
+    + [10,25,50,100].map(function(n){ return '<option value="'+n+'"'+(n===perPage?' selected':'')+'>'+n+'</option>'; }).join('')
+    + '</select></div>';
+  el.innerHTML = html;
+  var topEl = document.getElementById(containerId + '-top');
+  if (topEl) topEl.innerHTML = html;
+}
+
 function renderLog() {
   var q = (document.getElementById('log-search').value || '').toLowerCase();
-  // Populate type filter dropdown
+  // Populate type filter
   var types = ['All'].concat([...new Set(log.map(function(r){ return r.type; }).filter(Boolean))].sort());
   var tf = document.getElementById('log-type-filter');
   var curType = tf.value;
   tf.innerHTML = types.map(function(t){ return '<option value="'+esc(t)+'"'+(t===curType?' selected':'')+'>'+esc(t)+'</option>'; }).join('');
   logTypeFilter = tf.value;
+  // Populate year filter from actual data
+  var years = [...new Set(log.map(function(r){ return r.dt ? new Date(r.dt).getFullYear() : null; }).filter(Boolean))].sort(function(a,b){ return b-a; });
+  var yf = document.getElementById('log-year');
+  var curYear = yf.value;
+  yf.innerHTML = '<option value="All">All years</option>' + years.map(function(y){ return '<option value="'+y+'"'+(String(y)===curYear?' selected':'')+'>'+y+'</option>'; }).join('');
+  logYear = yf.value;
+  // Populate month filter — only months present in selected year
+  var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var mf = document.getElementById('log-month');
+  var curMonth = mf.value;
+  var availMonths;
+  if (logYear === 'All') {
+    availMonths = [...new Set(log.map(function(r){ return r.dt ? new Date(r.dt).getMonth() : null; }).filter(function(m){ return m !== null; }))].sort(function(a,b){ return a-b; });
+  } else {
+    availMonths = [...new Set(log.filter(function(r){ return r.dt && new Date(r.dt).getFullYear() === parseInt(logYear); }).map(function(r){ return new Date(r.dt).getMonth(); }))].sort(function(a,b){ return a-b; });
+  }
+  mf.innerHTML = '<option value="All">All months</option>' + availMonths.map(function(m){ return '<option value="'+m+'"'+(String(m)===curMonth?' selected':'')+'>'+MONTHS[m]+'</option>'; }).join('');
+  if (curMonth !== 'All' && !availMonths.includes(parseInt(curMonth))) { mf.value = 'All'; logMonth = 'All'; } else { logMonth = mf.value; }
+  // Show/hide clear button
+  var clearBtn = document.getElementById('log-clear-date');
+  if (clearBtn) clearBtn.style.display = (logYear !== 'All' || logMonth !== 'All') ? 'inline-flex' : 'none';
   var rows = log.filter(function(r){
     var qok = !q || (r.freq+r.callsign+r.serial+r.type+r.notes).toLowerCase().includes(q);
     var tok = logTypeFilter === 'All' || r.type === logTypeFilter;
-    return qok && tok;
+    var yok = logYear === 'All' || (r.dt && new Date(r.dt).getFullYear() === parseInt(logYear));
+    var mok = logMonth === 'All' || (r.dt && String(new Date(r.dt).getMonth()) === String(logMonth));
+    return qok && tok && yok && mok;
   });
   rows.sort(function(a,b){
     var da = new Date(a.dt||0), db = new Date(b.dt||0);
@@ -550,9 +679,14 @@ function renderLog() {
   var tb = document.getElementById('log-tbody');
   if (!rows.length) {
     tb.innerHTML = '<tr><td colspan="6"><div class="empty"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49"/></svg>No entries yet. Start logging!</div></td></tr>';
+    renderPagination('log-pagination', 0, 1, logPer, 'function(p){logPage=p;renderLog()}', 'function(n){logPer=n;logPage=1;renderLog()}');
     return;
   }
-  tb.innerHTML = rows.map(function(r) {
+  var total = rows.length;
+  if (logPage > Math.ceil(total/logPer)) logPage = 1;
+  var start = (logPage-1)*logPer, end = start+logPer;
+  var pageRows = rows.slice(start, end);
+  tb.innerHTML = pageRows.map(function(r) {
     return '<tr>'
       + '<td style="font-family:var(--mono);font-size:11px;white-space:nowrap">' + fmt(r.dt) + '</td>'
       + '<td style="white-space:nowrap"><span class="freq-tag">' + esc(r.freq) + ' MHz</span></td>'
@@ -567,18 +701,36 @@ function renderLog() {
       + '</div></div></td></tr>'
       + notesRow(r.notes, 6);
   }).join('');
+  renderPagination('log-pagination', total, logPage, logPer, 'function(p){logPage=p;renderLog()}', 'function(n){logPer=n;logPage=1;renderLog()}');
 }
 
 // ── Render: Aircraft ──────────────────────────────────────────────────────────
 function renderAircraft() {
   var q = (document.getElementById('ac-search').value || '').toLowerCase();
-  var rows = aircraft.filter(function(r){ return !q || (r.cs+r.serial+r.type+r.op+r.country+r.hex).toLowerCase().includes(q); });
+  // Populate type filter
+  var types = ['All'].concat([...new Set(aircraft.map(function(r){ return r.type; }).filter(Boolean))].sort());
+  var tf = document.getElementById('ac-type-filter');
+  if (tf) { var cur = tf.value; tf.innerHTML = types.map(function(t){ return '<option value="'+esc(t)+'"'+(t===cur?' selected':'')+'>'+esc(t)+'</option>'; }).join(''); acTypeFilter = tf.value; }
+  var rows = aircraft.filter(function(r){
+    var qok = !q || (r.cs+r.serial+r.type+r.op+r.country+r.hex).toLowerCase().includes(q);
+    var tok = acTypeFilter === 'All' || r.type === acTypeFilter;
+    return qok && tok;
+  });
+  rows.sort(function(a,b){
+    var ca = (a.cs||'').toLowerCase(), cb = (b.cs||'').toLowerCase();
+    return acSort === 'asc' ? (ca < cb ? -1 : ca > cb ? 1 : 0) : (cb < ca ? -1 : cb > ca ? 1 : 0);
+  });
   var tb = document.getElementById('ac-tbody');
   if (!rows.length) {
     tb.innerHTML = '<tr><td colspan="6"><div class="empty"><svg viewBox="0 0 24 24"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21 4 19 4c-2 0-4 2-4 2l-8.2 1.8L3 9l4 2 2 4 2-1 1 3 3-2z"/></svg>No aircraft added yet.</div></td></tr>';
+    renderPagination('ac-pagination', 0, 1, acPer, 'function(p){acPage=p;renderAircraft()}', 'function(n){acPer=n;acPage=1;renderAircraft()}');
     return;
   }
-  tb.innerHTML = rows.map(function(r) {
+  var total = rows.length;
+  if (acPage > Math.ceil(total/acPer)) acPage = 1;
+  var start = (acPage-1)*acPer, end = start+acPer;
+  var pageRows = rows.slice(start, end);
+  tb.innerHTML = pageRows.map(function(r) {
     return '<tr>'
       + '<td><span class="callsign-tag">' + esc(r.cs) + '</span></td>'
       + '<td><span class="serial-tag">' + esc(r.serial) + '</span>' + (r.hex ? '<br><span style="font-size:10px;font-family:var(--mono);color:var(--text2)">' + esc(r.hex) + '</span>' : '') + '</td>'
@@ -593,6 +745,7 @@ function renderAircraft() {
       + '</div></div></td></tr>'
       + notesRow(r.notes, 6);
   }).join('');
+  renderPagination('ac-pagination', total, acPage, acPer, 'function(p){acPage=p;renderAircraft()}', 'function(n){acPer=n;acPage=1;renderAircraft()}');
 }
 
 // ── Render: Frequencies ───────────────────────────────────────────────────────
@@ -616,9 +769,14 @@ function renderFreqs() {
   var tb = document.getElementById('freq-tbody');
   if (!rows.length) {
     tb.innerHTML = '<tr><td colspan="4"><div class="empty"><svg viewBox="0 0 24 24"><path d="M2 12h4M18 12h4M6 12a6 6 0 0 0 12 0M6 12a6 6 0 0 1 12 0"/></svg>No frequencies found.</div></td></tr>';
+    renderPagination('freq-pagination', 0, 1, freqPer, 'function(p){freqPage=p;renderFreqs()}', 'function(n){freqPer=n;freqPage=1;renderFreqs()}');
     return;
   }
-  tb.innerHTML = rows.map(function(r) {
+  var total = rows.length;
+  if (freqPage > Math.ceil(total/freqPer)) freqPage = 1;
+  var start = (freqPage-1)*freqPer, end = start+freqPer;
+  var pageRows = rows.slice(start, end);
+  tb.innerHTML = pageRows.map(function(r) {
     return '<tr>'
       + '<td style="white-space:nowrap"><span class="freq-tag">' + esc(r.freq) + ' MHz</span></td>'
       + '<td>' + esc(r.descr) + '</td>'
@@ -631,34 +789,78 @@ function renderFreqs() {
       + '</div></div></td></tr>'
       + notesRow(r.notes, 4);
   }).join('');
+  renderPagination('freq-pagination', total, freqPage, freqPer, 'function(p){freqPage=p;renderFreqs()}', 'function(n){freqPer=n;freqPage=1;renderFreqs()}');
 }
 
 // ── Render: Stats ─────────────────────────────────────────────────────────────
+function showStatsSection() {
+  document.querySelectorAll('.section').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById('s-stats').classList.add('active');
+  document.querySelectorAll('.nav button').forEach(function(b){ b.classList.remove('active'); });
+  var statsBtn = document.querySelector('.nav button[onclick*="stats"]');
+  if (statsBtn) statsBtn.classList.add('active');
+  renderStats();
+}
+
+function buildFreqMap() {
+  var fmap = {};
+  log.forEach(function(r){ if (r.freq) fmap[r.freq] = (fmap[r.freq]||0)+1; });
+  return Object.entries(fmap).sort(function(a,b){ return b[1]-a[1]; });
+}
+function buildTypeMap() {
+  var tmap = {};
+  log.forEach(function(r){ if (r.type) tmap[r.type] = (tmap[r.type]||0)+1; });
+  return Object.entries(tmap).sort(function(a,b){ return b[1]-a[1]; });
+}
+
 function renderStats() {
+  var uniqueTypes = [...new Set(log.map(function(r){ return r.type; }).filter(Boolean))].length;
+  var uniqueFreqsHeard = [...new Set(log.map(function(r){ return r.freq; }).filter(Boolean))].length;
   document.getElementById('stats-grid').innerHTML =
     '<div class="stat-card"><div class="stat-val">' + log.length + '</div><div class="stat-lbl">Log entries</div></div>'
-    + '<div class="stat-card"><div class="stat-val">' + aircraft.length + '</div><div class="stat-lbl">Aircraft</div></div>'
-    + '<div class="stat-card"><div class="stat-val">' + freqs.length + '</div><div class="stat-lbl">Frequencies</div></div>'
-    + '<div class="stat-card"><div class="stat-val">' + ([...new Set(log.map(function(r){ return r.freq; }))]).size + '</div><div class="stat-lbl">Freqs heard</div></div>';
-  var fmap = {}; log.forEach(function(r){ if (r.freq) fmap[r.freq] = (fmap[r.freq]||0)+1; });
-  var sf = Object.entries(fmap).sort(function(a,b){ return b[1]-a[1]; }).slice(0,5);
+    + '<div class="stat-card"><div class="stat-val">' + uniqueTypes + '</div><div class="stat-lbl">Unique aircraft types</div></div>'
+    + '<div class="stat-card"><div class="stat-val">' + uniqueFreqsHeard + '</div><div class="stat-lbl">Unique frequencies logged</div></div>';
+
+  var sf = buildFreqMap().slice(0,10);
   document.getElementById('stat-freqs').innerHTML = sf.length ? sf.map(function(e){
-    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:0.5px solid var(--border)"><span class="freq-tag">'+esc(e[0])+' MHz</span><span style="font-family:var(--mono);font-weight:500">'+e[1]+'</span></div>';
+    var desc = (freqs.find(function(f){ return f.freq === e[0]; })||{}).descr || '';
+    return '<div class="stat-row"><div style="display:flex;align-items:center;gap:8px"><span class="freq-tag">'+esc(e[0])+' MHz</span>'+(desc?'<span style="font-size:12px;color:var(--text2)">'+esc(desc)+'</span>':'')+'</div><span class="stat-count">'+e[1]+'</span></div>';
   }).join('') : '<div style="color:var(--text2);font-size:13px">No data yet</div>';
-  var tmap = {}; log.forEach(function(r){ if (r.type) tmap[r.type] = (tmap[r.type]||0)+1; });
-  var st = Object.entries(tmap).sort(function(a,b){ return b[1]-a[1]; }).slice(0,5);
+
+  var st = buildTypeMap().slice(0,10);
   document.getElementById('stat-types').innerHTML = st.length ? st.map(function(e){
-    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:0.5px solid var(--border)"><span class="type-badge">'+esc(e[0])+'</span><span style="font-family:var(--mono);font-weight:500">'+e[1]+'</span></div>';
+    return '<div class="stat-row"><span class="type-badge">'+esc(e[0])+'</span><span class="stat-count">'+e[1]+'</span></div>';
   }).join('') : '<div style="color:var(--text2);font-size:13px">No data yet</div>';
-  var recent = log.slice().sort(function(a,b){ return new Date(b.created_at)-new Date(a.created_at); }).slice(0,5);
+
+  var recent = log.slice().sort(function(a,b){ return new Date(b.dt||b.created_at)-new Date(a.dt||a.created_at); }).slice(0,20);
   document.getElementById('stat-recent').innerHTML = recent.length ? recent.map(function(r){
-    return '<div style="display:flex;gap:12px;align-items:center;padding:6px 0;border-bottom:0.5px solid var(--border)">'
+    return '<div style="display:flex;gap:12px;align-items:center;padding:7px 0;border-bottom:0.5px solid var(--border);flex-wrap:wrap">'
       + '<span style="font-size:11px;font-family:var(--mono);color:var(--text2);white-space:nowrap">'+fmt(r.dt)+'</span>'
       + '<span class="freq-tag">'+esc(r.freq)+'</span>'
       + '<span class="callsign-tag">'+esc(r.callsign)+'</span>'
       + (r.type ? '<span class="type-badge">'+esc(r.type)+'</span>' : '')
+      + (r.serial ? '<span class="serial-tag">'+esc(r.serial)+'</span>' : '')
       + '</div>';
   }).join('') : '<div style="color:var(--text2);font-size:13px">No entries yet</div>';
+}
+
+function showAllFreqsHeard() {
+  document.querySelectorAll('.section').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById('s-stat-freqs-all').classList.add('active');
+  var all = buildFreqMap();
+  document.getElementById('stat-freqs-all-tbody').innerHTML = all.length ? all.map(function(e){
+    var desc = (freqs.find(function(f){ return f.freq === e[0]; })||{}).descr || '';
+    return '<tr><td style="white-space:nowrap"><span class="freq-tag">'+esc(e[0])+' MHz</span></td><td style="font-size:13px;color:var(--text2)">'+esc(desc)+'</td><td style="font-family:var(--mono);font-weight:500">'+e[1]+'</td></tr>';
+  }).join('') : '<tr><td colspan="3"><div class="empty">No data</div></td></tr>';
+}
+
+function showAllTypesHeard() {
+  document.querySelectorAll('.section').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById('s-stat-types-all').classList.add('active');
+  var all = buildTypeMap();
+  document.getElementById('stat-types-all-tbody').innerHTML = all.length ? all.map(function(e){
+    return '<tr><td><span class="type-badge">'+esc(e[0])+'</span></td><td style="font-family:var(--mono);font-weight:500">'+e[1]+'</td></tr>';
+  }).join('') : '<tr><td colspan="2"><div class="empty">No data</div></td></tr>';
 }
 
 // ── Log CRUD ──────────────────────────────────────────────────────────────────
