@@ -628,11 +628,12 @@ async function saveLog() {
       if (!frRes.error) { freqs.push(frRes.data); freqs.sort(function(a,b){ return parseFloat(a.freq)-parseFloat(b.freq); }); }
     }
   }
-  // Auto-add aircraft if not already in DB
+  // Auto-add aircraft if not already in DB, or add new record if details differ
   if (cs) {
-    var exists = aircraft.find(function(a){ return a.cs === cs; });
-    if (!exists) {
-      var acPayload = { cs: cs, serial: serial, type: type, op: op, country: '', hex: '', notes: '' };
+    var existing = aircraft.find(function(a){ return a.cs === cs; });
+    var detailsMatch = existing && (existing.serial||'') === serial && (existing.type||'') === type && (existing.op||'') === op;
+    if (!detailsMatch) {
+      var acPayload = { cs: cs, serial: serial, type: type, op: op, country: existing ? (existing.country||'') : '', hex: existing ? (existing.hex||'') : '', notes: '' };
       var acRes = await sb.from('aircraft').insert(acPayload).select().single();
       if (!acRes.error) aircraft.unshift(acRes.data);
     }
@@ -754,7 +755,7 @@ function acLookup() {
     document.getElementById('le-serial').value = m.serial || document.getElementById('le-serial').value;
     document.getElementById('le-type').value   = m.type   || document.getElementById('le-type').value;
     document.getElementById('le-op').value     = m.op     || document.getElementById('le-op').value;
-    el.textContent = 'Found in aircraft DB: ' + [m.type, m.serial, m.op].filter(Boolean).join(' · ');
+    el.textContent = 'Found in aircraft DB: ' + [m.type, m.serial, m.op].filter(Boolean).join(' · ') + ' — edit fields above if this aircraft differs';
   } else {
     el.textContent = 'Not in aircraft DB — will be added on save';
   }
