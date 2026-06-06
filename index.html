@@ -289,6 +289,17 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
     <div class="section-header"><div class="section-title">Import data</div></div>
     <div class="import-cards">
 
+      <div class="import-card" style="grid-column:1/-1">
+        <div class="import-card-title">One-off: backfill aircraft from existing logs</div>
+        <div class="import-card-desc">Scans all existing log entries and adds any callsign/serial/type combinations not yet in the aircraft database. Run this once to populate aircraft from previously imported logs.</div>
+        <button class="btn btn-primary" id="backfill-btn" onclick="backfillAircraft()">
+          <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          Run backfill
+        </button>
+        <div class="import-progress" id="backfill-progress"></div>
+        <div class="import-result" id="backfill-result"></div>
+      </div>
+
       <div class="import-card">
         <div class="import-card-title">Log entries</div>
         <div class="import-card-desc">CSV with columns: <strong>Date Time Logged, Frequency, Callsign, Type, Callsign (serial), Log Notes</strong><br>Duplicates (same date, frequency &amp; callsign) will be skipped.</div>
@@ -956,10 +967,40 @@ async function importLogs(rows, prog, res) {
     }
   }
 
+  // Build aircraft from imported log rows
+  if (added > 0) {
+    prog.textContent = 'Building aircraft database…';
+    await buildAircraftFromLogs(rows);
+    renderLog();
+    renderAircraft();
+  }
+
   prog.textContent = '';
   res.textContent = 'Done — ' + added + ' entries imported, ' + skipped + ' skipped, ' + errors + ' errors.';
   res.className = 'import-result ' + (errors > 0 ? 'info' : 'ok');
-  if (added > 0) renderLog();
+}
+
+async function buildAircraftFromLogs(rows) {
+  // Collect unique callsign+serial+type combos not already in aircraft DB
+  var toAdd = [];
+  rows.forEach(function(r) {
+    var keys = Object.keys(r);
+    var csKeys = keys.filter(function(k){ return k.toLowerCase().indexOf('callsign') !== -1; });
+    var callsign = csKeys.length >= 2 ? (r[csKeys[0]]||'').trim() : (r['Callsign']||'').trim();
+    var serial   = csKeys.length >= 2 ? (r[csKeys[1]]||'').trim() : (r['Callsign_2']||r['Serial']||'').trim();
+    var type     = (r['Type']||'').trim();
+    if (!callsign) return;
+    // Check not already in DB or already queued
+    var inDB    = aircraft.find(function(a){ return a.cs === callsign && (a.serial||'') === serial && (a.type||'') === type; });
+    var inQueue = toAdd.find(function(a){ return a.cs === callsign && a.serial === serial && a.type === type; });
+    if (!inDB && !inQueue) toAdd.push({ cs: callsign, serial: serial, type: type, op: '', country: '', hex: '', notes: '' });
+  });
+  if (!toAdd.length) return;
+  var BATCH = 50;
+  for (var i = 0; i < toAdd.length; i += BATCH) {
+    var { data, error } = await sb.from('aircraft').insert(toAdd.slice(i, i + BATCH)).select();
+    if (!error && data) aircraft = aircraft.concat(data);
+  }
 }
 
 async function importFreqs(rows, prog, res) {
@@ -992,6 +1033,50 @@ async function importFreqs(rows, prog, res) {
   res.textContent = 'Done — ' + added + ' frequencies imported, ' + skipped + ' skipped (already exist), ' + errors + ' errors.';
   res.className = 'import-result ' + (errors > 0 ? 'info' : 'ok');
   if (added > 0) renderFreqs();
+}
+
+
+async function backfillAircraft() {
+  var btn  = document.getElementById('backfill-btn');
+  var prog = document.getElementById('backfill-progress');
+  var res  = document.getElementById('backfill-result');
+  btn.disabled = true;
+  res.className = 'import-result';
+  prog.textContent = 'Scanning ' + log.length + ' log entries…';
+
+  var toAdd = [];
+  log.forEach(function(r) {
+    var callsign = (r.callsign||'').trim();
+    var serial   = (r.serial||'').trim();
+    var type     = (r.type||'').trim();
+    if (!callsign) return;
+    var inDB    = aircraft.find(function(a){ return a.cs === callsign && (a.serial||'') === serial && (a.type||'') === type; });
+    var inQueue = toAdd.find(function(a){ return a.cs === callsign && a.serial === serial && a.type === type; });
+    if (!inDB && !inQueue) toAdd.push({ cs: callsign, serial: serial, type: type, op: r.op||'', country: '', hex: '', notes: '' });
+  });
+
+  if (!toAdd.length) {
+    prog.textContent = '';
+    res.textContent = 'Nothing to add — all callsigns are already in the aircraft database.';
+    res.className = 'import-result info';
+    btn.disabled = false;
+    return;
+  }
+
+  prog.textContent = 'Adding ' + toAdd.length + ' aircraft…';
+  var added = 0, errors = 0;
+  var BATCH = 50;
+  for (var i = 0; i < toAdd.length; i += BATCH) {
+    var { data, error } = await sb.from('aircraft').insert(toAdd.slice(i, i + BATCH)).select();
+    if (error) { errors += Math.min(BATCH, toAdd.length - i); }
+    else { aircraft = aircraft.concat(data); added += data.length; }
+  }
+
+  prog.textContent = '';
+  res.textContent = 'Done — ' + added + ' aircraft added' + (errors ? ', ' + errors + ' errors' : '') + '.';
+  res.className = 'import-result ' + (errors ? 'info' : 'ok');
+  if (added > 0) renderAircraft();
+  btn.disabled = false;
 }
 
 // ── Boot ──────────────────────────────────────────────────────────────────────
