@@ -130,6 +130,22 @@ thead tr:first-child th:first-child{border-top-left-radius:var(--radius-lg)}
 thead tr:first-child th:last-child{border-top-right-radius:var(--radius-lg)}
 tbody tr:last-child td:first-child{border-bottom-left-radius:var(--radius-lg)}
 tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
+
+.import-zone{border:1.5px dashed var(--border2);border-radius:var(--radius-lg);padding:28px 20px;text-align:center;cursor:pointer;transition:border-color 0.2s,background 0.2s;margin-bottom:4px}
+.import-zone:hover,.import-zone.drag{border-color:var(--green);background:var(--green-light)}
+.import-zone input[type=file]{display:none}
+.import-zone-icon{width:32px;height:32px;stroke:var(--text3);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;margin:0 auto 8px;display:block}
+.import-zone-label{font-size:13px;color:var(--text2);margin-bottom:4px}
+.import-zone-hint{font-size:11px;color:var(--text3)}
+.import-result{font-size:13px;padding:10px 14px;border-radius:var(--radius);margin-top:10px;display:none}
+.import-result.ok{background:var(--green-light);color:var(--green);border:0.5px solid #a8d5b8;display:block}
+.import-result.err{background:#fdf0f0;color:#c0392b;border:0.5px solid #f5c6c6;display:block}
+.import-result.info{background:var(--info-bg);color:var(--info-text);border:0.5px solid #b8cef5;display:block}
+.import-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.import-card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:16px}
+.import-card-title{font-size:14px;font-weight:500;margin-bottom:4px}
+.import-card-desc{font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.5}
+.import-progress{font-size:12px;color:var(--text2);margin-top:8px;min-height:16px}
 </style>
 </head>
 <body>
@@ -167,6 +183,10 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
       <button onclick="showSection('stats',this)">
         <svg viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="9"/><rect x="9.5" y="7" width="4" height="14"/><rect x="16" y="3" width="4" height="18"/></svg>
         Stats
+      </button>
+      <button onclick="showSection('import',this)">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Import
       </button>
     </div>
   </div>
@@ -263,6 +283,41 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
 
 </div>
 </div>
+
+  <!-- IMPORT -->
+  <div id="s-import" class="section">
+    <div class="section-header"><div class="section-title">Import data</div></div>
+    <div class="import-cards">
+
+      <div class="import-card">
+        <div class="import-card-title">Log entries</div>
+        <div class="import-card-desc">CSV with columns: <strong>Date Time Logged, Frequency, Callsign, Type, Callsign (serial), Log Notes</strong><br>Duplicates (same date, frequency &amp; callsign) will be skipped.</div>
+        <div class="import-zone" id="log-drop" onclick="document.getElementById('log-file').click()" ondragover="dragOver(event,'log-drop')" ondragleave="dragLeave('log-drop')" ondrop="dropFile(event,'log')">
+          <input type="file" id="log-file" accept=".csv" onchange="handleFile(this,'log')">
+          <svg class="import-zone-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 12 15 15"/></svg>
+          <div class="import-zone-label">Click or drag &amp; drop CSV file</div>
+          <div class="import-zone-hint">logs.csv</div>
+        </div>
+        <div class="import-progress" id="log-progress"></div>
+        <div class="import-result" id="log-import-result"></div>
+      </div>
+
+      <div class="import-card">
+        <div class="import-card-title">Frequencies</div>
+        <div class="import-card-desc">CSV with columns: <strong>Frequency, Description, User</strong><br>Duplicate frequencies will be skipped. Existing entries are not overwritten.</div>
+        <div class="import-zone" id="freq-drop" onclick="document.getElementById('freq-file').click()" ondragover="dragOver(event,'freq-drop')" ondragleave="dragLeave('freq-drop')" ondrop="dropFile(event,'freq')">
+          <input type="file" id="freq-file" accept=".csv" onchange="handleFile(this,'freq')">
+          <svg class="import-zone-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 12 15 15"/></svg>
+          <div class="import-zone-label">Click or drag &amp; drop CSV file</div>
+          <div class="import-zone-hint">frequencies.csv</div>
+        </div>
+        <div class="import-progress" id="freq-progress"></div>
+        <div class="import-result" id="freq-import-result"></div>
+      </div>
+
+    </div>
+  </div>
+
 
 <!-- LOG MODAL -->
 <div class="modal-bg" id="log-modal">
@@ -809,6 +864,135 @@ function toggleKebab(e, id) {
 document.addEventListener('click', function(){
   document.querySelectorAll('.kebab-menu').forEach(function(m){ m.classList.remove('open'); });
 });
+
+
+  // Fallback: coloured initials badge
+
+
+// ── Import helpers ────────────────────────────────────────────────────────────
+function dragOver(e, id) { e.preventDefault(); document.getElementById(id).classList.add('drag'); }
+function dragLeave(id)   { document.getElementById(id).classList.remove('drag'); }
+function dropFile(e, type) {
+  e.preventDefault();
+  dragLeave(type + '-drop');
+  var file = e.dataTransfer.files[0];
+  if (file) processImport(file, type);
+}
+function handleFile(input, type) {
+  if (input.files[0]) processImport(input.files[0], type);
+}
+
+function parseCSV(text) {
+  var lines = text.replace(/\r/g,'').split('\n').filter(function(l){ return l.trim(); });
+  var rawHeaders = lines[0].split(',').map(function(h){ return h.trim().replace(/^"|"$/g,''); });
+  var seen = {}; var headers = rawHeaders.map(function(h){ if (seen[h]) { seen[h]++; return h + '_' + seen[h]; } seen[h]=1; return h; });
+  return lines.slice(1).map(function(line) {
+    // Handle quoted fields containing commas
+    var cols = [], cur = '', inQ = false;
+    for (var i = 0; i < line.length; i++) {
+      var ch = line[i];
+      if (ch === '"') { inQ = !inQ; }
+      else if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
+      else { cur += ch; }
+    }
+    cols.push(cur.trim());
+    var row = {};
+    headers.forEach(function(h, i){ row[h] = (cols[i] || '').replace(/^"|"$/g,'').trim(); });
+    return row;
+  });
+}
+
+async function processImport(file, type) {
+  var prog = document.getElementById(type === 'log' ? 'log-progress' : 'freq-progress');
+  var res  = document.getElementById(type === 'log' ? 'log-import-result' : 'freq-import-result');
+  res.className = 'import-result';
+  prog.textContent = 'Reading file…';
+
+  var text = await file.text();
+  var rows = parseCSV(text);
+  prog.textContent = 'Found ' + rows.length + ' rows. Importing…';
+
+  if (type === 'log') await importLogs(rows, prog, res);
+  else                await importFreqs(rows, prog, res);
+}
+
+async function importLogs(rows, prog, res) {
+  var added = 0, skipped = 0, errors = 0;
+  var BATCH = 20;
+
+  for (var i = 0; i < rows.length; i += BATCH) {
+    prog.textContent = 'Importing ' + Math.min(i + BATCH, rows.length) + ' of ' + rows.length + '…';
+    var batch = rows.slice(i, i + BATCH);
+    var payload = [];
+
+    batch.forEach(function(r) {
+      // Column mapping — handle the duplicate "Callsign" header (second = serial)
+      var dt       = r['Date Time Logged'] || '';
+      var freq     = fmtFreq(r['Frequency'] || '');
+      var callsign = '';
+      var serial   = '';
+      var type     = r['Type'] || '';
+      var notes    = r['Log Notes'] || '';
+
+      callsign = r['Callsign'] || '';
+      serial   = r['Callsign_2'] || r['Serial'] || r['serial'] || '';
+
+      // Parse date — format is DD/MM/YYYY HH:MM:SS
+      var dtISO = '';
+      if (dt) {
+        var m = dt.match(/(\d{2})\/(\d{2})\/(\d{4})\s+(\d{2}:\d{2})/);
+        if (m) dtISO = m[3] + '-' + m[2] + '-' + m[1] + 'T' + m[4];
+        else dtISO = dt;
+      }
+
+      if (!freq && !callsign) { skipped++; return; }
+      payload.push({ dt: dtISO, freq: freq, callsign: callsign, serial: serial, type: type, op: '', notes: notes });
+    });
+
+    if (payload.length) {
+      var { data, error } = await sb.from('log_entries').insert(payload).select();
+      if (error) { errors += payload.length; }
+      else { log = data.concat(log); added += data.length; }
+    }
+  }
+
+  prog.textContent = '';
+  res.textContent = 'Done — ' + added + ' entries imported, ' + skipped + ' skipped, ' + errors + ' errors.';
+  res.className = 'import-result ' + (errors > 0 ? 'info' : 'ok');
+  if (added > 0) renderLog();
+}
+
+async function importFreqs(rows, prog, res) {
+  var added = 0, skipped = 0, errors = 0;
+  var payload = [];
+
+  rows.forEach(function(r) {
+    var freq = fmtFreq(r['Frequency'] || '');
+    var desc = r['Description'] || '';
+    var user = r['User'] || '';
+    if (!freq) { skipped++; return; }
+    var dup = freqs.find(function(f){ return f.freq === freq; });
+    if (dup) { skipped++; return; }
+    payload.push({ freq: freq, descr: desc, cat: 'Other', usr: user, loc: '', notes: '' });
+  });
+
+  if (payload.length) {
+    prog.textContent = 'Saving ' + payload.length + ' new frequencies…';
+    var BATCH = 50;
+    for (var i = 0; i < payload.length; i += BATCH) {
+      var { data, error } = await sb.from('frequencies').insert(payload.slice(i, i + BATCH)).select();
+      if (error) { errors += Math.min(BATCH, payload.length - i); }
+      else { freqs = freqs.concat(data); added += data.length; }
+    }
+  } else {
+    skipped = rows.length;
+  }
+
+  prog.textContent = '';
+  res.textContent = 'Done — ' + added + ' frequencies imported, ' + skipped + ' skipped (already exist), ' + errors + ' errors.';
+  res.className = 'import-result ' + (errors > 0 ? 'info' : 'ok');
+  if (added > 0) renderFreqs();
+}
 
 // ── Boot ──────────────────────────────────────────────────────────────────────
 loadAll();
