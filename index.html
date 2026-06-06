@@ -639,7 +639,7 @@ async function saveLog() {
     }
   }
   setBusy('le-save-btn',false); setSyncStatus('ok','Synced');
-  closeModal('log-modal'); renderLog(); showAlert('log-alert');
+  closeModal('log-modal'); renderLog(); renderAircraft(); showAlert('log-alert');
 }
 
 // ── Aircraft CRUD ─────────────────────────────────────────────────────────────
@@ -724,6 +724,10 @@ async function saveFreq() {
     notes: document.getElementById('fm-notes').value.trim()
   };
   if (!payload.freq) { alert('Please enter a frequency.'); return; }
+  if (!editId) {
+    var dup = freqs.find(function(f){ return f.freq === payload.freq; });
+    if (dup) { alert(payload.freq + ' MHz already exists in the frequency database.'); return; }
+  }
   setBusy('fm-save-btn', true); setSyncStatus('loading','Saving…');
   var err, data;
   if (editId) {
@@ -742,8 +746,8 @@ async function saveFreq() {
 
 // ── Frequency lookup helpers ──────────────────────────────────────────────────
 function freqLookup() {
-  var v = document.getElementById('le-freq').value.trim();
-  var m = freqs.find(function(f){ return f.freq === v || f.freq.startsWith(v); });
+  var v = fmtFreq(document.getElementById('le-freq').value.trim());
+  var m = freqs.find(function(f){ return f.freq === v; });
   document.getElementById('freq-match').textContent = m ? (m.descr + (m.usr ? ' — ' + m.usr : '')) : '';
 }
 function acLookup() {
