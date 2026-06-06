@@ -204,9 +204,18 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
         <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg> New entry
       </button>
     </div>
-    <div class="search-bar">
-      <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input type="text" placeholder="Search callsign, frequency, serial, type…" id="log-search" oninput="renderLog()">
+    <div style="display:flex;gap:10px;margin-bottom:16px;align-items:center;flex-wrap:wrap">
+      <div class="search-bar" style="flex:1;min-width:200px;margin-bottom:0">
+        <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Search callsign, frequency, serial, type…" id="log-search" oninput="renderLog()">
+      </div>
+      <select id="log-type-filter" onchange="logTypeFilter=this.value;renderLog()" style="padding:8px 10px;border:0.5px solid var(--border2);border-radius:var(--radius);background:var(--bg);color:var(--text);font-size:13px;font-family:inherit;outline:none">
+        <option value="All">All types</option>
+      </select>
+      <select id="log-sort" onchange="logSort=this.value;renderLog()" style="padding:8px 10px;border:0.5px solid var(--border2);border-radius:var(--radius);background:var(--bg);color:var(--text);font-size:13px;font-family:inherit;outline:none">
+        <option value="desc">Date: newest first</option>
+        <option value="asc">Date: oldest first</option>
+      </select>
     </div>
     <div class="table-wrap">
       <table>
@@ -254,15 +263,23 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
         <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg> Add frequency
       </button>
     </div>
-    <div class="search-bar">
-      <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input type="text" placeholder="Search MHz, description, user, category…" id="freq-search" oninput="renderFreqs()">
+    <div style="display:flex;gap:10px;margin-bottom:16px;align-items:center;flex-wrap:wrap">
+      <div class="search-bar" style="flex:1;min-width:200px;margin-bottom:0">
+        <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Search MHz, description, user…" id="freq-search" oninput="renderFreqs()">
+      </div>
+      <select id="freq-user-filter" onchange="freqUserFilter=this.value;renderFreqs()" style="padding:8px 10px;border:0.5px solid var(--border2);border-radius:var(--radius);background:var(--bg);color:var(--text);font-size:13px;font-family:inherit;outline:none">
+        <option value="All">All users</option>
+      </select>
+      <select id="freq-sort" onchange="freqSort=this.value;renderFreqs()" style="padding:8px 10px;border:0.5px solid var(--border2);border-radius:var(--radius);background:var(--bg);color:var(--text);font-size:13px;font-family:inherit;outline:none">
+        <option value="asc">Frequency: low→high</option>
+        <option value="desc">Frequency: high→low</option>
+      </select>
     </div>
-    <div class="pill-filter" id="cat-filter"></div>
     <div class="table-wrap">
       <table>
         <thead><tr>
-          <th>Frequency (MHz)</th><th>Description</th><th>Category</th><th>User / Owner</th><th>Location</th>
+          <th>Frequency (MHz)</th><th>Description</th><th>User / Owner</th>
           <th style="width:36px"></th>
         </tr></thead>
         <tbody id="freq-tbody"></tbody>
@@ -412,20 +429,9 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
   </div>
   <div class="form-grid" style="margin-bottom:12px">
     <div class="field"><label>Frequency (MHz)</label><input type="text" id="fm-freq" placeholder="e.g. 135.000" style="font-family:var(--mono)"></div>
-    <div class="field"><label>Category</label>
-      <select id="fm-cat">
-        <option>Military Air</option><option>Civil Air</option><option>Ground</option>
-        <option>ATIS</option><option>Approach</option><option>Departure</option>
-        <option>Tower</option><option>Area Control</option><option>Oceanic</option>
-        <option>SAR</option><option>Special Ops</option><option>Emergency</option><option>Other</option>
-      </select>
-    </div>
+    <div class="field"><label>User / Owner</label><input type="text" id="fm-user" placeholder="e.g. RAF LATCC, NATS"></div>
   </div>
   <div class="field" style="margin-bottom:12px"><label>Description</label><input type="text" id="fm-desc" placeholder="e.g. London Military, Swanwick Mil"></div>
-  <div class="form-grid" style="margin-bottom:12px">
-    <div class="field"><label>User / Owner</label><input type="text" id="fm-user" placeholder="e.g. RAF LATCC, NATS"></div>
-    <div class="field"><label>Location / Area</label><input type="text" id="fm-loc" placeholder="e.g. UK, North Sea"></div>
-  </div>
   <div class="field" style="margin-bottom:16px"><label>Notes</label><textarea id="fm-notes" placeholder="Hours of operation, remarks…"></textarea></div>
   <input type="hidden" id="fm-edit-id" value="">
   <div style="display:flex;gap:8px;justify-content:flex-end">
@@ -442,7 +448,9 @@ const SUPA_KEY = 'sb_publishable_GY3FMtHoQXsj-WAvqZoWog_Dr6wxBRJ';
 const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
 
 // ── In-memory cache ───────────────────────────────────────────────────────────
-var log = [], aircraft = [], freqs = [], catFilter = 'All';
+var log = [], aircraft = [], freqs = [];
+var logSort = 'desc', logTypeFilter = 'All';
+var freqSort = 'asc',  freqUserFilter = 'All';
 
 // ── Sync status UI ────────────────────────────────────────────────────────────
 function setSyncStatus(state, label) {
@@ -524,7 +532,21 @@ function showErr(id, msg) { var el = document.getElementById(id); el.textContent
 // ── Render: Log ───────────────────────────────────────────────────────────────
 function renderLog() {
   var q = (document.getElementById('log-search').value || '').toLowerCase();
-  var rows = log.filter(function(r){ return !q || (r.freq+r.callsign+r.serial+r.type+r.notes).toLowerCase().includes(q); });
+  // Populate type filter dropdown
+  var types = ['All'].concat([...new Set(log.map(function(r){ return r.type; }).filter(Boolean))].sort());
+  var tf = document.getElementById('log-type-filter');
+  var curType = tf.value;
+  tf.innerHTML = types.map(function(t){ return '<option value="'+esc(t)+'"'+(t===curType?' selected':'')+'>'+esc(t)+'</option>'; }).join('');
+  logTypeFilter = tf.value;
+  var rows = log.filter(function(r){
+    var qok = !q || (r.freq+r.callsign+r.serial+r.type+r.notes).toLowerCase().includes(q);
+    var tok = logTypeFilter === 'All' || r.type === logTypeFilter;
+    return qok && tok;
+  });
+  rows.sort(function(a,b){
+    var da = new Date(a.dt||0), db = new Date(b.dt||0);
+    return logSort === 'asc' ? da-db : db-da;
+  });
   var tb = document.getElementById('log-tbody');
   if (!rows.length) {
     tb.innerHTML = '<tr><td colspan="6"><div class="empty"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49"/></svg>No entries yet. Start logging!</div></td></tr>';
@@ -576,35 +598,40 @@ function renderAircraft() {
 // ── Render: Frequencies ───────────────────────────────────────────────────────
 function renderFreqs() {
   var q = (document.getElementById('freq-search').value || '').toLowerCase();
-  var cats = ['All'].concat([...new Set(freqs.map(function(f){ return f.cat; }))].sort());
-  document.getElementById('cat-filter').innerHTML = cats.map(function(c){
-    return '<button class="pill' + (catFilter === c ? ' active' : '') + '" onclick="setCat(\'' + c.replace(/'/g,"\\'") + '\')">' + esc(c) + '</button>';
-  }).join('');
+  // Populate user filter dropdown
+  var users = ['All'].concat([...new Set(freqs.map(function(f){ return f.usr; }).filter(Boolean))].sort());
+  var uf = document.getElementById('freq-user-filter');
+  var curUser = uf.value;
+  uf.innerHTML = users.map(function(u){ return '<option value="'+esc(u)+'"'+(u===curUser?' selected':'')+'>'+esc(u)+'</option>'; }).join('');
+  freqUserFilter = uf.value;
   var rows = freqs.filter(function(r){
-    return (catFilter === 'All' || r.cat === catFilter) && (!q || (r.freq+r.descr+r.cat+r.usr+r.loc+r.notes).toLowerCase().includes(q));
-  }).sort(function(a,b){ return parseFloat(a.freq) - parseFloat(b.freq); });
+    var qok = !q || (r.freq+r.descr+r.usr+r.notes).toLowerCase().includes(q);
+    var uok = freqUserFilter === 'All' || r.usr === freqUserFilter;
+    return qok && uok;
+  });
+  rows.sort(function(a,b){
+    var diff = parseFloat(a.freq) - parseFloat(b.freq);
+    return freqSort === 'asc' ? diff : -diff;
+  });
   var tb = document.getElementById('freq-tbody');
   if (!rows.length) {
-    tb.innerHTML = '<tr><td colspan="6"><div class="empty"><svg viewBox="0 0 24 24"><path d="M2 12h4M18 12h4M6 12a6 6 0 0 0 12 0M6 12a6 6 0 0 1 12 0"/></svg>No frequencies found.</div></td></tr>';
+    tb.innerHTML = '<tr><td colspan="4"><div class="empty"><svg viewBox="0 0 24 24"><path d="M2 12h4M18 12h4M6 12a6 6 0 0 0 12 0M6 12a6 6 0 0 1 12 0"/></svg>No frequencies found.</div></td></tr>';
     return;
   }
   tb.innerHTML = rows.map(function(r) {
     return '<tr>'
       + '<td style="white-space:nowrap"><span class="freq-tag">' + esc(r.freq) + ' MHz</span></td>'
       + '<td>' + esc(r.descr) + '</td>'
-      + '<td>' + (r.cat ? '<span class="type-badge">' + esc(r.cat) + '</span>' : '') + '</td>'
-      + '<td>' + (r.usr ? '<span class="user-chip">' + esc(r.usr) + '</span>' : '') + '</td>'
-      + '<td style="font-size:12px">' + esc(r.loc) + '</td>'
+      + '<td style="font-size:13px;color:var(--text2)">' + esc(r.usr||'') + '</td>'
       + '<td><div class="kebab-wrap">'
       + '<button class="kebab-btn" onclick="toggleKebab(event,\'kb-'+r.id+'\')" aria-label="Actions">⋮</button>'
       + '<div class="kebab-menu" id="kb-'+r.id+'">'
       + '<button class="kebab-item" onclick="editFreq(\''+r.id+'\')" ><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit</button>'
       + '<button class="kebab-item danger" onclick="delFreq(\''+r.id+'\')" ><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>Delete</button>'
       + '</div></div></td></tr>'
-      + notesRow(r.notes, 6);
+      + notesRow(r.notes, 4);
   }).join('');
 }
-function setCat(c) { catFilter = c; renderFreqs(); }
 
 // ── Render: Stats ─────────────────────────────────────────────────────────────
 function renderStats() {
@@ -763,9 +790,7 @@ function openFreqModal(id) {
   var r = id ? freqs.find(function(x){ return x.id === id; }) : null;
   document.getElementById('fm-freq').value    = r ? (r.freq  || '') : '';
   document.getElementById('fm-desc').value    = r ? (r.descr || '') : '';
-  document.getElementById('fm-cat').value     = r ? (r.cat   || 'Military Air') : 'Military Air';
   document.getElementById('fm-user').value    = r ? (r.usr   || '') : '';
-  document.getElementById('fm-loc').value     = r ? (r.loc   || '') : '';
   document.getElementById('fm-notes').value   = r ? (r.notes || '') : '';
   document.getElementById('fm-edit-id').value = r ? r.id : '';
   openModal('freq-modal');
@@ -784,9 +809,7 @@ async function saveFreq() {
   var payload = {
     freq: fmtFreq(document.getElementById('fm-freq').value.trim()),
     descr: document.getElementById('fm-desc').value.trim(),
-    cat:   document.getElementById('fm-cat').value,
     usr:   document.getElementById('fm-user').value.trim(),
-    loc:   document.getElementById('fm-loc').value.trim(),
     notes: document.getElementById('fm-notes').value.trim()
   };
   if (!payload.freq) { alert('Please enter a frequency.'); return; }
@@ -1014,7 +1037,7 @@ async function importFreqs(rows, prog, res) {
     if (!freq) { skipped++; return; }
     var dup = freqs.find(function(f){ return f.freq === freq; });
     if (dup) { skipped++; return; }
-    payload.push({ freq: freq, descr: desc, cat: 'Other', usr: user, loc: '', notes: '' });
+    payload.push({ freq: freq, descr: desc, usr: user, notes: '' });
   });
 
   if (payload.length) {
