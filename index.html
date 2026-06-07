@@ -36,9 +36,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .ver{font-size:11px;background:var(--green-light);color:var(--green);padding:3px 8px;border-radius:4px;font-weight:500;font-family:var(--mono)}
 .sync-status{font-size:11px;display:flex;align-items:center;gap:5px;color:var(--text2)}
 .sync-dot{width:7px;height:7px;border-radius:50%;background:var(--text3);flex-shrink:0;transition:background 0.3s}
-.sync-dot.ok{background:var(--green-mid)}
-.sync-dot.err{background:#e74c3c}
-.sync-dot.loading{background:#f39c12;animation:pulse 1s infinite}
+.sync-dot.ok{background:var(--green-mid)}.sync-dot.err{background:#e74c3c}.sync-dot.loading{background:#f39c12;animation:pulse 1s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
 .nav{display:flex;gap:2px}
 .nav button{background:none;border:none;padding:8px 14px;font-size:13px;cursor:pointer;border-radius:6px;color:var(--text2);display:flex;align-items:center;gap:6px;font-family:inherit}
@@ -51,12 +49,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .section-title{font-size:16px;font-weight:500}
 .btn{padding:8px 14px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg);font-size:13px;cursor:pointer;color:var(--text);display:inline-flex;align-items:center;gap:6px;font-family:inherit}
 .btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.btn:hover{background:var(--bg2)}
-.btn:disabled{opacity:0.5;cursor:not-allowed}
+.btn:hover{background:var(--bg2)}.btn:disabled{opacity:0.5;cursor:not-allowed}
 .btn-primary{background:var(--green);color:#fff;border-color:var(--green)}
 .btn-primary:hover{background:#155a32;border-color:#155a32}
-.btn-danger{color:var(--danger-text);border-color:var(--danger-text)}
-.btn-danger:hover{background:#fff5f5}
+.btn-danger{color:var(--danger-text);border-color:var(--danger-text)}.btn-danger:hover{background:#fff5f5}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .form-grid.three{grid-template-columns:1fr 1fr 1fr}
 .field{display:flex;flex-direction:column;gap:5px}
@@ -66,7 +62,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .field textarea{resize:vertical;min-height:60px}
 .field input[type=datetime-local]{font-family:var(--mono);font-size:12px}
 .table-wrap{border:0.5px solid var(--border);border-radius:var(--radius-lg);overflow:visible}
-table{width:100%;border-collapse:collapse;font-size:13px;border-radius:var(--radius-lg)}
+table{width:100%;border-collapse:collapse;font-size:13px}
 th{background:var(--bg2);padding:10px 12px;text-align:left;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.05em;color:var(--text2);border-bottom:0.5px solid var(--border);white-space:nowrap}
 td{padding:10px 12px;border-bottom:0.5px solid var(--border);color:var(--text);vertical-align:middle;position:relative}
 tr:last-child td{border-bottom:none}
@@ -100,9 +96,6 @@ tr:hover td{background:var(--bg2)}
 .search-bar input{width:100%;padding:8px 10px 8px 34px;border:0.5px solid var(--border2);border-radius:var(--radius);background:var(--bg);color:var(--text);font-size:13px;font-family:inherit;outline:none}
 .search-bar input:focus{border-color:var(--green)}
 .search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--text2);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.pill-filter{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
-.pill{padding:5px 12px;border-radius:12px;font-size:12px;border:0.5px solid var(--border2);background:var(--bg);cursor:pointer;color:var(--text2);font-family:inherit}
-.pill.active{background:var(--green);color:#fff;border-color:var(--green)}
 .freq-lookup{display:flex;gap:8px;align-items:flex-end;margin-bottom:14px}
 .freq-lookup .field{flex:1}
 .hint{font-size:12px;color:var(--green);min-height:16px;margin-top:-8px;margin-bottom:10px}
@@ -114,7 +107,6 @@ tr:hover td{background:var(--bg2)}
 .loading-box{background:var(--bg);border-radius:var(--radius-lg);padding:24px 32px;font-size:14px;color:var(--text2);display:flex;align-items:center;gap:12px}
 .spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
-
 .kebab-btn{background:none;border:none;cursor:pointer;padding:4px 8px;border-radius:6px;color:var(--text2);font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center}
 .kebab-btn:hover{background:var(--bg2);color:var(--text)}
 .kebab-wrap{position:relative;display:inline-block}
@@ -122,15 +114,12 @@ tr:hover td{background:var(--bg2)}
 .kebab-menu.open{display:block}
 .kebab-item{display:flex;align-items:center;gap:8px;padding:8px 12px;font-size:13px;cursor:pointer;color:var(--text);white-space:nowrap;border:none;background:none;width:100%;text-align:left;font-family:inherit}
 .kebab-item:hover{background:var(--bg2)}
-.kebab-item.danger{color:var(--danger-text)}
-.kebab-item.danger:hover{background:#fff5f5}
+.kebab-item.danger{color:var(--danger-text)}.kebab-item.danger:hover{background:#fff5f5}
 .kebab-item svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
-
 thead tr:first-child th:first-child{border-top-left-radius:var(--radius-lg)}
 thead tr:first-child th:last-child{border-top-right-radius:var(--radius-lg)}
 tbody tr:last-child td:first-child{border-bottom-left-radius:var(--radius-lg)}
 tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
-
 .import-zone{border:1.5px dashed var(--border2);border-radius:var(--radius-lg);padding:28px 20px;text-align:center;cursor:pointer;transition:border-color 0.2s,background 0.2s;margin-bottom:4px}
 .import-zone:hover,.import-zone.drag{border-color:var(--green);background:var(--green-light)}
 .import-zone input[type=file]{display:none}
@@ -146,23 +135,35 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
 .import-card-title{font-size:14px;font-weight:500;margin-bottom:4px}
 .import-card-desc{font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.5}
 .import-progress{font-size:12px;color:var(--text2);margin-top:8px;min-height:16px}
-
 .pagination{display:flex;align-items:center;gap:6px;margin-top:12px;flex-wrap:wrap}
 .pagination .pg-info{font-size:12px;color:var(--text2);margin-right:4px}
 .pg-btn{padding:5px 10px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg);font-size:12px;cursor:pointer;color:var(--text);font-family:inherit;min-width:32px;text-align:center}
-.pg-btn:hover:not(:disabled){background:var(--bg2)}
-.pg-btn:disabled{opacity:0.35;cursor:not-allowed}
+.pg-btn:hover:not(:disabled){background:var(--bg2)}.pg-btn:disabled{opacity:0.35;cursor:not-allowed}
 .pg-btn.active{background:var(--green);color:#fff;border-color:var(--green)}
 .pg-select{padding:5px 8px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg);color:var(--text);font-size:12px;font-family:inherit;outline:none;cursor:pointer}
 .per-page-wrap{display:flex;align-items:center;gap:6px;margin-left:auto;font-size:12px;color:var(--text2)}
-
 .stat-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid var(--border)}
 .stat-row:last-child{border-bottom:none}
 .stat-count{font-family:var(--mono);font-weight:500;font-size:13px;color:var(--text2)}
+
+/* ── Auth ── */
+.auth-wrap{position:relative}
+.auth-btn{display:flex;align-items:center;gap:7px;padding:6px 12px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg);font-size:13px;cursor:pointer;color:var(--text);font-family:inherit;white-space:nowrap;transition:background 0.15s}
+.auth-btn:hover{background:var(--bg3)}
+.auth-avatar{width:20px;height:20px;border-radius:50%;object-fit:cover;flex-shrink:0}
+.auth-menu{position:absolute;right:0;top:calc(100% + 6px);background:var(--bg);border:0.5px solid var(--border2);border-radius:var(--radius);min-width:170px;z-index:200;display:none;box-shadow:0 4px 16px rgba(0,0,0,0.12)}
+.auth-menu.open{display:block}
+.auth-menu-name{font-size:11px;color:var(--text3);padding:8px 12px 6px;border-bottom:0.5px solid var(--border);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.auth-menu-item{display:flex;align-items:center;gap:8px;width:100%;background:none;border:none;color:var(--text2);font-family:inherit;font-size:13px;padding:8px 12px;cursor:pointer;text-align:left}
+.auth-menu-item:hover{background:var(--bg2);color:var(--text)}
+.auth-menu-item svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--bg);border:0.5px solid var(--border2);color:var(--text);font-size:13px;padding:10px 18px;border-radius:var(--radius);z-index:9999;opacity:0;transition:opacity 0.2s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,0.15)}
+.toast.show{opacity:1}
 </style>
 </head>
 <body>
 
+<div class="toast" id="toast"></div>
 <div class="alert alert-error" id="global-err" style="position:sticky;top:64px;z-index:9;margin:0;border-radius:0;display:none;padding:10px 20px;font-size:13px;"></div>
 <div class="loading-overlay" id="loading-overlay">
   <div class="loading-box"><div class="spinner"></div>Loading data…</div>
@@ -173,7 +174,7 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
   <div class="logo">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
     AeroLog
-    <span class="ver">v2.0</span>
+    <span class="ver">v2.1</span>
   </div>
   <div style="display:flex;align-items:center;gap:16px">
     <div class="sync-status">
@@ -197,12 +198,20 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
         <svg viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="9"/><rect x="9.5" y="7" width="4" height="14"/><rect x="16" y="3" width="4" height="18"/></svg>
         Stats
       </button>
-      <!-- Import nav button hidden — functionality retained
-      <button onclick="showSection('import',this)">
-        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        Import
+    </div>
+    <!-- Auth -->
+    <div class="auth-wrap" id="auth-wrap">
+      <button class="auth-btn" id="auth-btn" onclick="handleAuthClick()">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Sign in with Google
       </button>
-      -->
+      <div class="auth-menu" id="auth-menu">
+        <div class="auth-menu-name" id="auth-menu-name"></div>
+        <button class="auth-menu-item" onclick="signOut()">
+          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Sign out
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -215,7 +224,7 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
     <div class="alert alert-error" id="log-err"></div>
     <div class="section-header">
       <div class="section-title">Contact log</div>
-      <button class="btn btn-primary" onclick="openLogModal()">
+      <button class="btn btn-primary" id="btn-new-log" onclick="openLogModal()" style="display:none">
         <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg> New entry
       </button>
     </div>
@@ -260,7 +269,7 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
     <div class="alert alert-error" id="ac-err"></div>
     <div class="section-header">
       <div class="section-title">Aircraft database</div>
-      <button class="btn btn-primary" onclick="openAcModal()">
+      <button class="btn btn-primary" id="btn-new-ac" onclick="openAcModal()" style="display:none">
         <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg> Add aircraft
       </button>
     </div>
@@ -296,7 +305,7 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
     <div class="alert alert-error" id="freq-err"></div>
     <div class="section-header">
       <div class="section-title">Frequency database</div>
-      <button class="btn btn-primary" onclick="openFreqModal()">
+      <button class="btn btn-primary" id="btn-new-freq" onclick="openFreqModal()" style="display:none">
         <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg> Add frequency
       </button>
     </div>
@@ -345,9 +354,7 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
     <div class="card">
       <div style="font-size:13px;font-weight:500;margin-bottom:12px">Recent contacts (last 20)</div>
       <div class="table-wrap"><table>
-        <thead><tr>
-          <th>Date / Time</th><th>Frequency</th><th>Callsign</th><th>Serial</th><th>Type</th>
-        </tr></thead>
+        <thead><tr><th>Date / Time</th><th>Frequency</th><th>Callsign</th><th>Serial</th><th>Type</th></tr></thead>
         <tbody id="stat-recent"></tbody>
       </table></div>
       <div style="margin-top:10px"><a href="#" onclick="showSection('log',document.querySelector('.nav button'));window.scrollTo(0,0);return false;" style="font-size:12px;color:var(--green);text-decoration:none">Go to full log →</a></div>
@@ -378,17 +385,13 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
     </table></div>
   </div>
 
-</div>
-</div>
-
-  <!-- IMPORT -->
+  <!-- IMPORT (hidden from nav) -->
   <div id="s-import" class="section">
     <div class="section-header"><div class="section-title">Import data</div></div>
     <div class="import-cards">
-
       <div class="import-card" style="grid-column:1/-1">
         <div class="import-card-title">One-off: backfill aircraft from existing logs</div>
-        <div class="import-card-desc">Scans all existing log entries and adds any callsign/serial/type combinations not yet in the aircraft database. Run this once to populate aircraft from previously imported logs.</div>
+        <div class="import-card-desc">Scans all existing log entries and adds any callsign/serial/type combinations not yet in the aircraft database.</div>
         <button class="btn btn-primary" id="backfill-btn" onclick="backfillAircraft()">
           <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
           Run backfill
@@ -396,42 +399,41 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
         <div class="import-progress" id="backfill-progress"></div>
         <div class="import-result" id="backfill-result"></div>
       </div>
-
       <div class="import-card">
         <div class="import-card-title">Log entries</div>
-        <div class="import-card-desc">CSV with columns: <strong>Date Time Logged, Frequency, Callsign, Type, Callsign (serial), Log Notes</strong><br>Duplicates (same date, frequency &amp; callsign) will be skipped.</div>
-        <div class="import-zone" id="log-drop" onclick="document.getElementById('log-file').click()" ondragover="dragOver(event,'log-drop')" ondragleave="dragLeave('log-drop')" ondrop="dropFile(event,'log')">
-          <input type="file" id="log-file" accept=".csv" onchange="handleFile(this,'log')">
-          <svg class="import-zone-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 12 15 15"/></svg>
-          <div class="import-zone-label">Click or drag &amp; drop CSV file</div>
-          <div class="import-zone-hint">logs.csv</div>
-        </div>
-        <div class="import-progress" id="log-progress"></div>
+        <div class="import-card-desc">CSV with columns: <strong>Date, Frequency, Callsign, Callsign_2 (serial), Type, Notes</strong>.</div>
+        <label class="import-zone" ondragover="this.classList.add('drag');event.preventDefault()" ondragleave="this.classList.remove('drag')" ondrop="this.classList.remove('drag');handleFileDrop(event,'log')">
+          <svg class="import-zone-icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <div class="import-zone-label">Drop CSV here or click to browse</div>
+          <div class="import-zone-hint">Accepts .csv files</div>
+          <input type="file" accept=".csv" onchange="handleFileSelect(event,'log')">
+        </label>
+        <div class="import-progress" id="log-import-progress"></div>
         <div class="import-result" id="log-import-result"></div>
       </div>
-
       <div class="import-card">
         <div class="import-card-title">Frequencies</div>
-        <div class="import-card-desc">CSV with columns: <strong>Frequency, Description, User</strong><br>Duplicate frequencies will be skipped. Existing entries are not overwritten.</div>
-        <div class="import-zone" id="freq-drop" onclick="document.getElementById('freq-file').click()" ondragover="dragOver(event,'freq-drop')" ondragleave="dragLeave('freq-drop')" ondrop="dropFile(event,'freq')">
-          <input type="file" id="freq-file" accept=".csv" onchange="handleFile(this,'freq')">
-          <svg class="import-zone-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 12 15 15"/></svg>
-          <div class="import-zone-label">Click or drag &amp; drop CSV file</div>
-          <div class="import-zone-hint">frequencies.csv</div>
-        </div>
-        <div class="import-progress" id="freq-progress"></div>
+        <div class="import-card-desc">CSV with columns: <strong>Frequency, Description, User</strong>. Duplicates are skipped.</div>
+        <label class="import-zone" ondragover="this.classList.add('drag');event.preventDefault()" ondragleave="this.classList.remove('drag')" ondrop="this.classList.remove('drag');handleFileDrop(event,'freq')">
+          <svg class="import-zone-icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <div class="import-zone-label">Drop CSV here or click to browse</div>
+          <div class="import-zone-hint">Accepts .csv files</div>
+          <input type="file" accept=".csv" onchange="handleFileSelect(event,'freq')">
+        </label>
+        <div class="import-progress" id="freq-import-progress"></div>
         <div class="import-result" id="freq-import-result"></div>
       </div>
-
     </div>
   </div>
 
+</div>
+</div>
 
 <!-- LOG MODAL -->
 <div class="modal-bg" id="log-modal">
 <div class="modal">
   <div class="modal-header">
-    <div class="modal-title" id="log-modal-title">New log entry</div>
+    <div class="modal-title">Log entry</div>
     <button class="btn" onclick="closeModal('log-modal')">&times;</button>
   </div>
   <div class="field" style="margin-bottom:12px"><label>Date &amp; Time</label><input type="datetime-local" id="le-dt"></div>
@@ -527,20 +529,119 @@ const SUPA_URL = 'https://lnuhazkmokijsvpkarwk.supabase.co';
 const SUPA_KEY = 'sb_publishable_GY3FMtHoQXsj-WAvqZoWog_Dr6wxBRJ';
 const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
 
+// ── Auth config ───────────────────────────────────────────────────────────────
+const ALLOWED_EMAIL = 'matthewhearne@gmail.com';
+const SITE_URL      = 'https://matthewhearne.me.uk/aerolog/';
+
+var currentUser = null;
+var accessDeniedShown = false;
+
+function isAdmin() { return !!currentUser && currentUser.email === ALLOWED_EMAIL; }
+
+// ── Toast ─────────────────────────────────────────────────────────────────────
+var _toastTimer = null;
+function showToast(msg) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  if (_toastTimer) clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(function(){ el.classList.remove('show'); }, 3500);
+}
+
+// ── Auth UI ───────────────────────────────────────────────────────────────────
+function updateAuthUI() {
+  var btn = document.getElementById('auth-btn');
+  var menuName = document.getElementById('auth-menu-name');
+
+  if (isAdmin()) {
+    var avatarUrl = currentUser.user_metadata && currentUser.user_metadata.avatar_url;
+    var name = (currentUser.user_metadata && currentUser.user_metadata.full_name) || currentUser.email;
+    if (avatarUrl) {
+      btn.innerHTML = '<img src="' + avatarUrl + '" class="auth-avatar" alt=""> ' + esc(name.split(' ')[0]);
+    } else {
+      btn.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" style="flex-shrink:0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> ' + esc(name.split(' ')[0]);
+    }
+    menuName.textContent = name;
+  } else {
+    btn.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" style="flex-shrink:0"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg> Sign in with Google';
+    menuName.textContent = '';
+  }
+
+  // Show write-action buttons only to admin
+  ['btn-new-log','btn-new-ac','btn-new-freq'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.style.display = isAdmin() ? 'inline-flex' : 'none';
+  });
+
+  renderLog(); renderAircraft(); renderFreqs();
+}
+
+function handleAuthClick() {
+  if (currentUser) {
+    document.getElementById('auth-menu').classList.toggle('open');
+  } else {
+    signIn();
+  }
+}
+
+document.addEventListener('click', function(e) {
+  var wrap = document.getElementById('auth-wrap');
+  if (wrap && !wrap.contains(e.target)) document.getElementById('auth-menu').classList.remove('open');
+});
+
+async function signIn() {
+  var res = await sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: SITE_URL } });
+  if (res.error) showToast('Sign-in failed: ' + res.error.message);
+}
+
+async function signOut() {
+  document.getElementById('auth-menu').classList.remove('open');
+  await sb.auth.signOut();
+  currentUser = null;
+  updateAuthUI();
+  showToast('Signed out.');
+}
+
+function handleSession(user) {
+  if (user && user.email !== ALLOWED_EMAIL) {
+    // Wrong account — reject immediately
+    currentUser = null;
+    sb.auth.signOut();
+    updateAuthUI();
+    if (!accessDeniedShown) {
+      accessDeniedShown = true;
+      showToast('Access restricted — this log is private.');
+    }
+    return;
+  }
+  accessDeniedShown = false;
+  currentUser = user || null;
+  updateAuthUI();
+}
+
+// Picks up the redirect back from Google OAuth
+sb.auth.onAuthStateChange(function(_event, session) {
+  handleSession(session ? session.user : null);
+});
+
+// Restores existing session on page load
+sb.auth.getSession().then(function(res) {
+  var session = res.data && res.data.session;
+  handleSession(session ? session.user : null);
+});
+
 // ── In-memory cache ───────────────────────────────────────────────────────────
 var log = [], aircraft = [], freqs = [];
 var logSort = 'desc', logTypeFilter = 'All', logYear = 'All', logMonth = 'All';
-var freqSort = 'asc',  freqUserFilter = 'All';
+var freqSort = 'asc', freqUserFilter = 'All';
 var logPage = 1, acPage = 1, freqPage = 1;
 var logPer = 25, acPer = 25, freqPer = 25;
 var acTypeFilter = 'All', acSort = 'asc';
 
 // ── Sync status UI ────────────────────────────────────────────────────────────
 function setSyncStatus(state, label) {
-  var dot = document.getElementById('sync-dot');
-  var lbl = document.getElementById('sync-label');
-  dot.className = 'sync-dot ' + (state || '');
-  lbl.textContent = label;
+  document.getElementById('sync-dot').className = 'sync-dot ' + (state || '');
+  document.getElementById('sync-label').textContent = label;
 }
 
 // ── Seed default frequencies if table is empty ────────────────────────────────
@@ -548,11 +649,11 @@ async function seedFreqsIfEmpty() {
   var { count } = await sb.from('frequencies').select('*', { count: 'exact', head: true });
   if (count > 0) return;
   var defaults = [
-    { freq: '121.500', descr: 'International distress',    cat: 'Emergency',     usr: 'ICAO',     loc: 'Worldwide',       notes: 'Guard frequency — always monitored' },
-    { freq: '243.000', descr: 'Military distress (UHF)',   cat: 'Emergency',     usr: 'NATO',     loc: 'Worldwide',       notes: '' },
-    { freq: '135.275', descr: 'London Military',           cat: 'Military Air',  usr: 'RAF LATCC',loc: 'UK',              notes: '' },
-    { freq: '134.300', descr: 'London Control (Sector 9)', cat: 'Area Control',  usr: 'NATS',     loc: 'UK',              notes: '' },
-    { freq: '119.775', descr: 'Heathrow Tower',            cat: 'Tower',         usr: 'NATS',     loc: 'London Heathrow', notes: '' },
+    { freq: '121.500', descr: 'International distress',    usr: 'ICAO',      notes: 'Guard frequency — always monitored' },
+    { freq: '243.000', descr: 'Military distress (UHF)',   usr: 'NATO',      notes: '' },
+    { freq: '135.275', descr: 'London Military',           usr: 'RAF LATCC', notes: '' },
+    { freq: '134.300', descr: 'London Control (Sector 9)', usr: 'NATS',      notes: '' },
+    { freq: '119.775', descr: 'Heathrow Tower',            usr: 'NATS',      notes: '' },
   ];
   await sb.from('frequencies').insert(defaults);
 }
@@ -570,14 +671,16 @@ async function loadAll() {
     if (rLog.error) throw rLog.error;
     if (rAc.error)  throw rAc.error;
     if (rFr.error)  throw rFr.error;
-    log      = rLog.data || [];
-    aircraft = rAc.data  || [];
-    freqs    = rFr.data  || [];
+    log = rLog.data || []; aircraft = rAc.data || []; freqs = rFr.data || [];
     if (!freqs.length) { await seedFreqsIfEmpty(); var r2 = await sb.from('frequencies').select('*').order('freq'); freqs = r2.data || []; }
     setSyncStatus('ok', 'Synced');
     renderLog(); renderAircraft(); renderFreqs();
   } catch(e) {
-    var msg = (e && e.message) ? e.message : (e && e.hint ? e.hint : String(e)); var ge=document.getElementById("global-err"); ge.textContent="Supabase error: "+msg+". Check the browser console (F12) for details."; ge.style.display="block"; setSyncStatus('err', msg.length > 60 ? msg.slice(0,60)+'...' : msg);
+    var msg = (e && e.message) ? e.message : String(e);
+    var ge = document.getElementById('global-err');
+    ge.textContent = 'Supabase error: ' + msg;
+    ge.style.display = 'block';
+    setSyncStatus('err', msg.slice(0,60));
     console.error(e);
   }
   document.getElementById('loading-overlay').classList.remove('show');
@@ -596,497 +699,47 @@ function notesRow(notes, cols) {
   if (!notes || !notes.trim()) return '';
   return '<tr class="notes-row"><td colspan="' + cols + '" style="padding-top:0"><div class="notes-content"><span class="notes-label">Notes</span><span class="notes-text">' + esc(notes) + '</span></div></td></tr>';
 }
-function setBusy(btnId, busy) {
-  var b = document.getElementById(btnId);
-  if (b) b.disabled = busy;
-}
+function setBusy(id, busy) { var b=document.getElementById(id); if(b) b.disabled=busy; }
 function showSection(id, btn) {
-  document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
-  document.querySelectorAll('.nav button').forEach(function(b) { b.classList.remove('active'); });
-  document.getElementById('s-' + id).classList.add('active');
-  btn.classList.add('active');
-  if (id === 'stats') renderStats();
+  document.querySelectorAll('.section').forEach(function(s){ s.classList.remove('active'); });
+  document.querySelectorAll('.nav button').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById('s-'+id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (id==='stats') renderStats();
 }
 function openModal(id)  { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-function showAlert(id, duration) { var el = document.getElementById(id); el.classList.add('show'); setTimeout(function(){ el.classList.remove('show'); }, duration || 2500); }
-function showErr(id, msg) { var el = document.getElementById(id); el.textContent = msg; el.classList.add('show'); setTimeout(function(){ el.classList.remove('show'); }, 4000); }
-
-// ── Render: Log ───────────────────────────────────────────────────────────────
+function showAlert(id, dur) { var el=document.getElementById(id); el.classList.add('show'); setTimeout(function(){ el.classList.remove('show'); }, dur||2500); }
+function showErr(id, msg) { var el=document.getElementById(id); el.textContent=msg; el.classList.add('show'); setTimeout(function(){ el.classList.remove('show'); }, 4000); }
 
 // ── Pagination helper ─────────────────────────────────────────────────────────
 function renderPagination(containerId, total, page, perPage, onPage, onPer) {
   var el = document.getElementById(containerId);
   if (!el) return;
-  var totalPages = Math.max(1, Math.ceil(total / perPage));
+  var totalPages = Math.max(1, Math.ceil(total/perPage));
   if (page > totalPages) page = totalPages;
-  // Build page buttons — show first, last, current ±2, with ellipsis
   var pages = [];
-  for (var i = 1; i <= totalPages; i++) {
-    if (i === 1 || i === totalPages || (i >= page-2 && i <= page+2)) pages.push(i);
-    else if (pages[pages.length-1] !== '…') pages.push('…');
+  for (var i=1; i<=totalPages; i++) {
+    if (i===1||i===totalPages||(i>=page-2&&i<=page+2)) pages.push(i);
+    else if (pages[pages.length-1]!=='…') pages.push('…');
   }
   var btns = pages.map(function(p) {
-    if (p === '…') return '<span style="padding:5px 4px;font-size:12px;color:var(--text3)">…</span>';
+    if (p==='…') return '<span style="padding:5px 4px;font-size:12px;color:var(--text3)">…</span>';
     return '<button class="pg-btn'+(p===page?' active':'')+'" onclick="('+onPage+')('+p+')">' + p + '</button>';
   }).join('');
-
-  var html =
-    '<span class="pg-info">'+total+' total</span>'
+  var html = '<span class="pg-info">'+total+' total</span>'
     + '<button class="pg-btn" onclick="('+onPage+')('+Math.max(1,page-1)+')" '+(page<=1?'disabled':'')+'>‹</button>'
     + btns
     + '<button class="pg-btn" onclick="('+onPage+')('+Math.min(totalPages,page+1)+')" '+(page>=totalPages?'disabled':'')+'>›</button>'
-    + '<div class="per-page-wrap">Per page '
-    + '<select class="pg-select" onchange="('+onPer+')(parseInt(this.value))">'
+    + '<div class="per-page-wrap">Per page <select class="pg-select" onchange="('+onPer+')(parseInt(this.value))">'
     + [10,25,50,100].map(function(n){ return '<option value="'+n+'"'+(n===perPage?' selected':'')+'>'+n+'</option>'; }).join('')
     + '</select></div>';
   el.innerHTML = html;
-  var topEl = document.getElementById(containerId + '-top');
-  if (topEl) topEl.innerHTML = html;
+  var top = document.getElementById(containerId+'-top');
+  if (top) top.innerHTML = html;
 }
 
-function renderLog() {
-  var q = (document.getElementById('log-search').value || '').toLowerCase();
-  // Populate type filter
-  var types = ['All'].concat([...new Set(log.map(function(r){ return r.type; }).filter(Boolean))].sort());
-  var tf = document.getElementById('log-type-filter');
-  var curType = tf.value;
-  tf.innerHTML = types.map(function(t){ return '<option value="'+esc(t)+'"'+(t===curType?' selected':'')+'>'+esc(t)+'</option>'; }).join('');
-  logTypeFilter = tf.value;
-  // Populate year filter from actual data
-  var years = [...new Set(log.map(function(r){ return r.dt ? new Date(r.dt).getFullYear() : null; }).filter(Boolean))].sort(function(a,b){ return b-a; });
-  var yf = document.getElementById('log-year');
-  var curYear = yf.value;
-  yf.innerHTML = '<option value="All">All years</option>' + years.map(function(y){ return '<option value="'+y+'"'+(String(y)===curYear?' selected':'')+'>'+y+'</option>'; }).join('');
-  logYear = yf.value;
-  // Populate month filter — only months present in selected year
-  var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-  var mf = document.getElementById('log-month');
-  var curMonth = mf.value;
-  var availMonths;
-  if (logYear === 'All') {
-    availMonths = [...new Set(log.map(function(r){ return r.dt ? new Date(r.dt).getMonth() : null; }).filter(function(m){ return m !== null; }))].sort(function(a,b){ return a-b; });
-  } else {
-    availMonths = [...new Set(log.filter(function(r){ return r.dt && new Date(r.dt).getFullYear() === parseInt(logYear); }).map(function(r){ return new Date(r.dt).getMonth(); }))].sort(function(a,b){ return a-b; });
-  }
-  mf.innerHTML = '<option value="All">All months</option>' + availMonths.map(function(m){ return '<option value="'+m+'"'+(String(m)===curMonth?' selected':'')+'>'+MONTHS[m]+'</option>'; }).join('');
-  if (curMonth !== 'All' && !availMonths.includes(parseInt(curMonth))) { mf.value = 'All'; logMonth = 'All'; } else { logMonth = mf.value; }
-  // Show/hide clear button
-  var clearBtn = document.getElementById('log-clear-date');
-  if (clearBtn) clearBtn.style.display = (logYear !== 'All' || logMonth !== 'All') ? 'inline-flex' : 'none';
-  var rows = log.filter(function(r){
-    var qok = !q || (r.freq+r.callsign+r.serial+r.type+r.notes).toLowerCase().includes(q);
-    var tok = logTypeFilter === 'All' || r.type === logTypeFilter;
-    var yok = logYear === 'All' || (r.dt && new Date(r.dt).getFullYear() === parseInt(logYear));
-    var mok = logMonth === 'All' || (r.dt && String(new Date(r.dt).getMonth()) === String(logMonth));
-    return qok && tok && yok && mok;
-  });
-  rows.sort(function(a,b){
-    var da = new Date(a.dt||0), db = new Date(b.dt||0);
-    return logSort === 'asc' ? da-db : db-da;
-  });
-  var tb = document.getElementById('log-tbody');
-  if (!rows.length) {
-    tb.innerHTML = '<tr><td colspan="6"><div class="empty"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49"/></svg>No entries yet. Start logging!</div></td></tr>';
-    renderPagination('log-pagination', 0, 1, logPer, 'function(p){logPage=p;renderLog()}', 'function(n){logPer=n;logPage=1;renderLog()}');
-    return;
-  }
-  var total = rows.length;
-  if (logPage > Math.ceil(total/logPer)) logPage = 1;
-  var start = (logPage-1)*logPer, end = start+logPer;
-  var pageRows = rows.slice(start, end);
-  tb.innerHTML = pageRows.map(function(r) {
-    return '<tr>'
-      + '<td style="font-family:var(--mono);font-size:11px;white-space:nowrap">' + fmt(r.dt) + '</td>'
-      + '<td style="white-space:nowrap"><span class="freq-tag">' + esc(r.freq) + ' MHz</span></td>'
-      + '<td><span class="callsign-tag">' + esc(r.callsign) + '</span></td>'
-      + '<td><span class="serial-tag">' + esc(r.serial) + '</span></td>'
-      + '<td>' + (r.type ? '<span class="type-badge">' + esc(r.type) + '</span>' : '') + '</td>'
-      + '<td><div class="kebab-wrap">'
-      + '<button class="kebab-btn" onclick="toggleKebab(event,\'kb-'+r.id+'\')" aria-label="Actions">⋮</button>'
-      + '<div class="kebab-menu" id="kb-'+r.id+'">'
-      + '<button class="kebab-item" onclick="editLog(\''+r.id+'\')" ><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit</button>'
-      + '<button class="kebab-item danger" onclick="delLog(\''+r.id+'\')" ><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>Delete</button>'
-      + '</div></div></td></tr>'
-      + notesRow(r.notes, 6);
-  }).join('');
-  renderPagination('log-pagination', total, logPage, logPer, 'function(p){logPage=p;renderLog()}', 'function(n){logPer=n;logPage=1;renderLog()}');
-}
-
-// ── Render: Aircraft ──────────────────────────────────────────────────────────
-function renderAircraft() {
-  var q = (document.getElementById('ac-search').value || '').toLowerCase();
-  // Populate type filter
-  var types = ['All'].concat([...new Set(aircraft.map(function(r){ return r.type; }).filter(Boolean))].sort());
-  var tf = document.getElementById('ac-type-filter');
-  if (tf) { var cur = tf.value; tf.innerHTML = types.map(function(t){ return '<option value="'+esc(t)+'"'+(t===cur?' selected':'')+'>'+esc(t)+'</option>'; }).join(''); acTypeFilter = tf.value; }
-  var rows = aircraft.filter(function(r){
-    var qok = !q || (r.cs+r.serial+r.type+r.op+r.country+r.hex).toLowerCase().includes(q);
-    var tok = acTypeFilter === 'All' || r.type === acTypeFilter;
-    return qok && tok;
-  });
-  rows.sort(function(a,b){
-    var ca = (a.cs||'').toLowerCase(), cb = (b.cs||'').toLowerCase();
-    return acSort === 'asc' ? (ca < cb ? -1 : ca > cb ? 1 : 0) : (cb < ca ? -1 : cb > ca ? 1 : 0);
-  });
-  var tb = document.getElementById('ac-tbody');
-  if (!rows.length) {
-    tb.innerHTML = '<tr><td colspan="6"><div class="empty"><svg viewBox="0 0 24 24"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21 4 19 4c-2 0-4 2-4 2l-8.2 1.8L3 9l4 2 2 4 2-1 1 3 3-2z"/></svg>No aircraft added yet.</div></td></tr>';
-    renderPagination('ac-pagination', 0, 1, acPer, 'function(p){acPage=p;renderAircraft()}', 'function(n){acPer=n;acPage=1;renderAircraft()}');
-    return;
-  }
-  var total = rows.length;
-  if (acPage > Math.ceil(total/acPer)) acPage = 1;
-  var start = (acPage-1)*acPer, end = start+acPer;
-  var pageRows = rows.slice(start, end);
-  tb.innerHTML = pageRows.map(function(r) {
-    return '<tr>'
-      + '<td><span class="callsign-tag">' + esc(r.cs) + '</span></td>'
-      + '<td><span class="serial-tag">' + esc(r.serial) + '</span>' + (r.hex ? '<br><span style="font-size:10px;font-family:var(--mono);color:var(--text2)">' + esc(r.hex) + '</span>' : '') + '</td>'
-      + '<td>' + (r.type ? '<span class="type-badge">' + esc(r.type) + '</span>' : '') + '</td>'
-      + '<td>' + esc(r.op) + '</td>'
-      + '<td>' + esc(r.country) + '</td>'
-      + '<td><div class="kebab-wrap">'
-      + '<button class="kebab-btn" onclick="toggleKebab(event,\'kb-'+r.id+'\')" aria-label="Actions">⋮</button>'
-      + '<div class="kebab-menu" id="kb-'+r.id+'">'
-      + '<button class="kebab-item" onclick="editAircraft(\''+r.id+'\')" ><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit</button>'
-      + '<button class="kebab-item danger" onclick="delAircraft(\''+r.id+'\')" ><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>Delete</button>'
-      + '</div></div></td></tr>'
-      + notesRow(r.notes, 6);
-  }).join('');
-  renderPagination('ac-pagination', total, acPage, acPer, 'function(p){acPage=p;renderAircraft()}', 'function(n){acPer=n;acPage=1;renderAircraft()}');
-}
-
-// ── Render: Frequencies ───────────────────────────────────────────────────────
-function renderFreqs() {
-  var q = (document.getElementById('freq-search').value || '').toLowerCase();
-  // Populate user filter dropdown
-  var users = ['All'].concat([...new Set(freqs.map(function(f){ return f.usr; }).filter(Boolean))].sort());
-  var uf = document.getElementById('freq-user-filter');
-  var curUser = uf.value;
-  uf.innerHTML = users.map(function(u){ return '<option value="'+esc(u)+'"'+(u===curUser?' selected':'')+'>'+esc(u)+'</option>'; }).join('');
-  freqUserFilter = uf.value;
-  var rows = freqs.filter(function(r){
-    var qok = !q || (r.freq+r.descr+r.usr+r.notes).toLowerCase().includes(q);
-    var uok = freqUserFilter === 'All' || r.usr === freqUserFilter;
-    return qok && uok;
-  });
-  rows.sort(function(a,b){
-    var diff = parseFloat(a.freq) - parseFloat(b.freq);
-    return freqSort === 'asc' ? diff : -diff;
-  });
-  var tb = document.getElementById('freq-tbody');
-  if (!rows.length) {
-    tb.innerHTML = '<tr><td colspan="4"><div class="empty"><svg viewBox="0 0 24 24"><path d="M2 12h4M18 12h4M6 12a6 6 0 0 0 12 0M6 12a6 6 0 0 1 12 0"/></svg>No frequencies found.</div></td></tr>';
-    renderPagination('freq-pagination', 0, 1, freqPer, 'function(p){freqPage=p;renderFreqs()}', 'function(n){freqPer=n;freqPage=1;renderFreqs()}');
-    return;
-  }
-  var total = rows.length;
-  if (freqPage > Math.ceil(total/freqPer)) freqPage = 1;
-  var start = (freqPage-1)*freqPer, end = start+freqPer;
-  var pageRows = rows.slice(start, end);
-  tb.innerHTML = pageRows.map(function(r) {
-    return '<tr>'
-      + '<td style="white-space:nowrap"><span class="freq-tag">' + esc(r.freq) + ' MHz</span></td>'
-      + '<td>' + esc(r.descr) + '</td>'
-      + '<td style="font-size:13px;color:var(--text2)">' + esc(r.usr||'') + '</td>'
-      + '<td><div class="kebab-wrap">'
-      + '<button class="kebab-btn" onclick="toggleKebab(event,\'kb-'+r.id+'\')" aria-label="Actions">⋮</button>'
-      + '<div class="kebab-menu" id="kb-'+r.id+'">'
-      + '<button class="kebab-item" onclick="editFreq(\''+r.id+'\')" ><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit</button>'
-      + '<button class="kebab-item danger" onclick="delFreq(\''+r.id+'\')" ><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>Delete</button>'
-      + '</div></div></td></tr>'
-      + notesRow(r.notes, 4);
-  }).join('');
-  renderPagination('freq-pagination', total, freqPage, freqPer, 'function(p){freqPage=p;renderFreqs()}', 'function(n){freqPer=n;freqPage=1;renderFreqs()}');
-}
-
-// ── Render: Stats ─────────────────────────────────────────────────────────────
-function showStatsSection() {
-  document.querySelectorAll('.section').forEach(function(s){ s.classList.remove('active'); });
-  document.getElementById('s-stats').classList.add('active');
-  document.querySelectorAll('.nav button').forEach(function(b){ b.classList.remove('active'); });
-  var statsBtn = document.querySelector('.nav button[onclick*="stats"]');
-  if (statsBtn) statsBtn.classList.add('active');
-  renderStats();
-}
-
-function buildFreqMap() {
-  var fmap = {};
-  log.forEach(function(r){ if (r.freq) fmap[r.freq] = (fmap[r.freq]||0)+1; });
-  return Object.entries(fmap).sort(function(a,b){ return b[1]-a[1]; });
-}
-function buildTypeMap() {
-  var tmap = {};
-  log.forEach(function(r){ if (r.type) tmap[r.type] = (tmap[r.type]||0)+1; });
-  return Object.entries(tmap).sort(function(a,b){ return b[1]-a[1]; });
-}
-
-function renderStats() {
-  var uniqueTypes = [...new Set(log.map(function(r){ return r.type; }).filter(Boolean))].length;
-  var uniqueFreqsHeard = [...new Set(log.map(function(r){ return r.freq; }).filter(Boolean))].length;
-  document.getElementById('stats-grid').innerHTML =
-    '<div class="stat-card"><div class="stat-val">' + log.length + '</div><div class="stat-lbl">Log entries</div></div>'
-    + '<div class="stat-card"><div class="stat-val">' + uniqueTypes + '</div><div class="stat-lbl">Unique aircraft types</div></div>'
-    + '<div class="stat-card"><div class="stat-val">' + uniqueFreqsHeard + '</div><div class="stat-lbl">Unique frequencies logged</div></div>';
-
-  var sf = buildFreqMap().slice(0,10);
-  document.getElementById('stat-freqs').innerHTML = sf.length ? sf.map(function(e){
-    var desc = (freqs.find(function(f){ return f.freq === e[0]; })||{}).descr || '';
-    return '<div class="stat-row"><div style="display:flex;align-items:center;gap:8px"><span class="freq-tag">'+esc(e[0])+' MHz</span>'+(desc?'<span style="font-size:12px;color:var(--text2)">'+esc(desc)+'</span>':'')+'</div><span class="stat-count">'+e[1]+'</span></div>';
-  }).join('') : '<div style="color:var(--text2);font-size:13px">No data yet</div>';
-
-  var st = buildTypeMap().slice(0,10);
-  document.getElementById('stat-types').innerHTML = st.length ? st.map(function(e){
-    return '<div class="stat-row"><span class="type-badge">'+esc(e[0])+'</span><span class="stat-count">'+e[1]+'</span></div>';
-  }).join('') : '<div style="color:var(--text2);font-size:13px">No data yet</div>';
-
-  var recent = log.slice().sort(function(a,b){ return new Date(b.dt||b.created_at)-new Date(a.dt||a.created_at); }).slice(0,20);
-  document.getElementById('stat-recent').innerHTML = recent.length ? recent.map(function(r){
-    return '<tr>'
-      + '<td style="font-family:var(--mono);font-size:11px;white-space:nowrap">'+fmt(r.dt)+'</td>'
-      + '<td style="white-space:nowrap"><span class="freq-tag">'+esc(r.freq)+' MHz</span></td>'
-      + '<td><span class="callsign-tag">'+esc(r.callsign)+'</span></td>'
-      + '<td><span class="serial-tag">'+esc(r.serial)+'</span></td>'
-      + '<td>'+(r.type ? '<span class="type-badge">'+esc(r.type)+'</span>' : '')+'</td>'
-      + '</tr>';
-  }).join('') : '<tr><td colspan="5" style="padding:20px;text-align:center;color:var(--text2);font-size:13px">No entries yet</td></tr>';
-}
-
-function showAllFreqsHeard() {
-  document.querySelectorAll('.section').forEach(function(s){ s.classList.remove('active'); });
-  document.getElementById('s-stat-freqs-all').classList.add('active');
-  var all = buildFreqMap();
-  document.getElementById('stat-freqs-all-tbody').innerHTML = all.length ? all.map(function(e){
-    var desc = (freqs.find(function(f){ return f.freq === e[0]; })||{}).descr || '';
-    return '<tr><td style="white-space:nowrap"><span class="freq-tag">'+esc(e[0])+' MHz</span></td><td style="font-size:13px;color:var(--text2)">'+esc(desc)+'</td><td style="font-family:var(--mono);font-weight:500">'+e[1]+'</td></tr>';
-  }).join('') : '<tr><td colspan="3"><div class="empty">No data</div></td></tr>';
-}
-
-function showAllTypesHeard() {
-  document.querySelectorAll('.section').forEach(function(s){ s.classList.remove('active'); });
-  document.getElementById('s-stat-types-all').classList.add('active');
-  var all = buildTypeMap();
-  document.getElementById('stat-types-all-tbody').innerHTML = all.length ? all.map(function(e){
-    return '<tr><td><span class="type-badge">'+esc(e[0])+'</span></td><td style="font-family:var(--mono);font-weight:500">'+e[1]+'</td></tr>';
-  }).join('') : '<tr><td colspan="2"><div class="empty">No data</div></td></tr>';
-}
-
-// ── Log CRUD ──────────────────────────────────────────────────────────────────
-function openLogModal(id) {
-  var r = id ? log.find(function(x){ return x.id === id; }) : null;
-  document.getElementById('log-modal-title').textContent = r ? 'Edit log entry' : 'New log entry';
-  document.getElementById('le-dt').value      = r ? (r.dt || '') : new Date().toISOString().slice(0,16);
-  document.getElementById('le-freq').value    = r ? (r.freq    || '') : '';
-  document.getElementById('le-cs').value      = r ? (r.callsign|| '') : '';
-  document.getElementById('le-serial').value  = r ? (r.serial  || '') : '';
-  document.getElementById('le-type').value    = r ? (r.type    || '') : '';
-  document.getElementById('le-op').value      = r ? (r.op      || '') : '';
-  document.getElementById('le-notes').value   = r ? (r.notes   || '') : '';
-  document.getElementById('le-edit-id').value = r ? r.id : '';
-  document.getElementById('freq-match').textContent = '';
-  var am = document.getElementById('ac-match'); am.textContent=''; am.classList.remove('show');
-  openModal('log-modal');
-}
-function editLog(id) { openLogModal(id); }
-async function delLog(id) {
-  if (!confirm('Delete this log entry?')) return;
-  setSyncStatus('loading','Saving…');
-  var { error } = await sb.from('log_entries').delete().eq('id', id);
-  if (error) { setSyncStatus('err','Error'); showErr('log-err','Delete failed: '+error.message); return; }
-  log = log.filter(function(r){ return r.id !== id; });
-  setSyncStatus('ok','Synced'); renderLog();
-}
-async function saveLog() {
-  var editId = document.getElementById('le-edit-id').value;
-  var cs     = document.getElementById('le-cs').value.trim();
-  var serial = document.getElementById('le-serial').value.trim();
-  var type   = document.getElementById('le-type').value.trim();
-  var op     = document.getElementById('le-op').value.trim();
-  var payload = {
-    dt: document.getElementById('le-dt').value,
-    freq: fmtFreq(document.getElementById('le-freq').value.trim()),
-    callsign: cs, serial: serial, type: type, op: op,
-    notes: document.getElementById('le-notes').value.trim()
-  };
-  if (!payload.freq && !payload.callsign) { alert('Please enter at least a frequency or callsign.'); return; }
-  setBusy('le-save-btn', true); setSyncStatus('loading','Saving…');
-  var logErr, logData;
-  if (editId) {
-    var res = await sb.from('log_entries').update(payload).eq('id', editId).select().single();
-    logErr = res.error; logData = res.data;
-  } else {
-    var res = await sb.from('log_entries').insert(payload).select().single();
-    logErr = res.error; logData = res.data;
-  }
-  if (logErr) { setSyncStatus('err','Error'); showErr('log-err','Save failed: '+logErr.message); setBusy('le-save-btn',false); return; }
-  if (editId) { log = log.map(function(r){ return r.id===editId ? logData : r; }); }
-  else        { log.unshift(logData); }
-  // Auto-add frequency if not already in DB
-  var freq = fmtFreq(document.getElementById('le-freq').value.trim());
-  if (freq) {
-    var freqExists = freqs.find(function(f){ return f.freq === freq; });
-    if (!freqExists) {
-      var frPayload = { freq: freq, descr: '' , cat: 'Other', usr: '' , loc: '' , notes: '' };
-      var frRes = await sb.from('frequencies').insert(frPayload).select().single();
-      if (!frRes.error) { freqs.push(frRes.data); freqs.sort(function(a,b){ return parseFloat(a.freq)-parseFloat(b.freq); }); }
-    }
-  }
-  // Auto-add aircraft if not already in DB, or add new record if details differ
-  if (cs) {
-    var existing = aircraft.find(function(a){ return a.cs === cs; });
-    var detailsMatch = existing && (existing.serial||'') === serial && (existing.type||'') === type && (existing.op||'') === op;
-    if (!detailsMatch) {
-      var acPayload = { cs: cs, serial: serial, type: type, op: op, country: existing ? (existing.country||'') : '', hex: existing ? (existing.hex||'') : '', notes: '' };
-      var acRes = await sb.from('aircraft').insert(acPayload).select().single();
-      if (!acRes.error) aircraft.unshift(acRes.data);
-    }
-  }
-  setBusy('le-save-btn',false); setSyncStatus('ok','Synced');
-  closeModal('log-modal'); renderLog(); renderAircraft(); showAlert('log-alert');
-}
-
-// ── Aircraft CRUD ─────────────────────────────────────────────────────────────
-function openAcModal(id) {
-  var r = id ? aircraft.find(function(x){ return x.id === id; }) : null;
-  document.getElementById('ac-cs').value      = r ? (r.cs      || '') : '';
-  document.getElementById('ac-serial').value  = r ? (r.serial  || '') : '';
-  document.getElementById('ac-type').value    = r ? (r.type    || '') : '';
-  document.getElementById('ac-op').value      = r ? (r.op      || '') : '';
-  document.getElementById('ac-country').value = r ? (r.country || '') : '';
-  document.getElementById('ac-hex').value     = r ? (r.hex     || '') : '';
-  document.getElementById('ac-notes').value   = r ? (r.notes   || '') : '';
-  document.getElementById('ac-edit-id').value = r ? r.id : '';
-  openModal('ac-modal');
-}
-function editAircraft(id) { openAcModal(id); }
-async function delAircraft(id) {
-  if (!confirm('Delete this aircraft?')) return;
-  setSyncStatus('loading','Saving…');
-  var { error } = await sb.from('aircraft').delete().eq('id', id);
-  if (error) { setSyncStatus('err','Error'); showErr('ac-err','Delete failed: '+error.message); return; }
-  aircraft = aircraft.filter(function(r){ return r.id !== id; });
-  setSyncStatus('ok','Synced'); renderAircraft();
-}
-async function saveAircraft() {
-  var editId = document.getElementById('ac-edit-id').value;
-  var payload = {
-    cs: document.getElementById('ac-cs').value.trim(),
-    serial: document.getElementById('ac-serial').value.trim(),
-    type: document.getElementById('ac-type').value.trim(),
-    op: document.getElementById('ac-op').value.trim(),
-    country: document.getElementById('ac-country').value.trim(),
-    hex: document.getElementById('ac-hex').value.trim(),
-    notes: document.getElementById('ac-notes').value.trim()
-  };
-  if (!payload.cs && !payload.serial) { alert('Enter at least a callsign or serial.'); return; }
-  setBusy('ac-save-btn', true); setSyncStatus('loading','Saving…');
-  var err, data;
-  if (editId) {
-    var res = await sb.from('aircraft').update(payload).eq('id', editId).select().single();
-    err = res.error; data = res.data;
-  } else {
-    var res = await sb.from('aircraft').insert(payload).select().single();
-    err = res.error; data = res.data;
-  }
-  if (err) { setSyncStatus('err','Error'); showErr('ac-err','Save failed: '+err.message); setBusy('ac-save-btn',false); return; }
-  if (editId) { aircraft = aircraft.map(function(r){ return r.id===editId ? data : r; }); }
-  else        { aircraft.unshift(data); }
-  setBusy('ac-save-btn',false); setSyncStatus('ok','Synced');
-  closeModal('ac-modal'); renderAircraft(); showAlert('ac-alert');
-}
-
-// ── Frequency CRUD ────────────────────────────────────────────────────────────
-function openFreqModal(id) {
-  var r = id ? freqs.find(function(x){ return x.id === id; }) : null;
-  document.getElementById('fm-freq').value    = r ? (r.freq  || '') : '';
-  document.getElementById('fm-desc').value    = r ? (r.descr || '') : '';
-  document.getElementById('fm-user').value    = r ? (r.usr   || '') : '';
-  document.getElementById('fm-notes').value   = r ? (r.notes || '') : '';
-  document.getElementById('fm-edit-id').value = r ? r.id : '';
-  openModal('freq-modal');
-}
-function editFreq(id) { openFreqModal(id); }
-async function delFreq(id) {
-  if (!confirm('Delete this frequency?')) return;
-  setSyncStatus('loading','Saving…');
-  var { error } = await sb.from('frequencies').delete().eq('id', id);
-  if (error) { setSyncStatus('err','Error'); showErr('freq-err','Delete failed: '+error.message); return; }
-  freqs = freqs.filter(function(r){ return r.id !== id; });
-  setSyncStatus('ok','Synced'); renderFreqs();
-}
-async function saveFreq() {
-  var editId = document.getElementById('fm-edit-id').value;
-  var payload = {
-    freq: fmtFreq(document.getElementById('fm-freq').value.trim()),
-    descr: document.getElementById('fm-desc').value.trim(),
-    usr:   document.getElementById('fm-user').value.trim(),
-    notes: document.getElementById('fm-notes').value.trim()
-  };
-  if (!payload.freq) { alert('Please enter a frequency.'); return; }
-  if (!editId) {
-    var dup = freqs.find(function(f){ return f.freq === payload.freq; });
-    if (dup) { alert(payload.freq + ' MHz already exists in the frequency database.'); return; }
-  }
-  setBusy('fm-save-btn', true); setSyncStatus('loading','Saving…');
-  var err, data;
-  if (editId) {
-    var res = await sb.from('frequencies').update(payload).eq('id', editId).select().single();
-    err = res.error; data = res.data;
-  } else {
-    var res = await sb.from('frequencies').insert(payload).select().single();
-    err = res.error; data = res.data;
-  }
-  if (err) { setSyncStatus('err','Error'); showErr('freq-err','Save failed: '+err.message); setBusy('fm-save-btn',false); return; }
-  if (editId) { freqs = freqs.map(function(r){ return r.id===editId ? data : r; }); }
-  else        { freqs.push(data); freqs.sort(function(a,b){ return parseFloat(a.freq)-parseFloat(b.freq); }); }
-  setBusy('fm-save-btn',false); setSyncStatus('ok','Synced');
-  closeModal('freq-modal'); renderFreqs(); showAlert('freq-alert');
-}
-
-// ── Frequency lookup helpers ──────────────────────────────────────────────────
-function freqLookup() {
-  var v = fmtFreq(document.getElementById('le-freq').value.trim());
-  var m = freqs.find(function(f){ return f.freq === v; });
-  document.getElementById('freq-match').textContent = m ? (m.descr + (m.usr ? ' — ' + m.usr : '')) : '';
-}
-function acLookup() {
-  var v = document.getElementById('le-cs').value.trim().toUpperCase();
-  var el = document.getElementById('ac-match');
-  if (!v) { el.textContent = ''; el.classList.remove('show'); return; }
-  var m = aircraft.find(function(a){ return a.cs === v; });
-  if (m) {
-    document.getElementById('le-serial').value = m.serial || document.getElementById('le-serial').value;
-    document.getElementById('le-type').value   = m.type   || document.getElementById('le-type').value;
-    document.getElementById('le-op').value     = m.op     || document.getElementById('le-op').value;
-    el.textContent = 'Found in aircraft DB: ' + [m.type, m.serial, m.op].filter(Boolean).join(' · ') + ' — edit fields above if this aircraft differs';
-  } else {
-    el.textContent = 'Not in aircraft DB — will be added on save';
-  }
-  el.classList.add('show');
-}
-function freqPickerOpen() { renderFreqPicker(); openModal('freq-picker-modal'); }
-function renderFreqPicker() {
-  var q = (document.getElementById('fp-search').value || '').toLowerCase();
-  var rows = freqs.filter(function(f){ return !q || (f.freq+f.descr+f.cat+f.usr).toLowerCase().includes(q); })
-                  .sort(function(a,b){ return parseFloat(a.freq)-parseFloat(b.freq); });
-  document.getElementById('fp-list').innerHTML = rows.length ? rows.map(function(r){
-    return '<div onclick="pickFreq(\'' + r.freq.replace(/'/g,"\\'") + '\')" style="padding:10px 12px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:12px;margin-bottom:4px;border:0.5px solid var(--border)" onmouseover="this.style.background=\'var(--bg2)\'" onmouseout="this.style.background=\'\'">'
-      + '<span class="freq-tag">' + esc(r.freq) + ' MHz</span>'
-      + '<span style="font-size:13px">' + esc(r.descr) + '</span>'
-      + (r.usr ? '<span class="user-chip" style="margin-left:auto">' + esc(r.usr) + '</span>' : '')
-      + '</div>';
-  }).join('') : '<div class="empty" style="padding:20px">No frequencies match</div>';
-}
-function pickFreq(f) { document.getElementById('le-freq').value = f; freqLookup(); closeModal('freq-picker-modal'); }
-
-// ── Modal click-outside close ─────────────────────────────────────────────────
-document.querySelectorAll('.modal-bg').forEach(function(m){
-  m.addEventListener('click', function(e){ if (e.target === m) m.classList.remove('open'); });
-});
-
-
-// ── Kebab menu ────────────────────────────────────────────────────────────────
+// ── Kebab menus ───────────────────────────────────────────────────────────────
 function toggleKebab(e, id) {
   e.stopPropagation();
   var menu = document.getElementById(id);
@@ -1094,223 +747,525 @@ function toggleKebab(e, id) {
   document.querySelectorAll('.kebab-menu').forEach(function(m){ m.classList.remove('open'); });
   if (!wasOpen) {
     var rect = e.currentTarget.getBoundingClientRect();
-    var menuH = 80;
-    var spaceBelow = window.innerHeight - rect.bottom;
-    menu.style.right = 'auto';
-    menu.style.left = (rect.right - 120) + 'px';
-    if (spaceBelow < menuH + 8) {
-      menu.style.top = (rect.top - menuH - 4) + 'px';
-    } else {
-      menu.style.top = (rect.bottom + 4) + 'px';
-    }
+    menu.style.top  = (rect.bottom + 4) + 'px';
+    menu.style.right = (window.innerWidth - rect.right) + 'px';
     menu.classList.add('open');
   }
 }
-document.addEventListener('click', function(){
-  document.querySelectorAll('.kebab-menu').forEach(function(m){ m.classList.remove('open'); });
-});
+document.addEventListener('click', function(){ document.querySelectorAll('.kebab-menu').forEach(function(m){ m.classList.remove('open'); }); });
 
-
-  // Fallback: coloured initials badge
-
-
-// ── Import helpers ────────────────────────────────────────────────────────────
-function dragOver(e, id) { e.preventDefault(); document.getElementById(id).classList.add('drag'); }
-function dragLeave(id)   { document.getElementById(id).classList.remove('drag'); }
-function dropFile(e, type) {
-  e.preventDefault();
-  dragLeave(type + '-drop');
-  var file = e.dataTransfer.files[0];
-  if (file) processImport(file, type);
+// ── Render helpers ────────────────────────────────────────────────────────────
+function editKebab(type, id) {
+  return isAdmin() ? (
+    '<td style="text-align:right"><div class="kebab-wrap">'
+    + '<button class="kebab-btn" onclick="toggleKebab(event,\'km-'+type+'-'+id+'\')">⋮</button>'
+    + '<div class="kebab-menu" id="km-'+type+'-'+id+'">'
+    + '<button class="kebab-item" onclick="edit'+cap(type)+'(\''+id+'\')">'
+    + '<svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit</button>'
+    + '<button class="kebab-item danger" onclick="del'+cap(type)+'(\''+id+'\')">'
+    + '<svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>Delete</button>'
+    + '</div></div></td>'
+  ) : '<td></td>';
 }
-function handleFile(input, type) {
-  if (input.files[0]) processImport(input.files[0], type);
-}
+function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
 
-function parseCSV(text) {
-  var lines = text.replace(/\r/g,'').split('\n').filter(function(l){ return l.trim(); });
-  var rawHeaders = lines[0].split(',').map(function(h){ return h.trim().replace(/^"|"$/g,''); });
-  var seen = {}; var headers = rawHeaders.map(function(h){ if (seen[h]) { seen[h]++; return h + '_' + seen[h]; } seen[h]=1; return h; });
-  return lines.slice(1).map(function(line) {
-    // Handle quoted fields containing commas
-    var cols = [], cur = '', inQ = false;
-    for (var i = 0; i < line.length; i++) {
-      var ch = line[i];
-      if (ch === '"') { inQ = !inQ; }
-      else if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
-      else { cur += ch; }
-    }
-    cols.push(cur.trim());
-    var row = {};
-    headers.forEach(function(h, i){ row[h] = (cols[i] || '').replace(/^"|"$/g,'').trim(); });
-    return row;
+// ── Render: Log ───────────────────────────────────────────────────────────────
+function renderLog() {
+  var q = (document.getElementById('log-search').value||'').toLowerCase();
+  var types = ['All'].concat([...new Set(log.map(function(r){ return r.type; }).filter(Boolean))].sort());
+  var tf = document.getElementById('log-type-filter'); var ct = tf.value;
+  tf.innerHTML = types.map(function(t){ return '<option value="'+esc(t)+'"'+(t===ct?' selected':'')+'>'+esc(t)+'</option>'; }).join('');
+  logTypeFilter = tf.value;
+  var years = [...new Set(log.map(function(r){ return r.dt?new Date(r.dt).getFullYear():null; }).filter(Boolean))].sort(function(a,b){ return b-a; });
+  var yf = document.getElementById('log-year'); var cy = yf.value;
+  yf.innerHTML = '<option value="All">All years</option>'+years.map(function(y){ return '<option value="'+y+'"'+(String(y)===cy?' selected':'')+'>'+y+'</option>'; }).join('');
+  logYear = yf.value;
+  var MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var mf = document.getElementById('log-month'); var cm = mf.value;
+  var avail = logYear==='All'
+    ? [...new Set(log.map(function(r){ return r.dt?new Date(r.dt).getMonth():null; }).filter(function(m){ return m!==null; }))].sort(function(a,b){ return a-b; })
+    : [...new Set(log.filter(function(r){ return r.dt&&new Date(r.dt).getFullYear()===parseInt(logYear); }).map(function(r){ return new Date(r.dt).getMonth(); }))].sort(function(a,b){ return a-b; });
+  mf.innerHTML = '<option value="All">All months</option>'+avail.map(function(m){ return '<option value="'+m+'"'+(String(m)===cm?' selected':'')+'>'+MONTHS[m]+'</option>'; }).join('');
+  if (cm!=='All'&&!avail.includes(parseInt(cm))){ mf.value='All'; logMonth='All'; } else { logMonth=mf.value; }
+  var clearBtn = document.getElementById('log-clear-date');
+  if (clearBtn) clearBtn.style.display = (logYear!=='All'||logMonth!=='All')?'inline-flex':'none';
+
+  var rows = log.filter(function(r){
+    var qok = !q||(r.freq+r.callsign+r.serial+r.type+r.notes).toLowerCase().includes(q);
+    var tok = logTypeFilter==='All'||r.type===logTypeFilter;
+    var yok = logYear==='All'||(r.dt&&new Date(r.dt).getFullYear()===parseInt(logYear));
+    var mok = logMonth==='All'||(r.dt&&String(new Date(r.dt).getMonth())===String(logMonth));
+    return qok&&tok&&yok&&mok;
   });
+  rows.sort(function(a,b){ var da=new Date(a.dt||0),db=new Date(b.dt||0); return logSort==='asc'?da-db:db-da; });
+
+  var tb = document.getElementById('log-tbody');
+  if (!rows.length) {
+    tb.innerHTML='<tr><td colspan="6"><div class="empty"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49"/></svg>No entries yet.</div></td></tr>';
+    renderPagination('log-pagination',0,1,logPer,'function(p){logPage=p;renderLog()}','function(n){logPer=n;logPage=1;renderLog()}'); return;
+  }
+  var total=rows.length;
+  if (logPage>Math.ceil(total/logPer)) logPage=1;
+  var pageRows=rows.slice((logPage-1)*logPer,logPage*logPer);
+  tb.innerHTML=pageRows.map(function(r){
+    return '<tr>'
+      +'<td style="font-family:var(--mono);font-size:11px;white-space:nowrap">'+fmt(r.dt)+'</td>'
+      +'<td><span class="freq-tag">'+esc(r.freq)+'</span></td>'
+      +'<td><span class="callsign-tag">'+esc(r.callsign)+'</span></td>'
+      +'<td><span class="serial-tag">'+esc(r.serial||'—')+'</span></td>'
+      +'<td>'+(r.type?'<span class="type-badge">'+esc(r.type)+'</span>':'<span style="color:var(--text3)">—</span>')+'</td>'
+      +editKebab('log',r.id)
+      +'</tr>'+notesRow(r.notes,6);
+  }).join('');
+  renderPagination('log-pagination',total,logPage,logPer,'function(p){logPage=p;renderLog()}','function(n){logPer=n;logPage=1;renderLog()}');
 }
 
-async function processImport(file, type) {
-  var prog = document.getElementById(type === 'log' ? 'log-progress' : 'freq-progress');
-  var res  = document.getElementById(type === 'log' ? 'log-import-result' : 'freq-import-result');
-  res.className = 'import-result';
-  prog.textContent = 'Reading file…';
-
-  var text = await file.text();
-  var rows = parseCSV(text);
-  prog.textContent = 'Found ' + rows.length + ' rows. Importing…';
-
-  if (type === 'log') await importLogs(rows, prog, res);
-  else                await importFreqs(rows, prog, res);
+// ── Render: Aircraft ──────────────────────────────────────────────────────────
+function renderAircraft() {
+  var q=(document.getElementById('ac-search').value||'').toLowerCase();
+  var types=['All'].concat([...new Set(aircraft.map(function(a){ return a.type; }).filter(Boolean))].sort());
+  var tf=document.getElementById('ac-type-filter'); var ct=tf.value;
+  tf.innerHTML=types.map(function(t){ return '<option value="'+esc(t)+'"'+(t===ct?' selected':'')+'>'+esc(t)+'</option>'; }).join('');
+  acTypeFilter=tf.value;
+  var rows=aircraft.filter(function(a){
+    var qok=!q||(a.cs+a.serial+a.type+a.op+a.country+a.hex).toLowerCase().includes(q);
+    return qok&&(acTypeFilter==='All'||a.type===acTypeFilter);
+  });
+  rows.sort(function(a,b){ return acSort==='asc'?(a.cs||'').localeCompare(b.cs||''):(b.cs||'').localeCompare(a.cs||''); });
+  var tb=document.getElementById('ac-tbody');
+  if (!rows.length) {
+    tb.innerHTML='<tr><td colspan="6"><div class="empty"><svg viewBox="0 0 24 24"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21 4 19 4c-2 0-4 2-4 2l-8.2 1.8L3 9l4 2 2 4 2-1 1 3 3-2z"/></svg>No aircraft yet.</div></td></tr>';
+    renderPagination('ac-pagination',0,1,acPer,'function(p){acPage=p;renderAircraft()}','function(n){acPer=n;acPage=1;renderAircraft()}'); return;
+  }
+  var total=rows.length;
+  if (acPage>Math.ceil(total/acPer)) acPage=1;
+  var pageRows=rows.slice((acPage-1)*acPer,acPage*acPer);
+  tb.innerHTML=pageRows.map(function(a){
+    return '<tr>'
+      +'<td><span class="callsign-tag">'+esc(a.cs)+'</span></td>'
+      +'<td><span class="serial-tag">'+esc(a.serial||'—')+'</span></td>'
+      +'<td>'+(a.type?'<span class="type-badge">'+esc(a.type)+'</span>':'<span style="color:var(--text3)">—</span>')+'</td>'
+      +'<td>'+esc(a.op||'—')+'</td>'
+      +'<td>'+esc(a.country||'—')+'</td>'
+      +editKebab('aircraft',a.id)
+      +'</tr>'+notesRow(a.notes,6);
+  }).join('');
+  renderPagination('ac-pagination',total,acPage,acPer,'function(p){acPage=p;renderAircraft()}','function(n){acPer=n;acPage=1;renderAircraft()}');
 }
 
-async function importLogs(rows, prog, res) {
-  var added = 0, skipped = 0, errors = 0;
-  var BATCH = 20;
+// ── Render: Frequencies ───────────────────────────────────────────────────────
+function renderFreqs() {
+  var q=(document.getElementById('freq-search').value||'').toLowerCase();
+  var users=['All'].concat([...new Set(freqs.map(function(f){ return f.usr; }).filter(Boolean))].sort());
+  var uf=document.getElementById('freq-user-filter'); var cu=uf.value;
+  uf.innerHTML=users.map(function(u){ return '<option value="'+esc(u)+'"'+(u===cu?' selected':'')+'>'+esc(u)+'</option>'; }).join('');
+  freqUserFilter=uf.value;
+  var rows=freqs.filter(function(f){
+    var qok=!q||(f.freq+f.descr+f.usr+f.notes).toLowerCase().includes(q);
+    return qok&&(freqUserFilter==='All'||f.usr===freqUserFilter);
+  });
+  rows.sort(function(a,b){ return freqSort==='asc'?parseFloat(a.freq)-parseFloat(b.freq):parseFloat(b.freq)-parseFloat(a.freq); });
+  var tb=document.getElementById('freq-tbody');
+  if (!rows.length) {
+    tb.innerHTML='<tr><td colspan="4"><div class="empty"><svg viewBox="0 0 24 24"><path d="M2 12h4M18 12h4M6 12a6 6 0 0 0 12 0M6 12a6 6 0 0 1 12 0M12 6V2M12 22v-4"/></svg>No frequencies yet.</div></td></tr>';
+    renderPagination('freq-pagination',0,1,freqPer,'function(p){freqPage=p;renderFreqs()}','function(n){freqPer=n;freqPage=1;renderFreqs()}'); return;
+  }
+  var total=rows.length;
+  if (freqPage>Math.ceil(total/freqPer)) freqPage=1;
+  var pageRows=rows.slice((freqPage-1)*freqPer,freqPage*freqPer);
+  tb.innerHTML=pageRows.map(function(f){
+    return '<tr>'
+      +'<td><span class="freq-tag">'+esc(f.freq)+' MHz</span></td>'
+      +'<td>'+esc(f.descr||'—')+'</td>'
+      +'<td>'+(f.usr?'<span class="user-chip">'+esc(f.usr)+'</span>':'<span style="color:var(--text3)">—</span>')+'</td>'
+      +editKebab('freq',f.id)
+      +'</tr>'+notesRow(f.notes,4);
+  }).join('');
+  renderPagination('freq-pagination',total,freqPage,freqPer,'function(p){freqPage=p;renderFreqs()}','function(n){freqPer=n;freqPage=1;renderFreqs()}');
+}
 
-  for (var i = 0; i < rows.length; i += BATCH) {
-    prog.textContent = 'Importing ' + Math.min(i + BATCH, rows.length) + ' of ' + rows.length + '…';
-    var batch = rows.slice(i, i + BATCH);
-    var payload = [];
+// ── Stats ─────────────────────────────────────────────────────────────────────
+function showStatsSection() {
+  document.querySelectorAll('.section').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById('s-stats').classList.add('active');
+  renderStats();
+}
+function showAllFreqsHeard() {
+  document.querySelectorAll('.section').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById('s-stat-freqs-all').classList.add('active');
+  var fc={};
+  log.forEach(function(r){ if(r.freq) fc[r.freq]=(fc[r.freq]||0)+1; });
+  var sorted=Object.entries(fc).sort(function(a,b){ return b[1]-a[1]; });
+  var tb=document.getElementById('stat-freqs-all-tbody');
+  tb.innerHTML=sorted.length?sorted.map(function(e){
+    var fd=freqs.find(function(f){ return f.freq===e[0]; });
+    return '<tr><td><span class="freq-tag">'+esc(e[0])+' MHz</span></td><td>'+esc(fd?fd.descr:'—')+'</td><td style="font-family:var(--mono)">'+e[1]+'</td></tr>';
+  }).join(''):'<tr><td colspan="3" style="text-align:center;color:var(--text3);padding:20px">No data yet.</td></tr>';
+}
+function showAllTypesHeard() {
+  document.querySelectorAll('.section').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById('s-stat-types-all').classList.add('active');
+  var tc={};
+  log.forEach(function(r){ if(r.type) tc[r.type]=(tc[r.type]||0)+1; });
+  var sorted=Object.entries(tc).sort(function(a,b){ return b[1]-a[1]; });
+  var tb=document.getElementById('stat-types-all-tbody');
+  tb.innerHTML=sorted.length?sorted.map(function(e){
+    return '<tr><td><span class="type-badge">'+esc(e[0])+'</span></td><td style="font-family:var(--mono)">'+e[1]+'</td></tr>';
+  }).join(''):'<tr><td colspan="2" style="text-align:center;color:var(--text3);padding:20px">No data yet.</td></tr>';
+}
+function renderStats() {
+  document.getElementById('stats-grid').innerHTML=[
+    [log.length,'Total contacts'],
+    [[...new Set(log.map(function(r){ return r.callsign; }).filter(Boolean))].length,'Unique callsigns'],
+    [[...new Set(log.map(function(r){ return r.freq; }).filter(Boolean))].length,'Frequencies heard'],
+  ].map(function(s){ return '<div class="stat-card"><div class="stat-val">'+s[0]+'</div><div class="stat-lbl">'+s[1]+'</div></div>'; }).join('');
+  var fc={};
+  log.forEach(function(r){ if(r.freq) fc[r.freq]=(fc[r.freq]||0)+1; });
+  document.getElementById('stat-freqs').innerHTML=Object.entries(fc).sort(function(a,b){ return b[1]-a[1]; }).slice(0,5).map(function(e){
+    var fd=freqs.find(function(f){ return f.freq===e[0]; });
+    return '<div class="stat-row"><span><span class="freq-tag">'+esc(e[0])+'</span>'+(fd?' <span style="font-size:11px;color:var(--text2)">'+esc(fd.descr)+'</span>':'')+'</span><span class="stat-count">'+e[1]+'</span></div>';
+  }).join('')||'<div style="color:var(--text3);font-size:13px">No data yet.</div>';
+  var tc={};
+  log.forEach(function(r){ if(r.type) tc[r.type]=(tc[r.type]||0)+1; });
+  document.getElementById('stat-types').innerHTML=Object.entries(tc).sort(function(a,b){ return b[1]-a[1]; }).slice(0,5).map(function(e){
+    return '<div class="stat-row"><span class="type-badge">'+esc(e[0])+'</span><span class="stat-count">'+e[1]+'</span></div>';
+  }).join('')||'<div style="color:var(--text3);font-size:13px">No data yet.</div>';
+  var recent=[...log].sort(function(a,b){ return new Date(b.dt||0)-new Date(a.dt||0); }).slice(0,20);
+  document.getElementById('stat-recent').innerHTML=recent.map(function(r){
+    return '<tr>'
+      +'<td style="font-family:var(--mono);font-size:11px;white-space:nowrap">'+fmt(r.dt)+'</td>'
+      +'<td><span class="freq-tag">'+esc(r.freq)+'</span></td>'
+      +'<td><span class="callsign-tag">'+esc(r.callsign)+'</span></td>'
+      +'<td><span class="serial-tag">'+esc(r.serial||'—')+'</span></td>'
+      +'<td>'+(r.type?'<span class="type-badge">'+esc(r.type)+'</span>':'<span style="color:var(--text3)">—</span>')+'</td>'
+      +'</tr>';
+  }).join('');
+}
 
-    batch.forEach(function(r) {
-      // Column mapping — handle the duplicate "Callsign" header (second = serial)
-      var dt       = r['Date Time Logged'] || '';
-      var freq     = fmtFreq(r['Frequency'] || '');
-      var callsign = '';
-      var serial   = '';
-      var type     = r['Type'] || '';
-      var notes    = r['Log Notes'] || '';
+// ── Log CRUD ──────────────────────────────────────────────────────────────────
+function openLogModal() {
+  if (!isAdmin()) { showToast('Sign in to add entries.'); return; }
+  document.getElementById('le-edit-id').value='';
+  var now=new Date(); now.setSeconds(0,0);
+  document.getElementById('le-dt').value=now.toISOString().slice(0,16);
+  ['le-freq','le-cs','le-serial','le-type','le-op','le-notes'].forEach(function(id){ document.getElementById(id).value=''; });
+  document.getElementById('freq-match').textContent='';
+  document.getElementById('ac-match').className='info-banner';
+  openModal('log-modal');
+}
+function editLog(id) {
+  if (!isAdmin()) return;
+  var r=log.find(function(x){ return String(x.id)===String(id); }); if(!r) return;
+  document.getElementById('le-edit-id').value=r.id;
+  var dt=r.dt?new Date(r.dt):new Date(); dt.setSeconds(0,0);
+  document.getElementById('le-dt').value=dt.toISOString().slice(0,16);
+  document.getElementById('le-freq').value=r.freq||'';
+  document.getElementById('le-cs').value=r.callsign||'';
+  document.getElementById('le-serial').value=r.serial||'';
+  document.getElementById('le-type').value=r.type||'';
+  document.getElementById('le-op').value=r.op||'';
+  document.getElementById('le-notes').value=r.notes||'';
+  document.getElementById('freq-match').textContent='';
+  document.getElementById('ac-match').className='info-banner';
+  openModal('log-modal');
+}
+async function saveLog() {
+  if (!isAdmin()) { showToast('Sign in to save.'); return; }
+  var freq=fmtFreq(document.getElementById('le-freq').value.trim());
+  var cs=document.getElementById('le-cs').value.trim();
+  if (!freq&&!cs) { showErr('log-err','Frequency or callsign is required.'); return; }
+  var payload={
+    dt:document.getElementById('le-dt').value||null, freq, callsign:cs,
+    serial:document.getElementById('le-serial').value.trim(),
+    type:document.getElementById('le-type').value.trim(),
+    op:document.getElementById('le-op').value.trim(),
+    notes:document.getElementById('le-notes').value.trim()
+  };
+  setBusy('le-save-btn',true);
+  var editId=document.getElementById('le-edit-id').value;
+  try {
+    if (editId) {
+      var {data,error}=await sb.from('log_entries').update(payload).eq('id',editId).select();
+      if (error) throw error;
+      log=log.map(function(x){ return String(x.id)===String(editId)?data[0]:x; });
+    } else {
+      var {data,error}=await sb.from('log_entries').insert(payload).select();
+      if (error) throw error;
+      log=[data[0]].concat(log);
+    }
+    closeModal('log-modal'); showAlert('log-alert'); renderLog();
+  } catch(e){ showErr('log-err',e.message||String(e)); }
+  setBusy('le-save-btn',false);
+}
+async function delLog(id) {
+  if (!isAdmin()||!confirm('Delete this log entry?')) return;
+  var {error}=await sb.from('log_entries').delete().eq('id',id);
+  if (error){ showToast('Delete failed: '+error.message); return; }
+  log=log.filter(function(x){ return String(x.id)!==String(id); });
+  renderLog();
+}
 
-      callsign = r['Callsign'] || '';
-      serial   = r['Callsign_2'] || r['Serial'] || r['serial'] || '';
+// ── Aircraft CRUD ─────────────────────────────────────────────────────────────
+function openAcModal() {
+  if (!isAdmin()) { showToast('Sign in to add aircraft.'); return; }
+  document.getElementById('ac-edit-id').value='';
+  ['ac-cs','ac-serial','ac-type','ac-op','ac-country','ac-hex','ac-notes'].forEach(function(id){ document.getElementById(id).value=''; });
+  openModal('ac-modal');
+}
+function editAircraft(id) {
+  if (!isAdmin()) return;
+  var a=aircraft.find(function(x){ return String(x.id)===String(id); }); if(!a) return;
+  document.getElementById('ac-edit-id').value=a.id;
+  document.getElementById('ac-cs').value=a.cs||'';
+  document.getElementById('ac-serial').value=a.serial||'';
+  document.getElementById('ac-type').value=a.type||'';
+  document.getElementById('ac-op').value=a.op||'';
+  document.getElementById('ac-country').value=a.country||'';
+  document.getElementById('ac-hex').value=a.hex||'';
+  document.getElementById('ac-notes').value=a.notes||'';
+  openModal('ac-modal');
+}
+async function saveAircraft() {
+  if (!isAdmin()) { showToast('Sign in to save.'); return; }
+  var cs=document.getElementById('ac-cs').value.trim();
+  if (!cs) { showErr('ac-err','Callsign is required.'); return; }
+  var payload={cs,serial:document.getElementById('ac-serial').value.trim(),type:document.getElementById('ac-type').value.trim(),
+    op:document.getElementById('ac-op').value.trim(),country:document.getElementById('ac-country').value.trim(),
+    hex:document.getElementById('ac-hex').value.trim(),notes:document.getElementById('ac-notes').value.trim()};
+  setBusy('ac-save-btn',true);
+  var editId=document.getElementById('ac-edit-id').value;
+  try {
+    if (editId) {
+      var {data,error}=await sb.from('aircraft').update(payload).eq('id',editId).select();
+      if (error) throw error;
+      aircraft=aircraft.map(function(x){ return String(x.id)===String(editId)?data[0]:x; });
+    } else {
+      var {data,error}=await sb.from('aircraft').insert(payload).select();
+      if (error) throw error;
+      aircraft=[data[0]].concat(aircraft);
+    }
+    closeModal('ac-modal'); showAlert('ac-alert'); renderAircraft();
+  } catch(e){ showErr('ac-err',e.message||String(e)); }
+  setBusy('ac-save-btn',false);
+}
+async function delAircraft(id) {
+  if (!isAdmin()||!confirm('Delete this aircraft?')) return;
+  var {error}=await sb.from('aircraft').delete().eq('id',id);
+  if (error){ showToast('Delete failed: '+error.message); return; }
+  aircraft=aircraft.filter(function(x){ return String(x.id)!==String(id); });
+  renderAircraft();
+}
 
-      // Parse date — format is DD/MM/YYYY HH:MM:SS
-      var dtISO = '';
-      if (dt) {
-        var m = dt.match(/(\d{2})\/(\d{2})\/(\d{4})\s+(\d{2}:\d{2})/);
-        if (m) dtISO = m[3] + '-' + m[2] + '-' + m[1] + 'T' + m[4];
-        else dtISO = dt;
-      }
+// ── Frequency CRUD ────────────────────────────────────────────────────────────
+function openFreqModal() {
+  if (!isAdmin()) { showToast('Sign in to add frequencies.'); return; }
+  document.getElementById('fm-edit-id').value='';
+  ['fm-freq','fm-user','fm-desc','fm-notes'].forEach(function(id){ document.getElementById(id).value=''; });
+  openModal('freq-modal');
+}
+function editFreq(id) {
+  if (!isAdmin()) return;
+  var f=freqs.find(function(x){ return String(x.id)===String(id); }); if(!f) return;
+  document.getElementById('fm-edit-id').value=f.id;
+  document.getElementById('fm-freq').value=f.freq||'';
+  document.getElementById('fm-user').value=f.usr||'';
+  document.getElementById('fm-desc').value=f.descr||'';
+  document.getElementById('fm-notes').value=f.notes||'';
+  openModal('freq-modal');
+}
+async function saveFreq() {
+  if (!isAdmin()) { showToast('Sign in to save.'); return; }
+  var freq=fmtFreq(document.getElementById('fm-freq').value.trim());
+  if (!freq) { showErr('freq-err','Frequency is required.'); return; }
+  var payload={freq,usr:document.getElementById('fm-user').value.trim(),descr:document.getElementById('fm-desc').value.trim(),notes:document.getElementById('fm-notes').value.trim()};
+  setBusy('fm-save-btn',true);
+  var editId=document.getElementById('fm-edit-id').value;
+  try {
+    if (editId) {
+      var {data,error}=await sb.from('frequencies').update(payload).eq('id',editId).select();
+      if (error) throw error;
+      freqs=freqs.map(function(x){ return String(x.id)===String(editId)?data[0]:x; });
+    } else {
+      var {data,error}=await sb.from('frequencies').insert(payload).select();
+      if (error) throw error;
+      freqs=freqs.concat(data);
+    }
+    closeModal('freq-modal'); showAlert('freq-alert'); renderFreqs();
+  } catch(e){ showErr('freq-err',e.message||String(e)); }
+  setBusy('fm-save-btn',false);
+}
+async function delFreq(id) {
+  if (!isAdmin()||!confirm('Delete this frequency?')) return;
+  var {error}=await sb.from('frequencies').delete().eq('id',id);
+  if (error){ showToast('Delete failed: '+error.message); return; }
+  freqs=freqs.filter(function(x){ return String(x.id)!==String(id); });
+  renderFreqs();
+}
 
-      if (!freq && !callsign) { skipped++; return; }
-      payload.push({ dt: dtISO, freq: freq, callsign: callsign, serial: serial, type: type, op: '', notes: notes });
+// ── Freq lookup / autocomplete ────────────────────────────────────────────────
+function freqLookup() {
+  var v=fmtFreq((document.getElementById('le-freq').value||'').trim());
+  var hint=document.getElementById('freq-match');
+  if (!v){ hint.textContent=''; return; }
+  var m=freqs.find(function(f){ return f.freq===v; });
+  hint.textContent=m?'✓ '+m.descr+(m.usr?' — '+m.usr:''):'';
+}
+function acLookup() {
+  var cs=document.getElementById('le-cs').value.trim().toUpperCase();
+  var banner=document.getElementById('ac-match');
+  if (!cs){ banner.className='info-banner'; return; }
+  var m=aircraft.find(function(a){ return a.cs===cs; });
+  if (m) {
+    banner.textContent='✈ '+cs+(m.type?' · '+m.type:'')+(m.serial?' · '+m.serial:'')+(m.op?' · '+m.op:'');
+    banner.className='info-banner show';
+    if (!document.getElementById('le-serial').value) document.getElementById('le-serial').value=m.serial||'';
+    if (!document.getElementById('le-type').value)   document.getElementById('le-type').value=m.type||'';
+    if (!document.getElementById('le-op').value)     document.getElementById('le-op').value=m.op||'';
+  } else { banner.className='info-banner'; }
+}
+function freqPickerOpen() { document.getElementById('fp-search').value=''; renderFreqPicker(); openModal('freq-picker-modal'); }
+function renderFreqPicker() {
+  var q=(document.getElementById('fp-search').value||'').toLowerCase();
+  var list=freqs.filter(function(f){ return !q||(f.freq+f.descr+f.usr).toLowerCase().includes(q); });
+  list.sort(function(a,b){ return parseFloat(a.freq)-parseFloat(b.freq); });
+  var el=document.getElementById('fp-list');
+  if (!list.length){ el.innerHTML='<div style="color:var(--text3);padding:12px;font-size:13px">No frequencies found.</div>'; return; }
+  el.innerHTML=list.map(function(f){
+    return '<div onclick="pickFreq(\''+esc(f.freq)+'\')" style="padding:10px 12px;cursor:pointer;border-bottom:0.5px solid var(--border);display:flex;align-items:center;gap:10px">'
+      +'<span class="freq-tag">'+esc(f.freq)+'</span>'
+      +'<span style="font-size:13px;color:var(--text2)">'+esc(f.descr||'')+'</span>'
+      +(f.usr?'<span class="user-chip" style="margin-left:auto">'+esc(f.usr)+'</span>':'')
+      +'</div>';
+  }).join('');
+}
+function pickFreq(freq) { document.getElementById('le-freq').value=freq; freqLookup(); closeModal('freq-picker-modal'); }
+
+// ── CSV Import ────────────────────────────────────────────────────────────────
+function parseCSV(text) {
+  var lines=text.trim().split(/\r?\n/);
+  var headers=lines[0].split(',').map(function(h){ return h.trim().replace(/^"|"$/g,''); });
+  return lines.slice(1).map(function(line){
+    var vals=[],cur='',inQ=false;
+    for (var i=0;i<line.length;i++){
+      if (line[i]==='"') inQ=!inQ;
+      else if (line[i]===','&&!inQ){ vals.push(cur.trim()); cur=''; }
+      else cur+=line[i];
+    }
+    vals.push(cur.trim());
+    var obj={};
+    headers.forEach(function(h,i){ obj[h]=(vals[i]||'').replace(/^"|"$/g,''); });
+    return obj;
+  }).filter(function(r){ return Object.values(r).some(function(v){ return v; }); });
+}
+function handleFileSelect(e,type){ var f=e.target.files[0]; if(f) processFile(f,type); }
+function handleFileDrop(e,type){ e.preventDefault(); var f=e.dataTransfer.files[0]; if(f) processFile(f,type); }
+function processFile(file,type){
+  if (!isAdmin()){ showToast('Sign in to import data.'); return; }
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var rows=parseCSV(e.target.result);
+    if (type==='log')  importLogs(rows,document.getElementById('log-import-progress'),document.getElementById('log-import-result'));
+    if (type==='freq') importFreqs(rows,document.getElementById('freq-import-progress'),document.getElementById('freq-import-result'));
+  };
+  reader.readAsText(file);
+}
+async function importLogs(rows,prog,res){
+  if (!isAdmin()){ showToast('Sign in to import.'); return; }
+  var added=0,skipped=0,errors=0,BATCH=50;
+  for (var i=0;i<rows.length;i+=BATCH){
+    var batch=rows.slice(i,i+BATCH),payload=[];
+    batch.forEach(function(r){
+      var keys=Object.keys(r);
+      var csKeys=keys.filter(function(k){ return k.toLowerCase().indexOf('callsign')!==-1; });
+      var callsign=csKeys.length>=2?(r[csKeys[0]]||'').trim():(r['Callsign']||'').trim();
+      var serial=csKeys.length>=2?(r[csKeys[1]]||'').trim():(r['Callsign_2']||r['Serial']||'').trim();
+      var type=(r['Type']||'').trim(),notes=(r['Notes']||'').trim();
+      var freq=fmtFreq(r['Frequency']||''),dt=(r['Date']||'').trim(),dtISO=dt;
+      if (dt){ var m=dt.match(/^(\d{2})\/(\d{2})\/(\d{4})\s+(\d{2}:\d{2})/); if(m) dtISO=m[3]+'-'+m[2]+'-'+m[1]+'T'+m[4]; }
+      if (!freq&&!callsign){ skipped++; return; }
+      payload.push({dt:dtISO,freq,callsign,serial,type,op:'',notes});
     });
-
-    if (payload.length) {
-      var { data, error } = await sb.from('log_entries').insert(payload).select();
-      if (error) { errors += payload.length; }
-      else { log = data.concat(log); added += data.length; }
+    if (payload.length){
+      prog.textContent='Importing rows '+(i+1)+'–'+Math.min(i+BATCH,rows.length)+'…';
+      var {data,error}=await sb.from('log_entries').insert(payload).select();
+      if (error) errors+=payload.length; else{ log=data.concat(log); added+=data.length; }
     }
   }
-
-  // Build aircraft from imported log rows
-  if (added > 0) {
-    prog.textContent = 'Building aircraft database…';
-    await buildAircraftFromLogs(rows);
-    renderLog();
-    renderAircraft();
-  }
-
-  prog.textContent = '';
-  res.textContent = 'Done — ' + added + ' entries imported, ' + skipped + ' skipped, ' + errors + ' errors.';
-  res.className = 'import-result ' + (errors > 0 ? 'info' : 'ok');
+  if (added>0){ prog.textContent='Building aircraft…'; await buildAircraftFromLogs(rows); renderLog(); renderAircraft(); }
+  prog.textContent='';
+  res.textContent='Done — '+added+' entries imported, '+skipped+' skipped, '+errors+' errors.';
+  res.className='import-result '+(errors>0?'info':'ok');
 }
-
-async function buildAircraftFromLogs(rows) {
-  // Collect unique callsign+serial+type combos not already in aircraft DB
-  var toAdd = [];
-  rows.forEach(function(r) {
-    var keys = Object.keys(r);
-    var csKeys = keys.filter(function(k){ return k.toLowerCase().indexOf('callsign') !== -1; });
-    var callsign = csKeys.length >= 2 ? (r[csKeys[0]]||'').trim() : (r['Callsign']||'').trim();
-    var serial   = csKeys.length >= 2 ? (r[csKeys[1]]||'').trim() : (r['Callsign_2']||r['Serial']||'').trim();
-    var type     = (r['Type']||'').trim();
+async function buildAircraftFromLogs(rows){
+  var toAdd=[];
+  rows.forEach(function(r){
+    var keys=Object.keys(r);
+    var csKeys=keys.filter(function(k){ return k.toLowerCase().indexOf('callsign')!==-1; });
+    var callsign=csKeys.length>=2?(r[csKeys[0]]||'').trim():(r['Callsign']||'').trim();
+    var serial=csKeys.length>=2?(r[csKeys[1]]||'').trim():(r['Callsign_2']||r['Serial']||'').trim();
+    var type=(r['Type']||'').trim();
     if (!callsign) return;
-    // Check not already in DB or already queued
-    var inDB    = aircraft.find(function(a){ return a.cs === callsign && (a.serial||'') === serial && (a.type||'') === type; });
-    var inQueue = toAdd.find(function(a){ return a.cs === callsign && a.serial === serial && a.type === type; });
-    if (!inDB && !inQueue) toAdd.push({ cs: callsign, serial: serial, type: type, op: '', country: '', hex: '', notes: '' });
+    var inDB=aircraft.find(function(a){ return a.cs===callsign&&(a.serial||'')===serial&&(a.type||'')===type; });
+    var inQ=toAdd.find(function(a){ return a.cs===callsign&&a.serial===serial&&a.type===type; });
+    if (!inDB&&!inQ) toAdd.push({cs:callsign,serial,type,op:'',country:'',hex:'',notes:''});
   });
   if (!toAdd.length) return;
-  var BATCH = 50;
-  for (var i = 0; i < toAdd.length; i += BATCH) {
-    var { data, error } = await sb.from('aircraft').insert(toAdd.slice(i, i + BATCH)).select();
-    if (!error && data) aircraft = aircraft.concat(data);
+  var BATCH=50;
+  for (var i=0;i<toAdd.length;i+=BATCH){
+    var {data,error}=await sb.from('aircraft').insert(toAdd.slice(i,i+BATCH)).select();
+    if (!error&&data) aircraft=aircraft.concat(data);
   }
 }
-
-async function importFreqs(rows, prog, res) {
-  var added = 0, skipped = 0, errors = 0;
-  var payload = [];
-
-  rows.forEach(function(r) {
-    var freq = fmtFreq(r['Frequency'] || '');
-    var desc = r['Description'] || '';
-    var user = r['User'] || '';
-    if (!freq) { skipped++; return; }
-    var dup = freqs.find(function(f){ return f.freq === freq; });
-    if (dup) { skipped++; return; }
-    payload.push({ freq: freq, descr: desc, usr: user, notes: '' });
+async function importFreqs(rows,prog,res){
+  if (!isAdmin()){ showToast('Sign in to import.'); return; }
+  var added=0,skipped=0,errors=0,payload=[];
+  rows.forEach(function(r){
+    var freq=fmtFreq(r['Frequency']||'');
+    if (!freq){ skipped++; return; }
+    if (freqs.find(function(f){ return f.freq===freq; })){ skipped++; return; }
+    payload.push({freq,descr:r['Description']||'',usr:r['User']||'',notes:''});
   });
-
-  if (payload.length) {
-    prog.textContent = 'Saving ' + payload.length + ' new frequencies…';
-    var BATCH = 50;
-    for (var i = 0; i < payload.length; i += BATCH) {
-      var { data, error } = await sb.from('frequencies').insert(payload.slice(i, i + BATCH)).select();
-      if (error) { errors += Math.min(BATCH, payload.length - i); }
-      else { freqs = freqs.concat(data); added += data.length; }
+  if (payload.length){
+    prog.textContent='Saving '+payload.length+' new frequencies…';
+    var BATCH=50;
+    for (var i=0;i<payload.length;i+=BATCH){
+      var {data,error}=await sb.from('frequencies').insert(payload.slice(i,i+BATCH)).select();
+      if (error) errors+=Math.min(BATCH,payload.length-i); else{ freqs=freqs.concat(data); added+=data.length; }
     }
-  } else {
-    skipped = rows.length;
-  }
-
-  prog.textContent = '';
-  res.textContent = 'Done — ' + added + ' frequencies imported, ' + skipped + ' skipped (already exist), ' + errors + ' errors.';
-  res.className = 'import-result ' + (errors > 0 ? 'info' : 'ok');
-  if (added > 0) renderFreqs();
+  } else skipped=rows.length;
+  prog.textContent='';
+  res.textContent='Done — '+added+' frequencies imported, '+skipped+' skipped, '+errors+' errors.';
+  res.className='import-result '+(errors>0?'info':'ok');
+  if (added>0) renderFreqs();
 }
-
-
-async function backfillAircraft() {
-  var btn  = document.getElementById('backfill-btn');
-  var prog = document.getElementById('backfill-progress');
-  var res  = document.getElementById('backfill-result');
-  btn.disabled = true;
-  res.className = 'import-result';
-  prog.textContent = 'Scanning ' + log.length + ' log entries…';
-
-  var toAdd = [];
-  log.forEach(function(r) {
-    var callsign = (r.callsign||'').trim();
-    var serial   = (r.serial||'').trim();
-    var type     = (r.type||'').trim();
+async function backfillAircraft(){
+  if (!isAdmin()){ showToast('Sign in to run backfill.'); return; }
+  var btn=document.getElementById('backfill-btn'),prog=document.getElementById('backfill-progress'),res=document.getElementById('backfill-result');
+  btn.disabled=true; res.className='import-result';
+  prog.textContent='Scanning '+log.length+' log entries…';
+  var toAdd=[];
+  log.forEach(function(r){
+    var callsign=(r.callsign||'').trim(),serial=(r.serial||'').trim(),type=(r.type||'').trim();
     if (!callsign) return;
-    var inDB    = aircraft.find(function(a){ return a.cs === callsign && (a.serial||'') === serial && (a.type||'') === type; });
-    var inQueue = toAdd.find(function(a){ return a.cs === callsign && a.serial === serial && a.type === type; });
-    if (!inDB && !inQueue) toAdd.push({ cs: callsign, serial: serial, type: type, op: r.op||'', country: '', hex: '', notes: '' });
+    var inDB=aircraft.find(function(a){ return a.cs===callsign&&(a.serial||'')===serial&&(a.type||'')===type; });
+    var inQ=toAdd.find(function(a){ return a.cs===callsign&&a.serial===serial&&a.type===type; });
+    if (!inDB&&!inQ) toAdd.push({cs:callsign,serial,type,op:r.op||'',country:'',hex:'',notes:''});
   });
-
-  if (!toAdd.length) {
-    prog.textContent = '';
-    res.textContent = 'Nothing to add — all callsigns are already in the aircraft database.';
-    res.className = 'import-result info';
-    btn.disabled = false;
-    return;
+  if (!toAdd.length){
+    prog.textContent=''; res.textContent='Nothing to add — all callsigns already in aircraft database.';
+    res.className='import-result info'; btn.disabled=false; return;
   }
-
-  prog.textContent = 'Adding ' + toAdd.length + ' aircraft…';
-  var added = 0, errors = 0;
-  var BATCH = 50;
-  for (var i = 0; i < toAdd.length; i += BATCH) {
-    var { data, error } = await sb.from('aircraft').insert(toAdd.slice(i, i + BATCH)).select();
-    if (error) { errors += Math.min(BATCH, toAdd.length - i); }
-    else { aircraft = aircraft.concat(data); added += data.length; }
+  prog.textContent='Adding '+toAdd.length+' aircraft…';
+  var added=0,errors=0,BATCH=50;
+  for (var i=0;i<toAdd.length;i+=BATCH){
+    var {data,error}=await sb.from('aircraft').insert(toAdd.slice(i,i+BATCH)).select();
+    if (error) errors+=Math.min(BATCH,toAdd.length-i); else{ aircraft=aircraft.concat(data); added+=data.length; }
   }
-
-  prog.textContent = '';
-  res.textContent = 'Done — ' + added + ' aircraft added' + (errors ? ', ' + errors + ' errors' : '') + '.';
-  res.className = 'import-result ' + (errors ? 'info' : 'ok');
-  if (added > 0) renderAircraft();
-  btn.disabled = false;
+  prog.textContent='';
+  res.textContent='Done — '+added+' aircraft added'+(errors?', '+errors+' errors':'')+'.';
+  res.className='import-result '+(errors?'info':'ok');
+  if (added>0) renderAircraft();
+  btn.disabled=false;
 }
 
 // ── Boot ──────────────────────────────────────────────────────────────────────
