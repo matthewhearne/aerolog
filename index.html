@@ -1004,6 +1004,16 @@ async function saveLog() {
         if (!acErr&&acData) { aircraft=[acData[0]].concat(aircraft); renderAircraft(); }
       }
     }
+    // Auto-add to frequencies DB if frequency is new
+    if (freq) {
+      var freqFormatted=parseFloat(freq).toFixed(3);
+      var inFreqDB=freqs.find(function(f){ return f.freq===freqFormatted; });
+      if (!inFreqDB) {
+        var frPayload={freq:freqFormatted,descr:'',usr:'',notes:''};
+        var {data:frData,error:frErr}=await sb.from('frequencies').insert(frPayload).select();
+        if (!frErr&&frData) { freqs=freqs.concat(frData); renderFreqs(); }
+      }
+    }
   } catch(e){ showErr('log-err',e.message||String(e)); }
   setBusy('le-save-btn',false);
 }
