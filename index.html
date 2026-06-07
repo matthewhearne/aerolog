@@ -254,7 +254,7 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
     <div class="table-wrap">
       <table>
         <thead><tr>
-          <th>Date / Time</th><th>Frequency</th><th>Callsign</th><th>Serial</th><th>Type</th>
+          <th>Date / Time</th><th>Frequency</th><th>Description</th><th>User</th><th>Callsign</th><th>Serial</th><th>Type</th>
           <th style="width:36px"></th>
         </tr></thead>
         <tbody id="log-tbody"></tbody>
@@ -354,7 +354,7 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
     <div class="card">
       <div style="font-size:13px;font-weight:500;margin-bottom:12px">Recent contacts (last 20)</div>
       <div class="table-wrap"><table>
-        <thead><tr><th>Date / Time</th><th>Frequency</th><th>Callsign</th><th>Serial</th><th>Type</th></tr></thead>
+        <thead><tr><th>Date / Time</th><th>Frequency</th><th>Description</th><th>User</th><th>Callsign</th><th>Serial</th><th>Type</th></tr></thead>
         <tbody id="stat-recent"></tbody>
       </table></div>
       <div style="margin-top:10px"><a href="#" onclick="showSection('log',document.querySelector('.nav button'));window.scrollTo(0,0);return false;" style="font-size:12px;color:var(--green);text-decoration:none">Go to full log →</a></div>
@@ -801,21 +801,24 @@ function renderLog() {
 
   var tb = document.getElementById('log-tbody');
   if (!rows.length) {
-    tb.innerHTML='<tr><td colspan="6"><div class="empty"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49"/></svg>No entries yet.</div></td></tr>';
+    tb.innerHTML='<tr><td colspan="8"><div class="empty"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49"/></svg>No entries yet.</div></td></tr>';
     renderPagination('log-pagination',0,1,logPer,'function(p){logPage=p;renderLog()}','function(n){logPer=n;logPage=1;renderLog()}'); return;
   }
   var total=rows.length;
   if (logPage>Math.ceil(total/logPer)) logPage=1;
   var pageRows=rows.slice((logPage-1)*logPer,logPage*logPer);
   tb.innerHTML=pageRows.map(function(r){
+    var fd=freqs.find(function(f){ return f.freq===r.freq; });
     return '<tr>'
       +'<td style="font-family:var(--mono);font-size:11px;white-space:nowrap">'+fmt(r.dt)+'</td>'
       +'<td><span class="freq-tag">'+esc(r.freq)+'</span></td>'
+      +'<td style="font-size:12px;color:var(--text2)">'+esc(fd&&fd.descr?fd.descr:'—')+'</td>'
+      +'<td>'+(fd&&fd.usr?'<span class="user-chip">'+esc(fd.usr)+'</span>':'<span style="color:var(--text3)">—</span>')+'</td>'
       +'<td><span class="callsign-tag">'+esc(r.callsign)+'</span></td>'
       +'<td><span class="serial-tag">'+esc(r.serial||'—')+'</span></td>'
       +'<td>'+(r.type?'<span class="type-badge">'+esc(r.type)+'</span>':'<span style="color:var(--text3)">—</span>')+'</td>'
       +editKebab('log',r.id)
-      +'</tr>'+notesRow(r.notes,6);
+      +'</tr>'+notesRow(r.notes,8);
   }).join('');
   renderPagination('log-pagination',total,logPage,logPer,'function(p){logPage=p;renderLog()}','function(n){logPer=n;logPage=1;renderLog()}');
 }
@@ -932,9 +935,12 @@ function renderStats() {
   }).join('')||'<div style="color:var(--text3);font-size:13px">No data yet.</div>';
   var recent=[...log].sort(function(a,b){ return new Date(b.dt||0)-new Date(a.dt||0); }).slice(0,20);
   document.getElementById('stat-recent').innerHTML=recent.map(function(r){
+    var fd=freqs.find(function(f){ return f.freq===r.freq; });
     return '<tr>'
       +'<td style="font-family:var(--mono);font-size:11px;white-space:nowrap">'+fmt(r.dt)+'</td>'
       +'<td><span class="freq-tag">'+esc(r.freq)+'</span></td>'
+      +'<td style="font-size:12px;color:var(--text2)">'+esc(fd&&fd.descr?fd.descr:'—')+'</td>'
+      +'<td>'+(fd&&fd.usr?'<span class="user-chip">'+esc(fd.usr)+'</span>':'<span style="color:var(--text3)">—</span>')+'</td>'
       +'<td><span class="callsign-tag">'+esc(r.callsign)+'</span></td>'
       +'<td><span class="serial-tag">'+esc(r.serial||'—')+'</span></td>'
       +'<td>'+(r.type?'<span class="type-badge">'+esc(r.type)+'</span>':'<span style="color:var(--text3)">—</span>')+'</td>'
