@@ -62,9 +62,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .field textarea{resize:vertical;min-height:60px}
 .field input[type=datetime-local]{font-family:var(--mono);font-size:12px}
 .table-wrap{border:0.5px solid var(--border);border-radius:var(--radius-lg);overflow:visible}
-table{width:100%;border-collapse:collapse;font-size:13px}
+table{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
 th{background:var(--bg2);padding:10px 12px;text-align:left;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.05em;color:var(--text2);border-bottom:0.5px solid var(--border);white-space:nowrap}
-td{padding:10px 12px;border-bottom:0.5px solid var(--border);color:var(--text);vertical-align:middle;position:relative}
+td{padding:10px 12px;border-bottom:0.5px solid var(--border);color:var(--text);vertical-align:middle;position:relative;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:var(--bg2)}
 .freq-tag{font-family:var(--mono);font-size:12px;background:var(--green-light);color:var(--green);padding:3px 8px;border-radius:4px;font-weight:500;white-space:nowrap;display:inline-block}
@@ -254,7 +254,7 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
     <div class="table-wrap">
       <table>
         <thead><tr>
-          <th>Date / Time</th><th>Frequency</th><th>Description</th><th>User</th><th>Callsign</th><th>Serial</th><th>Type</th>
+          <th style="width:130px">Date / Time</th><th style="width:90px">Frequency</th><th style="width:200px">Description</th><th style="width:120px">User</th><th style="width:110px">Callsign</th><th style="width:90px">Serial</th><th style="width:110px">Type</th>
           <th style="width:36px"></th>
         </tr></thead>
         <tbody id="log-tbody"></tbody>
@@ -290,7 +290,7 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
     <div class="table-wrap">
       <table>
         <thead><tr>
-          <th>Callsign</th><th>Serial</th><th>Type / Model</th><th>Operator</th><th>Country</th>
+          <th style="width:120px">Callsign</th><th style="width:100px">Serial</th><th style="width:180px">Type / Model</th><th style="width:180px">Operator</th>
           <th style="width:36px"></th>
         </tr></thead>
         <tbody id="ac-tbody"></tbody>
@@ -326,7 +326,7 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
     <div class="table-wrap">
       <table>
         <thead><tr>
-          <th>Frequency (MHz)</th><th>Description</th><th>User / Owner</th>
+          <th style="width:130px">Frequency (MHz)</th><th style="width:300px">Description</th><th style="width:180px">User / Owner</th>
           <th style="width:36px"></th>
         </tr></thead>
         <tbody id="freq-tbody"></tbody>
@@ -489,10 +489,7 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
     <div class="field"><label>Type / Model</label><input type="text" id="ac-type" placeholder="e.g. Boeing E-3D"></div>
     <div class="field"><label>Operator</label><input type="text" id="ac-op" placeholder="e.g. RAF, USAF"></div>
   </div>
-  <div class="form-grid" style="margin-bottom:12px">
-    <div class="field"><label>Country</label><input type="text" id="ac-country" placeholder="e.g. United Kingdom"></div>
-    <div class="field"><label>ICAO hex</label><input type="text" id="ac-hex" placeholder="e.g. 43C3A1" style="font-family:var(--mono);text-transform:uppercase" oninput="this.value=this.value.toUpperCase()"></div>
-  </div>
+  <div class="field" style="margin-bottom:12px"><label>ICAO hex</label><input type="text" id="ac-hex" placeholder="e.g. 43C3A1" style="font-family:var(--mono);text-transform:uppercase" oninput="this.value=this.value.toUpperCase()"></div>
   <div class="field" style="margin-bottom:16px"><label>Notes</label><textarea id="ac-notes" placeholder="Role, remarks, first heard…"></textarea></div>
   <input type="hidden" id="ac-edit-id" value="">
   <div style="display:flex;gap:8px;justify-content:flex-end">
@@ -837,7 +834,7 @@ function renderAircraft() {
   rows.sort(function(a,b){ return acSort==='asc'?(a.cs||'').localeCompare(b.cs||''):(b.cs||'').localeCompare(a.cs||''); });
   var tb=document.getElementById('ac-tbody');
   if (!rows.length) {
-    tb.innerHTML='<tr><td colspan="6"><div class="empty"><svg viewBox="0 0 24 24"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21 4 19 4c-2 0-4 2-4 2l-8.2 1.8L3 9l4 2 2 4 2-1 1 3 3-2z"/></svg>No aircraft yet.</div></td></tr>';
+    tb.innerHTML='<tr><td colspan="5"><div class="empty"><svg viewBox="0 0 24 24"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21 4 19 4c-2 0-4 2-4 2l-8.2 1.8L3 9l4 2 2 4 2-1 1 3 3-2z"/></svg>No aircraft yet.</div></td></tr>';
     renderPagination('ac-pagination',0,1,acPer,'function(p){acPage=p;renderAircraft()}','function(n){acPer=n;acPage=1;renderAircraft()}'); return;
   }
   var total=rows.length;
@@ -849,9 +846,8 @@ function renderAircraft() {
       +'<td><span class="serial-tag">'+esc(a.serial||'—')+'</span></td>'
       +'<td>'+(a.type?'<span class="type-badge">'+esc(a.type)+'</span>':'<span style="color:var(--text3)">—</span>')+'</td>'
       +'<td>'+esc(a.op||'—')+'</td>'
-      +'<td>'+esc(a.country||'—')+'</td>'
       +editKebab('aircraft',a.id)
-      +'</tr>'+notesRow(a.notes,6);
+      +'</tr>'+notesRow(a.notes,5);
   }).join('');
   renderPagination('ac-pagination',total,acPage,acPer,'function(p){acPage=p;renderAircraft()}','function(n){acPer=n;acPage=1;renderAircraft()}');
 }
@@ -924,13 +920,13 @@ function renderStats() {
   ].map(function(s){ return '<div class="stat-card"><div class="stat-val">'+s[0]+'</div><div class="stat-lbl">'+s[1]+'</div></div>'; }).join('');
   var fc={};
   log.forEach(function(r){ if(r.freq) fc[r.freq]=(fc[r.freq]||0)+1; });
-  document.getElementById('stat-freqs').innerHTML=Object.entries(fc).sort(function(a,b){ return b[1]-a[1]; }).slice(0,5).map(function(e){
+  document.getElementById('stat-freqs').innerHTML=Object.entries(fc).sort(function(a,b){ return b[1]-a[1]; }).slice(0,10).map(function(e){
     var fd=freqs.find(function(f){ return f.freq===e[0]; });
     return '<div class="stat-row"><span><span class="freq-tag">'+esc(e[0])+'</span>'+(fd?' <span style="font-size:11px;color:var(--text2)">'+esc(fd.descr)+'</span>':'')+'</span><span class="stat-count">'+e[1]+'</span></div>';
   }).join('')||'<div style="color:var(--text3);font-size:13px">No data yet.</div>';
   var tc={};
   log.forEach(function(r){ if(r.type) tc[r.type]=(tc[r.type]||0)+1; });
-  document.getElementById('stat-types').innerHTML=Object.entries(tc).sort(function(a,b){ return b[1]-a[1]; }).slice(0,5).map(function(e){
+  document.getElementById('stat-types').innerHTML=Object.entries(tc).sort(function(a,b){ return b[1]-a[1]; }).slice(0,10).map(function(e){
     return '<div class="stat-row"><span class="type-badge">'+esc(e[0])+'</span><span class="stat-count">'+e[1]+'</span></div>';
   }).join('')||'<div style="color:var(--text3);font-size:13px">No data yet.</div>';
   var recent=[...log].sort(function(a,b){ return new Date(b.dt||0)-new Date(a.dt||0); }).slice(0,20);
@@ -1035,7 +1031,7 @@ async function delLog(id) {
 function openAcModal() {
   if (!isAdmin()) { showToast('Sign in to add aircraft.'); return; }
   document.getElementById('ac-edit-id').value='';
-  ['ac-cs','ac-serial','ac-type','ac-op','ac-country','ac-hex','ac-notes'].forEach(function(id){ document.getElementById(id).value=''; });
+  ['ac-cs','ac-serial','ac-type','ac-op','ac-hex','ac-notes'].forEach(function(id){ document.getElementById(id).value=''; });
   openModal('ac-modal');
 }
 function editAircraft(id) {
@@ -1046,7 +1042,6 @@ function editAircraft(id) {
   document.getElementById('ac-serial').value=a.serial||'';
   document.getElementById('ac-type').value=a.type||'';
   document.getElementById('ac-op').value=a.op||'';
-  document.getElementById('ac-country').value=a.country||'';
   document.getElementById('ac-hex').value=a.hex||'';
   document.getElementById('ac-notes').value=a.notes||'';
   openModal('ac-modal');
@@ -1056,7 +1051,7 @@ async function saveAircraft() {
   var cs=document.getElementById('ac-cs').value.trim();
   if (!cs) { showErr('ac-err','Callsign is required.'); return; }
   var payload={cs,serial:document.getElementById('ac-serial').value.trim(),type:document.getElementById('ac-type').value.trim(),
-    op:document.getElementById('ac-op').value.trim(),country:document.getElementById('ac-country').value.trim(),
+    op:document.getElementById('ac-op').value.trim(),
     hex:document.getElementById('ac-hex').value.trim(),notes:document.getElementById('ac-notes').value.trim()};
   setBusy('ac-save-btn',true);
   var editId=document.getElementById('ac-edit-id').value;
