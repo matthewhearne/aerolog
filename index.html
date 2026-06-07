@@ -994,6 +994,16 @@ async function saveLog() {
       log=[data[0]].concat(log);
     }
     closeModal('log-modal'); showAlert('log-alert'); renderLog();
+    // Auto-add to aircraft DB if callsign is new
+    if (cs) {
+      var serial=payload.serial, type=payload.type;
+      var inDB=aircraft.find(function(a){ return a.cs===cs&&(a.serial||'')===serial&&(a.type||'')===type; });
+      if (!inDB) {
+        var acPayload={cs:cs,serial:serial,type:type,op:payload.op,country:'',hex:'',notes:''};
+        var {data:acData,error:acErr}=await sb.from('aircraft').insert(acPayload).select();
+        if (!acErr&&acData) { aircraft=[acData[0]].concat(aircraft); renderAircraft(); }
+      }
+    }
   } catch(e){ showErr('log-err',e.message||String(e)); }
   setBusy('le-save-btn',false);
 }
