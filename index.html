@@ -490,7 +490,6 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
     <div class="field"><label>Type / Model</label><input type="text" id="ac-type" placeholder="e.g. Boeing E-3D"></div>
     <div class="field"><label>Operator</label><input type="text" id="ac-op" placeholder="e.g. RAF, USAF"></div>
   </div>
-  <div class="field" style="margin-bottom:12px"><label>ICAO hex</label><input type="text" id="ac-hex" placeholder="e.g. 43C3A1" style="font-family:var(--mono);text-transform:uppercase" oninput="this.value=this.value.toUpperCase()"></div>
   <div class="field" style="margin-bottom:16px"><label>Notes</label><textarea id="ac-notes" placeholder="Role, remarks, first heard…"></textarea></div>
   <input type="hidden" id="ac-edit-id" value="">
   <div style="display:flex;gap:8px;justify-content:flex-end">
@@ -1032,7 +1031,7 @@ async function delLog(id) {
 function openAcModal() {
   if (!isAdmin()) { showToast('Sign in to add aircraft.'); return; }
   document.getElementById('ac-edit-id').value='';
-  ['ac-cs','ac-serial','ac-type','ac-op','ac-hex','ac-notes'].forEach(function(id){ document.getElementById(id).value=''; });
+  ['ac-cs','ac-serial','ac-type','ac-op','ac-notes'].forEach(function(id){ document.getElementById(id).value=''; });
   openModal('ac-modal');
 }
 function editAircraft(id) {
@@ -1043,7 +1042,6 @@ function editAircraft(id) {
   document.getElementById('ac-serial').value=a.serial||'';
   document.getElementById('ac-type').value=a.type||'';
   document.getElementById('ac-op').value=a.op||'';
-  document.getElementById('ac-hex').value=a.hex||'';
   document.getElementById('ac-notes').value=a.notes||'';
   openModal('ac-modal');
 }
@@ -1052,8 +1050,7 @@ async function saveAircraft() {
   var cs=document.getElementById('ac-cs').value.trim();
   if (!cs) { showErr('ac-err','Callsign is required.'); return; }
   var payload={cs,serial:document.getElementById('ac-serial').value.trim(),type:document.getElementById('ac-type').value.trim(),
-    op:document.getElementById('ac-op').value.trim(),
-    hex:document.getElementById('ac-hex').value.trim(),notes:document.getElementById('ac-notes').value.trim()};
+    op:document.getElementById('ac-op').value.trim(),notes:document.getElementById('ac-notes').value.trim()};
   setBusy('ac-save-btn',true);
   var editId=document.getElementById('ac-edit-id').value;
   try {
