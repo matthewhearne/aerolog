@@ -980,8 +980,11 @@ async function saveLog() {
   var freq=fmtFreq(document.getElementById('le-freq').value.trim());
   var cs=document.getElementById('le-cs').value.trim();
   if (!freq&&!cs) { showErr('log-err','Frequency or callsign is required.'); return; }
+  var dtRaw=document.getElementById('le-dt').value;
+  var dtVal=null;
+  if(dtRaw){ var off=-new Date().getTimezoneOffset(); var sign=off>=0?'+':'-'; var h=Math.floor(Math.abs(off)/60),m=Math.abs(off)%60; dtVal=dtRaw+sign+String(h).padStart(2,'0')+':'+String(m).padStart(2,'0'); }
   var payload={
-    dt:document.getElementById('le-dt').value||null, freq, callsign:cs,
+    dt:dtVal, freq, callsign:cs,
     serial:document.getElementById('le-serial').value.trim(),
     type:document.getElementById('le-type').value.trim(),
     op:document.getElementById('le-op').value.trim(),
