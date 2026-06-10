@@ -460,11 +460,10 @@ tr.day-divider span::after{content:'';flex:1;height:1px;background:var(--border)
   </div>
   <div class="hint" id="freq-match"></div>
   <div class="form-grid three" style="margin-bottom:12px">
-    <div class="field"><label>Callsign</label><input type="text" id="le-cs" placeholder="e.g. RRR1234" style="font-family:var(--mono);text-transform:uppercase" oninput="this.value=this.value.toUpperCase();acLookup()"></div>
+    <div class="field" style="position:relative"><label>Callsign</label><input type="text" id="le-cs" placeholder="e.g. RRR1234" style="font-family:var(--mono);text-transform:uppercase" autocomplete="off" oninput="this.value=this.value.toUpperCase();csAcInput()" onkeydown="csAcKey(event)" onblur="setTimeout(closeCsAc,150)"><div id="cs-ac-list" class="type-ac-list"></div></div>
     <div class="field"><label>Serial / Hex</label><input type="text" id="le-serial" placeholder="e.g. ZZ123" style="font-family:var(--mono);text-transform:uppercase" oninput="this.value=this.value.toUpperCase()"></div>
     <div class="field" style="position:relative"><label>Aircraft type</label><input type="text" id="le-type" placeholder="e.g. C-130J" autocomplete="off" oninput="typeAcInput()" onkeydown="typeAcKey(event)" onblur="setTimeout(closeTypeAc,150)"><div id="type-ac-list" class="type-ac-list"></div></div>
   </div>
-  <div class="info-banner" id="ac-match"></div>
   <div class="field" style="margin-bottom:12px"><label>Operator</label><input type="text" id="le-op" placeholder="e.g. RAF, USAF"></div>
   <div class="field" style="margin-bottom:16px"><label>Notes</label><textarea id="le-notes" placeholder="Any additional observations…"></textarea></div>
   <input type="hidden" id="le-edit-id" value="">
@@ -1016,8 +1015,7 @@ function openLogModal() {
   document.getElementById('le-dt').value=toLocalDTString(now);
   ['le-freq','le-cs','le-serial','le-type','le-op','le-notes'].forEach(function(id){ document.getElementById(id).value=''; });
   document.getElementById('freq-match').textContent='';
-  document.getElementById('ac-match').className='info-banner';
-  closeTypeAc();
+  closeCsAc(); closeTypeAc();
   openModal('log-modal');
 }
 function editLog(id) {
@@ -1033,8 +1031,7 @@ function editLog(id) {
   document.getElementById('le-op').value=r.op||'';
   document.getElementById('le-notes').value=r.notes||'';
   document.getElementById('freq-match').textContent='';
-  document.getElementById('ac-match').className='info-banner';
-  closeTypeAc();
+  closeCsAc(); closeTypeAc();
   openModal('log-modal');
 }
 async function saveLog() {
@@ -1198,18 +1195,50 @@ function freqLookup() {
   var m=freqs.find(function(f){ return f.freq===v; });
   hint.textContent=m?'✓ '+m.descr+(m.usr?' — '+m.usr:''):'';
 }
-function acLookup() {
-  var cs=document.getElementById('le-cs').value.trim().toUpperCase();
-  var banner=document.getElementById('ac-match');
-  if (!cs){ banner.className='info-banner'; return; }
-  var m=aircraft.find(function(a){ return a.cs===cs; });
+var csAcIdx = -1;
+function csAcInput() {
+  var q = (document.getElementById('le-cs').value||'').trim().toUpperCase();
+  var list = document.getElementById('cs-ac-list');
+  csAcIdx = -1;
+  if (!q) { list.classList.remove('open'); list.innerHTML=''; return; }
+  var matches = aircraft.filter(function(a){ return a.cs && a.cs.toUpperCase().includes(q); });
+  matches.sort(function(a,b){
+    var ai=a.cs.toUpperCase().indexOf(q), bi=b.cs.toUpperCase().indexOf(q);
+    if(ai!==bi) return ai-bi;
+    return a.cs.localeCompare(b.cs);
+  });
+  if (!matches.length) { list.classList.remove('open'); list.innerHTML=''; return; }
+  list.innerHTML = matches.slice(0,8).map(function(a){
+    var detail=[a.type,a.serial,a.op].filter(Boolean).join(' · ');
+    return '<div class="type-ac-item" onmousedown="csAcSelect(\''+esc(a.cs)+'\')">'
+      +'<span style="font-family:var(--mono);font-weight:500">'+esc(a.cs)+'</span>'
+      +(detail?'<span class="type-ac-count" style="font-family:inherit;font-size:12px">'+esc(detail)+'</span>':'')
+      +'</div>';
+  }).join('');
+  list.classList.add('open');
+}
+function csAcSelect(cs) {
+  document.getElementById('le-cs').value = cs;
+  closeCsAc();
+  var m = aircraft.find(function(a){ return a.cs===cs; });
   if (m) {
-    banner.textContent='✈ '+cs+(m.type?' · '+m.type:'')+(m.serial?' · '+m.serial:'')+(m.op?' · '+m.op:'');
-    banner.className='info-banner show';
     if (!document.getElementById('le-serial').value) document.getElementById('le-serial').value=m.serial||'';
     if (!document.getElementById('le-type').value)   document.getElementById('le-type').value=m.type||'';
     if (!document.getElementById('le-op').value)     document.getElementById('le-op').value=m.op||'';
-  } else { banner.className='info-banner'; }
+  }
+}
+function closeCsAc() {
+  var list = document.getElementById('cs-ac-list');
+  list.classList.remove('open'); list.innerHTML=''; csAcIdx=-1;
+}
+function csAcKey(e) {
+  var list = document.getElementById('cs-ac-list');
+  var items = list.querySelectorAll('.type-ac-item');
+  if (!items.length) return;
+  if (e.key==='ArrowDown') { e.preventDefault(); csAcIdx=Math.min(csAcIdx+1,items.length-1); items.forEach(function(el,i){ el.classList.toggle('active',i===csAcIdx); }); }
+  else if (e.key==='ArrowUp') { e.preventDefault(); csAcIdx=Math.max(csAcIdx-1,0); items.forEach(function(el,i){ el.classList.toggle('active',i===csAcIdx); }); }
+  else if (e.key==='Enter'&&csAcIdx>=0) { e.preventDefault(); csAcSelect(items[csAcIdx].dataset.val||items[csAcIdx].querySelector('[style*=mono]').textContent); }
+  else if (e.key==='Escape') { closeCsAc(); }
 }
 function freqPickerOpen() { document.getElementById('fp-search').value=''; renderFreqPicker(); openModal('freq-picker-modal'); }
 function renderFreqPicker() {
