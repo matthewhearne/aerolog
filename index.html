@@ -147,6 +147,19 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
 .stat-row:last-child{border-bottom:none}
 .stat-count{font-family:var(--mono);font-weight:500;font-size:13px;color:var(--text2)}
 
+/* ── Type autocomplete ── */
+.type-ac-list{position:absolute;top:100%;left:0;right:0;background:var(--bg);border:0.5px solid var(--border2);border-radius:var(--radius);z-index:500;max-height:180px;overflow-y:auto;display:none;box-shadow:0 4px 16px rgba(0,0,0,0.12);margin-top:2px}
+.type-ac-list.open{display:block}
+.type-ac-item{padding:8px 12px;font-size:13px;cursor:pointer;color:var(--text);display:flex;align-items:center;justify-content:space-between;gap:8px}
+.type-ac-item:hover,.type-ac-item.active{background:var(--bg2)}
+.type-ac-item .type-ac-count{font-size:11px;color:var(--text3);font-family:var(--mono);flex-shrink:0}
+
+/* ── Day dividers ── */
+tr.day-divider td{padding:10px 10px 4px;border:none;background:transparent}
+tr.day-divider-first td{padding-top:4px}
+tr.day-divider span{font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--text3);display:flex;align-items:center;gap:8px}
+tr.day-divider span::after{content:'';flex:1;height:1px;background:var(--border)}
+
 /* ── Auth ── */
 .auth-wrap{position:relative}
 .auth-btn{display:flex;align-items:center;gap:7px;padding:6px 12px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg);font-size:13px;cursor:pointer;color:var(--text);font-family:inherit;white-space:nowrap;transition:background 0.15s}
@@ -449,7 +462,7 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:var(--radius-lg)}
   <div class="form-grid three" style="margin-bottom:12px">
     <div class="field"><label>Callsign</label><input type="text" id="le-cs" placeholder="e.g. RRR1234" style="font-family:var(--mono);text-transform:uppercase" oninput="this.value=this.value.toUpperCase();acLookup()"></div>
     <div class="field"><label>Serial / Hex</label><input type="text" id="le-serial" placeholder="e.g. ZZ123" style="font-family:var(--mono);text-transform:uppercase" oninput="this.value=this.value.toUpperCase()"></div>
-    <div class="field"><label>Aircraft type</label><input type="text" id="le-type" placeholder="e.g. C-130J"></div>
+    <div class="field" style="position:relative"><label>Aircraft type</label><input type="text" id="le-type" placeholder="e.g. C-130J" autocomplete="off" oninput="typeAcInput()" onkeydown="typeAcKey(event)" onblur="setTimeout(closeTypeAc,150)"><div id="type-ac-list" class="type-ac-list"></div></div>
   </div>
   <div class="info-banner" id="ac-match"></div>
   <div class="field" style="margin-bottom:12px"><label>Operator</label><input type="text" id="le-op" placeholder="e.g. RAF, USAF"></div>
@@ -713,6 +726,49 @@ function closeModal(id) { document.getElementById(id).classList.remove('open'); 
 function showAlert(id, dur) { var el=document.getElementById(id); el.classList.add('show'); setTimeout(function(){ el.classList.remove('show'); }, dur||2500); }
 function showErr(id, msg) { var el=document.getElementById(id); el.textContent=msg; el.classList.add('show'); setTimeout(function(){ el.classList.remove('show'); }, 4000); }
 
+// ── Type autocomplete ─────────────────────────────────────────────────────────
+var typeAcIdx = -1;
+function typeAcInput() {
+  var q = (document.getElementById('le-type').value||'').trim().toLowerCase();
+  var list = document.getElementById('type-ac-list');
+  typeAcIdx = -1;
+  if (!q) { list.classList.remove('open'); list.innerHTML=''; return; }
+  // Gather unique types from aircraft table, ranked by match quality then frequency
+  var counts = {};
+  aircraft.forEach(function(a){ if(a.type) counts[a.type]=(counts[a.type]||0)+1; });
+  var matches = Object.keys(counts).filter(function(t){ return t.toLowerCase().includes(q); });
+  matches.sort(function(a,b){
+    var ai=a.toLowerCase().indexOf(q), bi=b.toLowerCase().indexOf(q);
+    if(ai!==bi) return ai-bi; // earlier match first
+    return counts[b]-counts[a];  // then by frequency
+  });
+  if (!matches.length) { list.classList.remove('open'); list.innerHTML=''; return; }
+  list.innerHTML = matches.slice(0,8).map(function(t,i){
+    return '<div class="type-ac-item" data-val="'+esc(t)+'" onmousedown="typeAcSelect(\''+esc(t)+'\')">'
+      +'<span>'+esc(t)+'</span>'
+      +(counts[t]>1?'<span class="type-ac-count">×'+counts[t]+'</span>':'')
+      +'</div>';
+  }).join('');
+  list.classList.add('open');
+}
+function typeAcSelect(val) {
+  document.getElementById('le-type').value = val;
+  closeTypeAc();
+}
+function closeTypeAc() {
+  var list = document.getElementById('type-ac-list');
+  list.classList.remove('open'); list.innerHTML=''; typeAcIdx=-1;
+}
+function typeAcKey(e) {
+  var list = document.getElementById('type-ac-list');
+  var items = list.querySelectorAll('.type-ac-item');
+  if (!items.length) return;
+  if (e.key==='ArrowDown') { e.preventDefault(); typeAcIdx=Math.min(typeAcIdx+1,items.length-1); items.forEach(function(el,i){ el.classList.toggle('active',i===typeAcIdx); }); }
+  else if (e.key==='ArrowUp') { e.preventDefault(); typeAcIdx=Math.max(typeAcIdx-1,0); items.forEach(function(el,i){ el.classList.toggle('active',i===typeAcIdx); }); }
+  else if (e.key==='Enter'&&typeAcIdx>=0) { e.preventDefault(); typeAcSelect(items[typeAcIdx].dataset.val); }
+  else if (e.key==='Escape') { closeTypeAc(); }
+}
+
 // ── Pagination helper ─────────────────────────────────────────────────────────
 function renderPagination(containerId, total, page, perPage, onPage, onPer) {
   var el = document.getElementById(containerId);
@@ -808,9 +864,13 @@ function renderLog() {
   var total=rows.length;
   if (logPage>Math.ceil(total/logPer)) logPage=1;
   var pageRows=rows.slice((logPage-1)*logPer,logPage*logPer);
+  var lastDay='';
   tb.innerHTML=pageRows.map(function(r){
     var fd=freqs.find(function(f){ return f.freq===r.freq; });
-    return '<tr>'
+    var dayLabel=r.dt?new Date(r.dt).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'}):'';
+    var sep='';
+    if(dayLabel&&dayLabel!==lastDay){ sep='<tr class="day-divider'+(lastDay?'':' day-divider-first')+'"><td colspan="8"><span>'+dayLabel+'</span></td></tr>'; lastDay=dayLabel; }
+    return sep+'<tr>'
       +'<td style="font-family:var(--mono);font-size:11px;white-space:nowrap">'+fmt(r.dt)+'</td>'
       +'<td><span class="freq-tag">'+esc(r.freq)+'</span></td>'
       +'<td style="font-size:12px;color:var(--text2)">'+esc(fd&&fd.descr?fd.descr:'—')+'</td>'
@@ -957,6 +1017,7 @@ function openLogModal() {
   ['le-freq','le-cs','le-serial','le-type','le-op','le-notes'].forEach(function(id){ document.getElementById(id).value=''; });
   document.getElementById('freq-match').textContent='';
   document.getElementById('ac-match').className='info-banner';
+  closeTypeAc();
   openModal('log-modal');
 }
 function editLog(id) {
@@ -973,6 +1034,7 @@ function editLog(id) {
   document.getElementById('le-notes').value=r.notes||'';
   document.getElementById('freq-match').textContent='';
   document.getElementById('ac-match').className='info-banner';
+  closeTypeAc();
   openModal('log-modal');
 }
 async function saveLog() {
